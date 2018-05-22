@@ -1,0 +1,6 @@
+.cache-main
+.cache-test
+.project
+.classpath
+/bin/
+/lib/
