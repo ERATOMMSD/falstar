@@ -1,0 +1,4 @@
+model;property;algorithm;control points;exploration ratio;budget;seed;success;tries;min simulations;min time;max simulations;max time;avg simulations;avg time;best robustness
+fuel_control;□_[11.0, 50.0] abs(mu) < 0.02;adaptive;3 3 3 3 3;0.25;100;0;10;10;1;0;2;1;1;0;-0.026843342579650296
+fuel_control;□_[11.0, 50.0] abs(mu) < 0.04;adaptive;3 3 3 3 3;0.25;100;0;10;10;1;0;5;2;1;0;-0.006843342579650295
+fuel_control;□_[11.0, 50.0] abs(mu) < 0.05;adaptive;3 3 3 3 3;0.25;100;0;0;10;0;0;0;0;0;0;7.100433679634657E-4

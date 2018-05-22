@@ -1,0 +1,7 @@
+model;property;algorithm;control points;exploration ratio;budget;seed;success;tries;min simulations;min time;max simulations;max time;avg simulations;avg time;best robustness
+automatic_transmission;□_[0.0, 30.0] speed < 120.0;adaptive;2 2 3 3 3 4;0.25;100;0;1;1;29;40;29;40;29;40;-17.980199361426514
+automatic_transmission;□_[0.0, 30.0] (gear != 3.0 || 30.0 < speed);adaptive;2 2 3 3 3 4;0.25;100;0;1;1;75;31;75;31;75;31;-3.5325478948790447
+automatic_transmission;□_[0.0, 30.0] (gear != 4.0 || 40.0 < speed);adaptive;2 2 3 3 3 4;0.25;100;0;1;1;5;2;5;2;5;2;-5.24145448916066
+automatic_transmission;◇_[10.0, 30.0] (speed < 50.0 || 60.0 < speed);adaptive;2 2 3 3 3 4;0.25;100;0;0;1;0;0;0;0;0;0;3.085931663603752
+automatic_transmission;(□_[0.0, 10.0] speed < 80.0 || ◇_[0.0, 30.0] 4500.0 < RPM);adaptive;2 2 3 3 3 4;0.25;100;0;1;1;5;2;5;2;5;2;-6.041439027059852
+automatic_transmission;(□_[0.0, 10.0] speed < 50.0 || ◇_[0.0, 30.0] 2700.0 < RPM);adaptive;2 2 3 3 3 4;0.25;100;0;1;1;47;20;47;20;47;20;-1.501937034466863

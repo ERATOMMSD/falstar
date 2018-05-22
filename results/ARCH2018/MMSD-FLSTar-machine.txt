@@ -1,0 +1,4 @@
+CPU:     Intel i5-7200U, 64 bit, 2.50GHz
+Memory:  16 GB
+OS:      Linux 4.16.8-1-ARCH
+Matlab:  R2017b (glnxa64), using 4 cores in parallel
