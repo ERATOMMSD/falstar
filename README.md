@@ -1,6 +1,12 @@
 # Fast Falsification with Adaptive Inputs
 
-Quickstart:
+Requirements
+
+- Scala 2.12
+- Java 1.8
+- Matlab (tested with R2017)
+
+## Quickstart:
 
 Link the necessary MATLAB files and binaries
 
@@ -14,6 +20,10 @@ For 64 bit systems:
 - Linux: `glnxa64`
 - Mac OS X: `maci64`
 - Windows: `win64`
+
+Compile
+
+    make
 
 Try it out
 
