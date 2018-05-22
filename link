@@ -1,0 +1,13 @@
+#!/bin/sh
+
+MATLABROOT="$1"
+
+if [ -n "$MATLABROOT" ]; then
+    mkdir -p lib
+    ln -s $MATLABROOT/java/jar/engine.jar lib
+    ln -s $MATLABROOT/java/jar/mvm.jar lib
+    ln -s $MATLABROOT/java/jar/util.jar lib
+    ln -s $MATLABROOT/bin/glnxa64 lib
+else
+    echo "./link <MATLABROOT>"
+fi
