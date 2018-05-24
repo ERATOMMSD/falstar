@@ -41,11 +41,14 @@ case class Robustness(rs: Array[(Time, Score)]) {
     else rs(i)._1
   }
 
+  def unary_! = unary(Robustness.not)
   def and(that: Robustness) = binary(that)(Robustness.and)
   def or(that: Robustness) = binary(that)(Robustness.or)
+  def implies(that: Robustness) = binary(that)(Robustness.implies)
 
-  def product(that: Robustness) = binary(that)(Robustness.product)
-  def sum(that: Robustness) = binary(that)(Robustness.sum)
+  def unary(f: Double => Double): Robustness = {
+    Robustness(rs.map { case ((t, s)) => (t, f(s)) })
+  }
 
   def binary(that: Robustness)(f: (Double, Double) => Double): Robustness = {
     Robustness((this.rs, that.rs).zipped.map { case ((t, s1), (_, s2)) => (t, f(s1, s2)) })
@@ -61,12 +64,20 @@ case class Robustness(rs: Array[(Time, Score)]) {
 }
 
 case class Value(lower: Score, upper: Score) {
+  def unary_! = {
+    Value(Robustness.not(upper), Robustness.not(lower))
+  }
+
   def and(that: Value) = {
-    Value(Math.min(this.lower, that.lower), Math.min(this.upper, that.upper))
+    Value(Robustness.and(this.lower, that.lower), Robustness.and(this.upper, that.upper))
   }
 
   def or(that: Value) = {
-    Value(Math.max(this.lower, that.lower), Math.max(this.upper, that.upper))
+    Value(Robustness.or(this.lower, that.lower), Robustness.or(this.upper, that.upper))
+  }
+
+  def implies(that: Value) = {
+    !this or that
   }
 }
 
@@ -94,8 +105,10 @@ object Robustness {
     }
   }
 
+  def not(s: Score) = -s
   def and(s1: Score, s2: Score) = Math.min(s1, s2)
   def or(s1: Score, s2: Score) = Math.max(s1, s2)
+  def implies(s1: Score, s2: Score) = or(not(s1), s2)
 
   def product(s1: Score, s2: Score) = s1 * s2
   def sum(s1: Score, s2: Score) = s1 + s2 - s1 * s2
@@ -104,22 +117,11 @@ object Robustness {
     apply(right, t, u, x) - apply(left, t, u, x)
   }
 
-  def le(left: Term, right: Term, t: Time, u: Input, x: State) = {
-    apply(right, t, u, x) - apply(left, t, u, x) + Constraint.threshold
-  }
-
   def equal(left: Term, right: Term, t: Time, u: Input, x: State) = {
     if (Math.abs(apply(right, t, u, x) - apply(left, t, u, x)) < Constraint.threshold)
       Score.MaxValue
     else
       Score.MinValue
-  }
-
-  def inequal(left: Term, right: Term, t: Time, u: Input, x: State) = {
-    if (Math.abs(apply(right, t, u, x) - apply(left, t, u, x)) < Constraint.threshold)
-      Score.MinValue
-    else
-      Score.MaxValue
   }
 
   def apply(tm: Term, t: Time, u: Input, x: State): Double = tm match {
@@ -137,9 +139,9 @@ object Robustness {
     case False => Score.MinValue
     case True => Score.MaxValue
     case Less(left, right) => lt(left, right, t, u, x)
-    case LessEqual(left, right) => le(left, right, t, u, x)
+    case LessEqual(left, right) => not(lt(right, left, t, u, x))
     case Equal(left, right) => equal(left, right, t, u, x)
-    case NotEqual(left, right) => inequal(left, right, t, u, x)
+    case NotEqual(left, right) => not(equal(left, right, t, u, x))
   }
 
   def apply(prop: Proposition, us: Signal, xs: Signal): Robustness = {
@@ -187,11 +189,17 @@ object Robustness {
     case prop: Proposition =>
       apply(prop, us, xs)
 
+    case Not(phi) =>
+      !apply(phi, us, xs)
+
     case And(phi, psi) =>
       apply(phi, us, xs) and apply(psi, us, xs)
 
     case Or(phi, psi) =>
       apply(phi, us, xs) or apply(psi, us, xs)
+
+    case Implies(phi, psi) =>
+      apply(phi, us, xs) implies apply(psi, us, xs)
 
     case Always(from, to, phi) =>
       apply(phi, us, xs) always (from, to)
@@ -208,11 +216,17 @@ object Robustness {
       val rs = apply(prop, us, xs)
       Value.known(rs.score)
 
+    case Not(phi) =>
+      !bounds(phi, us, xs)
+
     case And(phi, psi) =>
       bounds(phi, us, xs) and bounds(psi, us, xs)
 
     case Or(phi, psi) =>
       bounds(phi, us, xs) or bounds(psi, us, xs)
+
+    case Implies(phi, psi) =>
+      bounds(phi, us, xs) implies bounds(psi, us, xs)
 
     case Always(from, to, _) =>
       val rs = apply(phi, us, xs)

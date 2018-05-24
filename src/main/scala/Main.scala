@@ -76,12 +76,13 @@ object Main {
       writer.write(table.avg.time + ";")
       writer.write(table.best.score + "\n")
     }
-
+    
+    writer.write("\n")
     writer.close()
   }
 
   def run(cmd: Command): Unit = cmd match {
-    case Falsify(search, name, sys, phi, seed, repeat, log) =>
+    case Falsify(search, sys, phi, seed, repeat, log) =>
       seed match {
         case None => Probability.setUniqueSeed()
         case Some(seed) => Probability.seed = seed
@@ -97,11 +98,11 @@ object Main {
       }
 
       if (options.g) {
-        val title = if (res.isFalsified) "falsified | " + name + " | " + phi else "not falsified: " + phi
+        val title = if (res.isFalsified) "falsified | " + sys.name + " | " + phi else "not falsified: " + phi
         val scope = new Scope(title, sys, res)
       }
 
-    case Simulate(name, sys, phi, us, t) =>
+    case Simulate(sys, phi, us, t) =>
       val tr = sys.sim(us, t)
       val rs = mtl.Robustness(phi, tr.us, tr.ys)
 

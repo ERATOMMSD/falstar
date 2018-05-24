@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="fast-falsification-with-adaptive-inputs">Fast Falsification with Adaptive Inputs</h1>
+<p>Contents</p>
+<ul>
+<li><a href="#quickstart">Quickstart</a></li>
+<li><a href="#arch-2018-friendly-competition">ARCH 2018 friendly competition</a></li>
+</ul>
+<p>Requirements</p>
+<ul>
+<li><strong>Java 1.8</strong></li>
+<li><strong>Matlab (tested with R2017)</strong></li>
+<li>Scala 2.12 (build only)</li>
+</ul>
+<h2 id="quickstart">Quickstart:</h2>
+<p>Link the necessary MATLAB files and binaries</p>
+<pre><code>./link $MATLABROOT $ARCH</code></pre>
+<p>where <code>$MATLABROOT</code> points to the top-level of a specific Matlab installation (e.g., ending in <code>../MATLAB/R2017b</code>) and where <code>$ARCH</code> <a href="https://www.mathworks.com/help/matlab/matlab_external/setup-environment.html">depends on your OS</a>. For 64 bit systems:</p>
+<ul>
+<li>Linux: <code>glnxa64</code></li>
+<li>Mac OS X: <code>maci64</code></li>
+<li>Windows: <code>win64</code></li>
+</ul>
+<p>There is a pre-built jar <code>main.jar</code>. Re-create with:</p>
+<pre><code>make compile</code></pre>
+<p>Try it out</p>
+<pre><code>./run -g src/test/configuration/test.cfg</code></pre>
+<p>falsifies a Simulink model of an automatic transmission against specification <code>□_[0,30] speed &lt; 120</code> and displays various input and output signals.</p>
+<p>Here is an example output:</p>
+<pre><code>trial 1/1
+property □_[0.0, 30.0] speed &lt; 120.0
+algorithm adaptive
+  control points: 2 2 3 3 3 4
+  exploration ratio: 0.25
+  budget: 100
+starting matlab ... connected (4s)
+initializing &#39;automatic_transmission&#39; ... done (17s)
+......
+
+inputs
+  t__ = [0.0; 10.0; 25.0; 30.0]
+  u__ = [75.0 0.0; 100.0 0.0; 37.5 243.75; 37.5 243.75]
+falsified with robustness -6.849703872580591
+
+statistics
+  simulations 6
+  total time  29s
+  peak memory 37111 kb
+
+bye</code></pre>
+<h2 id="arch-2018-friendly-competition">ARCH 2018 friendly competition</h2>
+<p>Re run</p>
+<pre><code>make test</code></pre>
+<p>The benchmark models are in</p>
+<pre><code>src/test/simulink</code></pre>
+<p>and the configuration scripts are in</p>
+<pre><code>src/test/configuration</code></pre>
+<p>The results are in</p>
+<pre><code>results/ARCH2018</code></pre>
+<p>as <code>csv</code> files following the naming scheme with team <code>MMSD</code>, tool FALSTAR <code>FLST</code>, variant adaptive refinement <code>ar</code>. Here’s an example:</p>
+<pre><code>model;property;algorithm;control points;exploration ratio;budget;seed;success;tries;min simulations;min time;max simulations;max time;avg simulations;avg time;best robustness
+fuel_control;□_[11.0, 50.0] abs(mu) &lt; 0.04;adaptive;3 3 3 3 3;0.25;100;0;10;10;1;0;5;2;1;0;-0.006843342579650295</code></pre>
+<p>The fields are as follows:</p>
+<ul>
+<li>name of the Simulink model and property of interest</li>
+<li>algorithm and meta-parameters</li>
+<li>success rate and total number of trials</li>
+<li>aggregation over <em>successful</em> runs: number of simulations, run time per trial (min, max, average)</li>
+<li>best robustness achieved in any of the trials</li>
+</ul>
+<p>Peak memory of the <em>JVM heap</em> is reported by the tool when re-running, the Matlab memory is not measured here.</p>
+</body>
+</html>

@@ -8,7 +8,12 @@ sealed trait Formula {
   def T: Time
   def dim: Int
   def times: Seq[Time]
-  def unary_! : Formula
+
+  def unary_! : Formula = this match {
+    case True => False
+    case False => True
+    case _ => Not(this)
+  }
 
   def &&(that: Formula): Formula = (this, that) match {
     case (True, _) => that
@@ -26,7 +31,13 @@ sealed trait Formula {
     case _ => Or(this, that)
   }
 
-  def ==>(that: Formula): Formula = !this || that
+  def ==>(that: Formula): Formula = (this, that) match {
+    case (False, _) => True
+    case (_, True) => True
+    case (True, _) => that
+    case (_, False) => !this
+    case _ => Implies(this, that)
+  }
 }
 
 sealed trait Proposition extends Formula {
@@ -64,55 +75,52 @@ sealed trait Modality extends Formula {
   def times = Seq(from, to)
 }
 
-case object True extends Constant {
-  def unary_! = False
-}
-
-case object False extends Constant {
-  def unary_! = True
-}
+case object True extends Constant
+case object False extends Constant
 
 case class Less(left: Term, right: Term) extends Constraint {
-  def unary_! = right <= left
   override def toString = left + " < " + right
 }
 
 case class LessEqual(left: Term, right: Term) extends Constraint {
-  def unary_! = right < left
   override def toString = left + " <= " + right
 }
 
 case class Equal(left: Term, right: Term) extends Constraint {
-  def unary_! = left !== right
   override def toString = left + " == " + right
 }
 
 case class NotEqual(left: Term, right: Term) extends Constraint {
-  def unary_! = left === right
   override def toString = left + " != " + right
 }
 
+case class Not(phi: Formula) extends Formula {
+  def T = phi.T
+  def dim = phi.dim
+  def times = phi.times
+}
+
 case class And(left: Formula, right: Formula) extends Connective {
-  def unary_! = !left || !right
   override def toString = "(" + left + " && " + right + ")"
 }
 
 case class Or(left: Formula, right: Formula) extends Connective {
-  def unary_! = !left && !right
   override def toString = "(" + left + " || " + right + ")"
+}
+
+case class Implies(left: Formula, right: Formula) extends Connective {
+  override def toString = "(" + left + " ==> " + right + ")"
 }
 
 case class Always(from: Time, to: Time, phi: Formula) extends Modality {
   assert(0 <= from && from <= to && to < Double.PositiveInfinity)
   def T = to
-  def unary_! = ◇(from, to, !phi)
   override def toString = "□_[" + from + ", " + to + "] " + phi
 }
 
 case class Eventually(from: Time, to: Time, phi: Formula) extends Modality {
   assert(0 <= from && from <= to && to < Double.PositiveInfinity)
   def T = to
-  def unary_! = □(from, to, !phi)
   override def toString = "◇_[" + from + ", " + to + "] " + phi
 }
   

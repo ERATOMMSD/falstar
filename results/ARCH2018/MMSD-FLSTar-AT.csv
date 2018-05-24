@@ -5,3 +5,12 @@ automatic_transmission;□_[0.0, 30.0] (gear != 4.0 || 40.0 < speed);adaptive;2 
 automatic_transmission;◇_[10.0, 30.0] (speed < 50.0 || 60.0 < speed);adaptive;2 2 3 3 3 4;0.25;100;0;0;1;0;0;0;0;0;0;3.085931663603752
 automatic_transmission;(□_[0.0, 10.0] speed < 80.0 || ◇_[0.0, 30.0] 4500.0 < RPM);adaptive;2 2 3 3 3 4;0.25;100;0;1;1;5;2;5;2;5;2;-6.041439027059852
 automatic_transmission;(□_[0.0, 10.0] speed < 50.0 || ◇_[0.0, 30.0] 2700.0 < RPM);adaptive;2 2 3 3 3 4;0.25;100;0;1;1;47;20;47;20;47;20;-1.501937034466863
+
+model;property;algorithm;control points;exploration ratio;budget;seed;success;tries;min simulations;min time;max simulations;max time;avg simulations;avg time;best robustness
+automatic_transmission;□_[0.0, 30.0] speed < 120.0;adaptive;2 2 3 3 3 4;0.25;100;0;10;10;2;0;29;39;8;5;-17.980199361426514
+automatic_transmission;□_[0.0, 30.0] (gear == 3.0 ==> 30.0 < speed);adaptive;2 2 3 3 3 4;0.25;100;0;10;10;3;1;75;32;28;12;-10.20098067004583
+automatic_transmission;□_[0.0, 30.0] (gear == 4.0 ==> 40.0 < speed);adaptive;2 2 3 3 3 4;0.25;100;0;10;10;5;2;54;24;27;11;-5.24145448916066
+automatic_transmission;Not(□_[10.0, 30.0] (50.0 <= speed && speed <= 60.0));adaptive;2 2 3 3 3 4;0.25;100;0;7;10;7;3;86;43;46;21;-0.5108737655039377
+automatic_transmission;(□_[0.0, 10.0] speed < 80.0 || ◇_[0.0, 30.0] 4500.0 < RPM);adaptive;2 2 3 3 3 4;0.25;100;0;10;10;2;0;40;17;17;7;-6.0439516000248545
+automatic_transmission;(□_[0.0, 10.0] speed < 50.0 || ◇_[0.0, 30.0] 2700.0 < RPM);adaptive;2 2 3 3 3 4;0.25;100;0;10;10;13;5;97;43;51;23;-1.5044496074318587
+

@@ -26,6 +26,8 @@ import mtl.Term
 import mtl.Times
 import mtl.True
 import mtl.Transform
+import mtl.Not
+import mtl.Implies
 
 object Breach {
   def print(tm: Term): String = tm match {
@@ -47,8 +49,10 @@ object Breach {
     case Equal(left, right) => "(" + print(left) + " == " + print(right) + ")"
     case NotEqual(left, right) => "(not (" + print(left) + " == " + print(right) + "))"
 
+    case Not(phi) => "(not " + print(phi) + ")"
     case Or(phi, psi) => "(" + print(phi) + " or " + print(psi) + ")"
     case And(phi, psi) => "(" + print(phi) + " and " + print(psi) + ")"
+    case Implies(phi, psi) => "(" + print(phi) + " => " + print(psi) + ")"
 
     case Always(t0, t1, phi) => "(alw_[" + t0 + "," + t1 + "] " + print(phi) + ")"
     case Eventually(t0, t1, phi) => "(ev_[" + t0 + "," + t1 + "] " + print(phi) + ")"

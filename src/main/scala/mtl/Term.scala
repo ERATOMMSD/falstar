@@ -1,19 +1,27 @@
 package mtl
 
+object Term {
+  def binary(t1: Term, t2: Term, op: (Double, Double) => Double, constr: (Term, Term) => Term) = (t1, t2) match {
+    case (Const(v1), Const(v2)) => Const(op(v1, v2))
+    case _ => constr(t1, t2)
+  }
+}
+
 sealed trait Term {
   def dim: Int
 
-  def +(that: Term): Term = Plus(this, that)
-  def -(that: Term): Term = Minus(this, that)
-  def *(that: Term): Term = Times(this, that)
-  def /(that: Term): Term = DividedBy(this, that)
+  def +(that: Term): Term = Term.binary(this, that, _ + _, Plus)
+  def -(that: Term): Term = Term.binary(this, that, _ - _, Minus)
+  def *(that: Term): Term = Term.binary(this, that, _ * _, Times)
+  def /(that: Term): Term = Term.binary(this, that, _ / _, DividedBy)
 
-  def <(that: Term): Constraint = Less(this, that)
-  def >(that: Term): Constraint = Less(that, this)
-  def <=(that: Term): Constraint = LessEqual(this, that)
-  def >=(that: Term): Constraint = LessEqual(that, this)
-  def ===(that: Term): Constraint = Equal(this, that)
-  def !==(that: Term): Constraint = NotEqual(this, that)
+  def <(that: Term): Formula = Less(this, that)
+  def <=(that: Term): Formula = LessEqual(this, that)
+
+  def >(that: Term): Formula = that < this
+  def >=(that: Term): Formula = that <= this
+  def ===(that: Term): Formula = Equal(this, that)
+  def !==(that: Term): Formula = NotEqual(this, that)
 
   def ~=(that: Term): Formula = (this >= that) && (this <= that)
   def in(lb: Term, ub: Term): Formula = lb <= this && this <= ub

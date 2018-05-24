@@ -7,8 +7,8 @@ Contents
 
 Requirements
 
-- Java 1.8
-- Matlab (tested with R2017)
+- **Java 1.8**
+- **Matlab (tested with R2017)**
 - Scala 2.12 (build only)
 
 ## Quickstart:
@@ -97,20 +97,3 @@ The fields are as follows:
 
 Peak memory of the *JVM heap* is reported by the tool when re-running,
 the Matlab memory is not measured here.
-
-### Fuel Control Requirements
-
-Model: `src/test/fuel_control.slx` from the [ARCH website](...)
-
-Requirements as in described in
-
-    Powertrain Verification Benchmark, ...
-- 
-
-### Electromagnetic Braking System
-
-Model: `src/test/emb_controller.slx` from the [ARCH website](...)
-
-Requirements
-
-- 

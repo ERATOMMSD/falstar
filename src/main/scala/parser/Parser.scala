@@ -17,32 +17,37 @@ import mtl.Term
 import mtl.□
 import mtl.◇
 import mtl.Transform
+import falsification.STaliro
 
 sealed trait Command
 case object Quit extends Command
-case class Falsify(search: Falsification, name: String, sys: System, phi: Formula, seed: Option[Long], repeat: Int, log: Option[String]) extends Command
-case class Simulate(name: String, sys: System, phi: Formula, us: Signal, T: Time) extends Command
+case class Falsify(search: Falsification, sys: System, phi: Formula, seed: Option[Long], repeat: Int, log: Option[String]) extends Command
+case class Simulate(sys: System, phi: Formula, us: Signal, T: Time) extends Command
 case class Robustness(phi: Formula, us: Signal, ys: Signal, T: Time) extends Command
 
 class Parser {
-  // case class State(search: Falsification, system: System, defines: Map[String, Syntax], systems: Map[String, System])
-  // var stack: List[State] = Nil
+  case class State(
+    var search: Falsification,
+    var system: System,
+    var defines: Map[String, Syntax],
+    var systems: Map[String, System],
 
-  var search: Falsification = null
-  var name: String = null
-  var system: System = null
-  var defines = Map[String, Syntax]()
-  var systems = Map[String, System]()
+    // for experiments
+    var seed: Option[Long],
+    var repeat: Int,
+    var log: Option[String])
 
-  // for experiments
-  var seed: Option[Long] = None
-  var repeat: Int = 1
-  var log: Option[String] = None
+  object State {
+    def empty = State(null, null, Map(), Map(), None, 1, None)
+  }
+
+  var stack = List(State.empty)
+  def state = stack.head
 
   object Number {
     def unapply(node: Syntax): Option[Double] = node match {
       case Literal(value: Double) => Some(value)
-      case Identifier(name) if defines contains name => unapply(defines(name))
+      case Identifier(name) if state.defines contains name => unapply(state.defines(name))
       case _ => None
     }
   }
@@ -91,8 +96,8 @@ class Parser {
         SimulinkSystem(path, model, ins, outs, params, vars, load)
     }
 
-    assert(!(systems contains name))
-    systems += name -> sys
+    assert(!(state.systems contains name))
+    state.systems += name -> sys
   }
 
   def term(ports: Map[String, Port], tm: Syntax): Term = tm match {
@@ -101,7 +106,7 @@ class Parser {
     case Node(Keyword("-"), left, right) => term(ports, left) - term(ports, right)
     case Node(Keyword("*"), left, right) => term(ports, left) * term(ports, right)
     case Node(Keyword("/"), left, right) => term(ports, left) / term(ports, right)
-    case Identifier(name) if defines contains name => term(ports, defines(name))
+    case Identifier(name) if state.defines contains name => term(ports, state.defines(name))
     case Identifier(name) if ports contains name => ports(name)
     case Identifier(name) => sys.error("unknown identifier: " + name + " in " + ports.keys.mkString(", "))
     case Literal(value: Double) => Const(value)
@@ -137,13 +142,13 @@ class Parser {
     case Node(Keyword("always"), Node(Number(from), Number(to)), psi) => □(from, to, formula(ports, psi))
     case Node(Keyword("eventually"), Node(Number(from), Number(to)), psi) => ◇(from, to, formula(ports, psi))
 
-    case Identifier(name) if defines contains name =>
-      formula(ports, defines(name))
+    case Identifier(name) if state.defines contains name =>
+      formula(ports, state.defines(name))
   }
 
   def formula(phi: Syntax): Formula = {
-    val inports = Map(system.inports.map { port => (port.name, port) }: _*)
-    val outports = Map(system.outports.map { port => (port.name, port) }: _*)
+    val inports = Map(state.system.inports.map { port => (port.name, port) }: _*)
+    val outports = Map(state.system.outports.map { port => (port.name, port) }: _*)
     formula(inports ++ outports, phi)
   }
 
@@ -158,8 +163,12 @@ class Parser {
   }
 
   def top(syntax: Syntax): Seq[Command] = syntax match {
+    case Node(Keyword("include"), Literal(file: String)) =>
+      val node = read(new File(file))
+      parse(node)
+
     case Node(Keyword("define"), Identifier(name), syntax) =>
-      defines += name -> syntax
+      state.defines += name -> syntax
       Seq()
 
     case Node(Keyword("define-system"), Identifier(name), system, Node(Keyword("inputs"), inputs @ _*), Node(Keyword("outputs"), outputs @ _*), options @ _*) =>
@@ -167,8 +176,7 @@ class Parser {
       Seq()
 
     case Node(Keyword("set-system"), Identifier(id)) =>
-      name = id
-      system = systems(id)
+      state.system = state.systems(id)
       Seq()
 
     case Node(Keyword("set-solver"), Identifier("adaptive"), Node(controlpoints @ _*), Literal(exploration: Double), Literal(budget: Double)) =>
@@ -176,62 +184,61 @@ class Parser {
         case Literal(cp: Double) => cp.toInt
       }
 
-      search = Adaptive.falsification(levels, exploration, budget.toInt)
+      state.search = Adaptive.falsification(levels, exploration, budget.toInt)
       Seq()
 
     case Node(Keyword("set-solver"), Identifier("breach"), Literal(controlpoints: Double), Identifier(solver), Literal(budget: Double)) =>
-      search = Breach.falsification(controlpoints.toInt, solver, budget.toInt)
+      state.search = Breach.falsification(controlpoints.toInt, solver, budget.toInt)
       Seq()
-      
+
     case Node(Keyword("set-solver"), Identifier("breachprinter")) =>
-      search = Breach.dummy
+      state.search = Breach.dummy
+      Seq()
+
+    case Node(Keyword("set-solver"), Identifier("staliroprinter"), Literal(prefix: String)) =>
+      state.search = STaliro.dummy(prefix)
       Seq()
 
     case Node(Keyword("falsify"), phis @ _*) =>
-      phis map { phi => Falsify(search, name, system, formula(phi), seed, repeat, log) }
+      phis map { phi => Falsify(state.search, state.system, formula(phi), state.seed, state.repeat, state.log) }
 
     case Node(Keyword("simulate"), Number(time), phi, input @ _*) =>
-      Seq(Simulate(name, system, formula(phi), signal(input), time))
+      Seq(Simulate(state.system, formula(phi), signal(input), time))
 
     case Node(Keyword("robustness"), Number(time), phi, input @ _*) =>
       Seq(Robustness(formula(phi), Signal((0: Time, Vector())), signal(input), time))
 
     case Node(Keyword("set-repeat"), Literal(n: Double)) =>
-      repeat = n.toInt
+      state.repeat = n.toInt
       Seq()
 
     case Node(Keyword("set-seed"), Literal(n: Double)) =>
-      seed = Some(n.toLong)
+      state.seed = Some(n.toLong)
       Seq()
 
     case Node(Keyword("clear-seed")) =>
-      seed = None
+      state.seed = None
       Seq()
 
     case Node(Keyword("set-log"), Literal(name: String)) =>
-      log = Some(name)
+      state.log = Some(name)
       Seq()
 
     case Node(Keyword("clear-log"), Literal(name: String)) =>
-      log = None
+      state.log = None
       Seq()
 
     case Node(Keyword("quit")) =>
       Seq(Quit)
 
-    /* case Node(Keyword("push")) =>
-      val state = State(search, system, defines, systems)
-      stack = state :: stack
+    case Node(Keyword("push")) =>
+      stack = state.copy() :: stack
       Seq()
 
     case Node(Keyword("pop")) =>
-      val state :: rest = stack
-      search = state.search
-      system = state.system
-      defines = state.defines
-      systems = state.systems
+      val _ :: rest = stack
       stack = rest
-      Seq() */
+      Seq()
   }
 
   def parse(syntax: Syntax): Seq[Command] = {

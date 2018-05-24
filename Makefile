@@ -1,4 +1,4 @@
-.PHONY: all compile doc test clean
+.PHONY: all scanner compile doc test clean
 
 SCANNER=src/main/scala/parser/Scanner.java
 
@@ -10,6 +10,7 @@ all: compile doc
 
 compile: main.jar
 doc: README.html
+scanner: $(SCANNER)
 
 main.jar: bin $(SRC)
 	scalac -d bin -cp lib/engine.jar $(SRC)
