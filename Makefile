@@ -26,8 +26,10 @@ bin:
 	mkdir -p bin
 
 clean:
-	rm bin -r
-	rm main.jar
+	rm -fr bin
+	rm -fr slprj
+	rm -f main.jar
+	rm -f *.slxc *.mexa64
 
 test: src/test/configuration/afc.cfg src/test/configuration/emb.cfg
 	./run src/test/configuration/afc.cfg
