@@ -18,6 +18,7 @@ import mtl.□
 import mtl.◇
 import mtl.Transform
 import falsification.STaliro
+import falsification.LaTeX
 
 sealed trait Command
 case object Quit extends Command
@@ -189,6 +190,10 @@ class Parser {
 
     case Node(Keyword("set-solver"), Identifier("breach"), Literal(controlpoints: Double), Identifier(solver), Literal(budget: Double)) =>
       state.search = Breach.falsification(controlpoints.toInt, solver, budget.toInt)
+      Seq()
+
+    case Node(Keyword("set-solver"), Identifier("latexprinter")) =>
+      state.search = LaTeX.dummy
       Seq()
 
     case Node(Keyword("set-solver"), Identifier("breachprinter")) =>

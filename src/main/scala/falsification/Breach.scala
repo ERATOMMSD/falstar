@@ -36,7 +36,7 @@ object Breach {
     case Plus(left, right) => "(" + print(left) + " + " + print(right) + ")"
     case Minus(left, right) => "(" + print(left) + " - " + print(right) + ")"
     case Times(left, right) => "(" + print(left) + " * " + print(right) + ")"
-    case DividedBy(left, right) => "(" + print(left) + " * " + print(right) + ")"
+    case DividedBy(left, right) => "(" + print(left) + " / " + print(right) + ")"
     case Transform(tm, _, f) if !f.isEmpty => f + "(" + print(tm) + ")"
   }
 
