@@ -17,17 +17,13 @@
 </head>
 <body>
 <h1 id="fast-falsification-with-adaptive-inputs">Fast Falsification with Adaptive Inputs</h1>
-<p>Contents</p>
-<ul>
-<li><a href="#quickstart">Quickstart</a></li>
-<li><a href="#arch-2018-friendly-competition">ARCH 2018 friendly competition</a></li>
-</ul>
 <p>Requirements</p>
 <ul>
 <li><strong>Java 1.8</strong></li>
 <li><strong>Matlab (tested with R2017)</strong></li>
 <li>Scala 2.12 (build only)</li>
 </ul>
+<p>See also <a href="https://cps-vo.org/group/ARCH/FriendlyCompetition">ARCH 2018 friendly competition</a></p>
 <h2 id="quickstart">Quickstart:</h2>
 <p>Link the necessary MATLAB files and binaries</p>
 <pre><code>./link $MATLABROOT $ARCH</code></pre>
@@ -64,26 +60,5 @@ statistics
   peak memory 37111 kb
 
 bye</code></pre>
-<h2 id="arch-2018-friendly-competition">ARCH 2018 friendly competition</h2>
-<p>Re run</p>
-<pre><code>make test</code></pre>
-<p>The benchmark models are in</p>
-<pre><code>src/test/simulink</code></pre>
-<p>and the configuration scripts are in</p>
-<pre><code>src/test/configuration</code></pre>
-<p>The results are in</p>
-<pre><code>results/ARCH2018</code></pre>
-<p>as <code>csv</code> files following the naming scheme with team <code>MMSD</code>, tool FALSTAR <code>FLST</code>, variant adaptive refinement <code>ar</code>. Here’s an example:</p>
-<pre><code>model;property;algorithm;control points;exploration ratio;budget;seed;success;tries;min simulations;min time;max simulations;max time;avg simulations;avg time;best robustness
-fuel_control;□_[11.0, 50.0] abs(mu) &lt; 0.04;adaptive;3 3 3 3 3;0.25;100;0;10;10;1;0;5;2;1;0;-0.006843342579650295</code></pre>
-<p>The fields are as follows:</p>
-<ul>
-<li>name of the Simulink model and property of interest</li>
-<li>algorithm and meta-parameters</li>
-<li>success rate and total number of trials</li>
-<li>aggregation over <em>successful</em> runs: number of simulations, run time per trial (min, max, average)</li>
-<li>best robustness achieved in any of the trials</li>
-</ul>
-<p>Peak memory of the <em>JVM heap</em> is reported by the tool when re-running, the Matlab memory is not measured here.</p>
 </body>
 </html>
