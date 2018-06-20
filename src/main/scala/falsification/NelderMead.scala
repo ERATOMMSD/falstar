@@ -8,6 +8,7 @@ import linear.Vector
 import mtl.Formula
 import mtl.Robustness
 import hybrid.Rho
+import hybrid.Input
 
 object NelderMead {
   case class falsification(controlpoints: Int, budget: Int) extends Falsification with WithStatistics {
@@ -19,24 +20,30 @@ object NelderMead {
       "controlpoints" -> controlpoints,
       "budget" -> budget)
 
-    def search(sys: System, phi: Formula, T: Time, sim: (Signal, Time) => Result): Result = {
+    def search(sys: System, phi: Formula, T: Time, sim: (Input, Signal, Time) => Result): Result = {
       val dt = T / controlpoints
-      val in = sys.in
+      
+      val i0 = sys.initial_region
+      val in = sys.input_region
 
+      val m = i0.dimensions
       val n = in.dimensions * controlpoints
 
       val x0 = for (d <- 0 to n) yield {
-        val us = Seq.tabulate(controlpoints)(_ => in.sample)
-        Vector(us.flatten: _*)
+        val i = i0.sample
+        val us = List.tabulate(controlpoints)(_ => in.sample)
+        Vector((i :: us).flatten: _*)
       }
 
-      def signal(z: Vector): Signal = {
-        Signal(controlpoints, i => (dt * i, z(i * in.dimensions until (i + 1) * in.dimensions)))
+      def signal(z: Vector): (Input, Signal) = {
+        val i = z(0 until m)
+        val us = Signal(controlpoints, k => (dt * k, z(m + k * in.dimensions until m + (k + 1) * in.dimensions)))
+        (i, us)
       }
 
       def feval(z: Vector): Score = {
-        val us = signal(z)
-        val res = sim(us, T)
+        val (i, us) = signal(z)
+        val res = sim(i, us, T)
         Falsification.observer.update(Seq(res))
         res.score
       }
@@ -51,8 +58,8 @@ object NelderMead {
 
       val (score, z) = util.NelderMead.minimize(feval, x0, lb, ub, fmin, nmax)
 
-      val us = signal(z)
-      sim(us, T)
+      val (i, us) = signal(z)
+      sim(i, us, T)
     }
   }
 }

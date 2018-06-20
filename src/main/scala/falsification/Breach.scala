@@ -85,11 +85,13 @@ object Breach {
       "budget" -> budget)
 
     def search(sys: System, _phi: Formula): (Result, Statistics) = sys match {
-      case sys @ SimulinkSystem(path, name, _, _, params, vars, load) =>
+      case sys @ SimulinkSystem(path, name, _, _, _, params, vars, load) =>
         val dt = 0.01
         val T = _phi.T
 
-        val in = sys.in
+        val i0 = sys.initial_region
+        val in = sys.input_region
+        val initports = sys.initports
         val inports = sys.inports
 
         val phi = print(_phi)
@@ -105,6 +107,15 @@ object Breach {
         eval("model.name = '" + name + "'")
         eval("model.dt = " + dt)
 
+        val i0x = for (InPort(name, index) <- initports) yield {
+          val min = i0.left(index)
+          val max = i0.right(index)
+          val ii = "i" + index
+          eval(ii + ".name = '" + name + "'")
+          eval(ii + ".range = [" + min + " " + max + "]")
+          ii
+        }
+
         val inx = for (InPort(name, index) <- inports) yield {
           val min = in.left(index)
           val max = in.right(index)
@@ -114,6 +125,7 @@ object Breach {
           ui
         }
 
+        eval("inits = " + i0x.mkString("[", " ", "]"))
         eval("inputs = " + inx.mkString("[", " ", "]"))
 
         eval("phi = STL_Formula('" + phi + "', '" + phi + "')")
@@ -122,7 +134,7 @@ object Breach {
         eval("stages = " + controlpoints)
         eval("samples = " + budget / controlpoints)
 
-        eval("[score, sims, time, t__, u__] = Breach(model, inputs, phi, T, solver, stages, samples)")
+        eval("[score, sims, time, t__, u__] = Breach(model, inits, inputs, phi, T, solver, stages, samples)")
 
         val score: Double = get("score")
         val sims: Double = get("sims")

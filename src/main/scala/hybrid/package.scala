@@ -37,7 +37,14 @@ package object hybrid {
     def inputs: Seq[(String, (Double, Double))]
     def outputs: Seq[String]
 
-    val in = {
+    val initial_region = {
+      val (left, right) = initials.map(_._2).unzip
+      Region(
+        Vector(left: _*),
+        Vector(right: _*))
+    }
+
+    val input_region = {
       val (left, right) = inputs.map(_._2).unzip
       Region(
         Vector(left: _*),
@@ -48,8 +55,7 @@ package object hybrid {
     val inports = InPorts(inputs map (_._1): _*)
     val outports = OutPorts(outputs: _*)
 
-    def sim(us: Signal, T: Time): Trace
-    def sim(tr: Trace, us: Signal, T: Time): Trace
+    def sim(i: Input, us: Signal, T: Time): Trace
   }
 
   object Score {

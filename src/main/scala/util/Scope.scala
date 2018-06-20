@@ -38,10 +38,11 @@ object Scope {
       (t: Time, x: State, u: Input) => u,
       0.1)
 
+    val i = Vector()
     val Seq(u) = sys.inports
     val Seq(x) = sys.outports
 
-    val tr = sys.sim(us, T)
+    val tr = sys.sim(i, us, T)
     val rs = Robustness(x > 0, tr.us, tr.ys)
     val res = Result(tr, rs)
     val scope = new Scope("test", sys, res)

@@ -1,4 +1,4 @@
-function [score, sims, time, t__, u__] = Breach(model, inputs, phi, T, solver, stages, samples)
+function [score, sims, time, t__, u__] = Breach(model, inits, inputs, phi, T, solver, stages, samples)
 
 sys = BreachSimulinkSystem(model.name);
 gen.type = 'UniStep';

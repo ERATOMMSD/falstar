@@ -20,11 +20,12 @@ import mtl.Transform
 import falsification.STaliro
 import falsification.LaTeX
 import falsification.UniformRandom
+import hybrid.Input
 
 sealed trait Command
 case object Quit extends Command
 case class Falsify(search: Falsification, sys: System, phi: Formula, seed: Option[Long], repeat: Int, log: Option[String]) extends Command
-case class Simulate(sys: System, phi: Formula, us: Signal, T: Time) extends Command
+case class Simulate(sys: System, phi: Formula, i: Input, us: Signal, T: Time) extends Command
 case class Robustness(phi: Formula, us: Signal, ys: Signal, T: Time) extends Command
 
 class Parser {
@@ -159,10 +160,14 @@ class Parser {
     formula(inports ++ outports, phi)
   }
 
+  def vector(syntax: Syntax) = {
+    val Node(vs @ _*) = syntax
+    Vector(vs map { case Literal(xi: Double) => xi }: _*)
+  }
+
   def controlpoint(syntax: Syntax) = syntax match {
     case Node(Literal(t: Time), Node(vs @ _*)) =>
-      val x = Vector(vs map { case Literal(xi: Double) => xi }: _*)
-      (t, x)
+      (t, vector(syntax))
   }
 
   def signal(input: Seq[Syntax]): Signal = {
@@ -221,8 +226,8 @@ class Parser {
     case Node(Keyword("falsify"), phis @ _*) =>
       phis map { phi => Falsify(state.search, state.system, formula(phi), state.seed, state.repeat, state.log) }
 
-    case Node(Keyword("simulate"), Number(time), phi, input @ _*) =>
-      Seq(Simulate(state.system, formula(phi), signal(input), time))
+    case Node(Keyword("simulate"), Number(time), phi, init, input @ _*) =>
+      Seq(Simulate(state.system, formula(phi), vector(init), signal(input), time))
 
     case Node(Keyword("robustness"), Number(time), phi, input @ _*) =>
       Seq(Robustness(formula(phi), Signal((0: Time, Vector())), signal(input), time))

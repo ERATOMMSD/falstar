@@ -108,8 +108,8 @@ object Main {
         val scope = new Scope(title, sys, res)
       }
 
-    case Simulate(sys, phi, us, t) =>
-      val tr = sys.sim(us, t)
+    case Simulate(sys, phi, i, us, t) =>
+      val tr = sys.sim(i, us, t)
       val rs = mtl.Robustness(phi, tr.us, tr.ys)
 
     case Robustness(phi, us, ys, t) =>

@@ -36,15 +36,11 @@ case class SimulinkSystem(
       eval("set_param('" + name + "'," + params.map { case (k, v) => k + "," + v }.mkString(", ") + ")")
     }
 
-    if (!vars.isEmpty) {
-      for ((x, a) <- vars)
-        eval(x + " = " + a)
-    }
+    for ((x, a) <- vars)
+      eval(x + " = " + a)
 
-    if (!load.isEmpty) {
-      for (file <- load)
-        eval("load('" + file + "')")
-    }
+    for (file <- load)
+      eval("load('" + file + "')")
 
     setup.stop()
     println(" done (" + setup.seconds + "s)")
@@ -52,14 +48,13 @@ case class SimulinkSystem(
     true
   }
 
-  def sim(tr: Trace, us: Signal, T: Time): Trace = {
-    sim(tr.us ++ us, T)
-  }
-
-  def sim(us: Signal, T: Time) = {
+  def sim(i: Input, us: Signal, T: Time) = {
     assert(initialized)
     // println("simulate " + name + " from " + 0 + " to " + T)
     // println("simulate " + name + " to " + T + " with inputs " + us /*.collapse*/ .mkString(" "))
+
+    for (k <- 0 until i.length)
+      eval(initports(k).name + " = " + i(k))
 
     val t__ = us map { case (t, u) => Array(t) }
     val u__ = us map { case (t, u) => u.data }

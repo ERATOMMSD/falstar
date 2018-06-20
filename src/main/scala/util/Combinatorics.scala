@@ -25,4 +25,8 @@ object Combinatorics {
   } else {
     Seq()
   }
+
+  def main(args: Array[String]) {
+    println(splits(0, 0, 0))
+  }
 }

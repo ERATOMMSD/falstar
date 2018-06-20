@@ -16,21 +16,24 @@ import util.Combinatorics
 import util.Proportional
 import util.Uniform
 
-class Bin(val level: Int, actions: Seq[(Input, Duration)]) {
-  val todo = ArrayBuffer[(Input, Duration)](actions: _*)
-  val done = ArrayBuffer[(Input, BinnedNode)]()
+class Bin[A](val level: Int, actions: Seq[A]) {
+  val todo = ArrayBuffer[A](actions: _*)
+  val done = ArrayBuffer[(Input, Node)]()
 
-  val fail = ArrayBuffer[(Input, BinnedNode)]()
-  val leaf = ArrayBuffer[(Input, BinnedNode)]()
+  val fail = ArrayBuffer[(Input, Node)]()
+  val leaf = ArrayBuffer[(Input, Node)]()
 
   def size = todo.size + done.size
 
   // the probability is proportional to the "good" edges,
   // i.e., if most actions are fruitless,
   // then the probability decreases as size goes tozero
-  def probability = Math.pow(2, -level) * size / actions.size
+  def probability = {
+    assert(!actions.isEmpty)
+    Math.pow(2, -level) * size / actions.size
+  }
 
-  def sample(e: Double): Either[(Input, Duration), (Input, BinnedNode)] = {
+  def sample(e: Double): Either[A, (Input, Node)] = {
     val k = 3 * e / (1 - e)
 
     val p1 = if (todo.isEmpty) 0 else k
@@ -49,31 +52,29 @@ class Bin(val level: Int, actions: Seq[(Input, Duration)]) {
   }
 }
 
-class BinnedNode(val time: Time, levels: Seq[Seq[(Input, Duration)]]) {
-  val bins = ArrayBuffer[Bin](init: _*)
-  //  var score: Score = Score.MaxValue
-  var result: Result = null
+trait Common[A] {
+  def levels: Seq[Seq[A]]
+
   var visited = 0
-
   var exhausted = false
-
   var local_score = Score.MaxValue
   var global_score = Score.MaxValue
 
-  def update(result: Result) = {
-    if (this.result == null || result.score < this.result.score) {
-      this.result = result
-      this.global_score = result.score
-    }
-  }
+  val bins = ArrayBuffer[Bin[A]](init: _*)
 
-  def init = levels.zipWithIndex.map {
-    case (actions, level) =>
+  def init = levels.zipWithIndex.collect {
+    case (actions, level) if !actions.isEmpty =>
       new Bin(level, actions)
   }
 
   def isEmpty = {
     bins forall (_.size == 0)
+  }
+
+  def update(result: Result) = {
+    if (result.score < global_score) {
+      global_score = result.score
+    }
   }
 
   def sample(e: Double) = {
@@ -83,21 +84,34 @@ class BinnedNode(val time: Time, levels: Seq[Seq[(Input, Duration)]]) {
   }
 }
 
+class Root(val levels: Seq[Seq[Input]]) extends Common[Input] {
+}
+
+class Node(val time: Time, val levels: Seq[Seq[(Input, Duration)]]) extends Common[(Input, Duration)] {
+}
+
 object Adaptive {
   trait Observer {
     def reset()
-    def update(root: BinnedNode)
+    def update(root: Node)
   }
 
   object Observer {
     object default extends Observer {
       def reset() {}
-      def update(root: BinnedNode) {}
+      def update(root: Node) {}
     }
   }
 
   var verbose: Boolean = false
   var observer: Observer = Observer.default
+
+  def level(n: Int, in: Region): Seq[Input] = {
+    for (ps <- Combinatorics.splits(0, in.dimensions, n)) yield {
+      val u = in.split(ps)
+      u
+    }
+  }
 
   def level(n: Int, dt: Duration, in: Region): Seq[(Input, Duration)] = {
     for (ps <- Combinatorics.splits(0, in.dimensions, n)) yield {
@@ -120,34 +134,61 @@ object Adaptive {
       "exploration ratio" -> exploration,
       "budget" -> budget)
 
-    def search(sys: System, phi: Formula, T: Time, sim: (Signal, Time) => Result): Result = {
+    def search(sys: System, phi: Formula, T: Time, sim: (Input, Signal, Time) => Result): Result = {
       Falsification.observer.reset(phi)
       Adaptive.observer.reset()
 
-      val in = sys.in
+      val i0 = sys.initial_region
+      val in = sys.input_region
+
+      val init_levels = controlpoints.zipWithIndex map {
+        case (_, i) => level(i, i0)
+      }
 
       val levels = controlpoints.zipWithIndex map {
         case (cp, i) => level(i, T / cp, in)
       }
 
-      def playout(us: Signal): Result = {
-        val res = sim(us, T)
+      def playout(i: Input, us: Signal): Result = {
+        val res = sim(i, us, T)
         res
       }
 
-      def sample(node: BinnedNode, us: Signal): Result = {
+      def init_sample(node: Root): Result = {
+        node.visited += 1
+
+        if (node.isEmpty) {
+          Result.empty
+        } else node.sample(exploration) match {
+          case (bin, Left(i)) =>
+            explore += 1
+            val child = new Node(0, levels)
+            val result = sample(child, i, Signal.empty)
+            bin.done += ((i, child))
+            node update result
+            result
+
+          case (bin, Right((i, child))) =>
+            exploit += 1
+            val result = sample(child, i, Signal.empty)
+            node update result
+            result
+        }
+      }
+
+      def sample(node: Node, i: Input, us: Signal): Result = {
         val t = node.time
         node.visited += 1
 
         if (node.isEmpty) {
-          node.result
+          Result.empty
         } else node.sample(exploration) match {
           case (bin, Left((u, dt))) if T <= t + dt =>
             explore += 1
 
-            val result = playout(us ++ Signal.point(t, u))
+            val result = playout(i, us ++ Signal.point(t, u))
             // Falsification.observer.update(result)
-            val dummy = new BinnedNode(-1, Seq())
+            val dummy = new Node(-1, Seq())
             dummy.local_score = result.score
             bin.leaf += ((u, dummy))
             result
@@ -156,8 +197,8 @@ object Adaptive {
             explore += 1
             //            print(bin.level + "@" + t + " ")
             // create new child node and a trace
-            val child = new BinnedNode(t + dt, levels)
-            val result = sample(child, us ++ Signal.point(t, u))
+            val child = new Node(t + dt, levels)
+            val result = sample(child, i, us ++ Signal.point(t, u))
             val Result(tr, rs) = result
 
             // check feasibility
@@ -170,7 +211,6 @@ object Adaptive {
               bin.done += ((u, child))
               child.local_score = upper
               child.global_score = rs.score
-              child.result = result
               if (verbose) println("good: " + lower + " ... " + upper + " at time " + child.time)
             } else {
               //                Falsification.observer.update(child.result)
@@ -184,26 +224,24 @@ object Adaptive {
 
           case (bin, Right((u, child))) =>
             exploit += 1
-            val result = sample(child, us ++ Signal.point(t, u))
+            val result = sample(child, i, us ++ Signal.point(t, u))
             node update result
             result
         }
       }
 
-      val root = new BinnedNode(0, levels)
-      root.result = Result.empty
+      val root = new Root(init_levels)
       var solved = false
+      var result = Result.empty
 
       for (i <- 0 until budget if !solved) {
-        sample(root, Signal.empty)
-        solved |= root.result.score < 0
+        result = init_sample(root)
+        solved |= result.score < 0
 
         print(".")
-        Adaptive.observer.update(root)
+        // Adaptive.observer.update(root)
       }
       println()
-
-      val result = root.result
 
       if (solved) {
         if (verbose) println("solved :)")

@@ -15,7 +15,7 @@ case class ContinuousSystem(
   dt: Duration)
   extends System {
 
-  def sim(us: Signal, T: Time): Trace = {
+  def sim(i: Input, us: Signal, T: Time): Trace = {
     sim(0, x0, us, T)
   }
 

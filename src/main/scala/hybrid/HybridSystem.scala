@@ -29,8 +29,12 @@ case class HybridSystem(
 
   val (m0, x0) = start
 
-  def sim(us: Signal, T: Time): Trace = {
+  def sim(i: Input, us: Signal, T: Time): Trace = {
     sim(0, x0, m0, us, T)
+  }
+
+  def sim(tr: Trace, us: Signal, T: Time): Trace = {
+    ??? // sim(tr.us ++ us, T)
   }
 
   def sim(t0: Time, x0: State, m0: String, us: Signal, T: Time): Trace = {
@@ -79,9 +83,5 @@ case class HybridSystem(
 
     val ys = xs.toArray[(Time, State)]
     Trace(us, ys)
-  }
-
-  def sim(tr: Trace, us: Signal, T: Time): Trace = {
-    sim(tr.us ++ us, T)
   }
 }
