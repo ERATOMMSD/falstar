@@ -30,29 +30,25 @@ case class HybridSystem(
   val (m0, x0) = start
 
   def sim(i: Input, us: Signal, T: Time): Trace = {
-    sim(0, x0, m0, us, T)
+    sim(0, x0, m0, i, us, T)
   }
 
-  def sim(tr: Trace, us: Signal, T: Time): Trace = {
-    ??? // sim(tr.us ++ us, T)
-  }
-
-  def sim(t0: Time, x0: State, m0: String, us: Signal, T: Time): Trace = {
+  def sim(t0: Time, x0: State, m0: String, i: Input, us: Signal, T: Time): Trace = {
     val hmin = 0.00001
     val hmax = dt
 
     var t = t0
     var x = x0
     var m = modes(m0)
-    var i = 0
+    var k = 0
     val n = us.length
     val xs = new ArrayBuffer[(Time, State)]()
 
     xs += ((t0, x0))
 
-    while (i < n && t < T) {
+    while (k < n && t < T) {
       var go = true
-      val (_, ui) = us(i)
+      val (_, ui) = us(k)
 
       // XXX: all mode switches are urgent!
       while (go) {
@@ -67,7 +63,7 @@ case class HybridSystem(
         }
       }
 
-      val (ti, _) = if (i + 1 < n) us(i + 1) else (T, us(n - 1))
+      val (ti, _) = if (k + 1 < n) us(k + 1) else (T, us(n - 1))
       // val dt = ti - t
 
       // val tx = Integrator.rk4(flow, t, dt, x, ui)
@@ -77,11 +73,11 @@ case class HybridSystem(
       t = tx._1
       x = tx._2
 
-      if (t >= ti) i += 1
+      if (t >= ti) k += 1
       // xs += tx
     }
 
     val ys = xs.toArray[(Time, State)]
-    Trace(us, ys)
+    Trace(i, us, ys)
   }
 }

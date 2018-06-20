@@ -58,9 +58,10 @@ object STaliro {
       println(sys.name + "_phi" + fi + "' = " + print(phi) + "';")
       fi += 1
 
+      val i = Vector.empty
       val us = Signal((0, Vector.zero(sys.inports.length)))
       val ys = Signal((0, Vector.zero(sys.outports.length)))
-      val tr = Trace(us, Signal.empty)
+      val tr = Trace(i, us, Signal.empty)
       val rs = Robustness(Array((0.0, 0.0)))
       val res = Result(tr, rs)
       val stat = Statistics.empty

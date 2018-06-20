@@ -65,9 +65,10 @@ object Breach {
     def search(sys: System, phi: Formula): (Result, Statistics) = {
       println(print(phi))
 
+      val i = Vector()
       val us = Signal((0, Vector.zero(sys.inports.length)))
       val ys = Signal((0, Vector.zero(sys.outports.length)))
-      val tr = Trace(us, Signal.empty)
+      val tr = Trace(i, us, Signal.empty)
       val rs = Robustness(Array((0.0, 0.0)))
       val res = Result(tr, rs)
       val stat = Statistics.empty
@@ -85,7 +86,7 @@ object Breach {
       "budget" -> budget)
 
     def search(sys: System, _phi: Formula): (Result, Statistics) = sys match {
-      case sys @ SimulinkSystem(path, name, _, _, _, params, vars, load) =>
+      case sys @ SimulinkSystem(path, name, initials, inputs, outputs, params, vars, load) =>
         val dt = 0.01
         val T = _phi.T
 
@@ -142,11 +143,12 @@ object Breach {
 
         val ts: Array[Double] = get("t__")
         val um: Array[Array[Double]] = get("u__")
+        val i = Vector()
         val uv = um map (Vector(_: _*))
         val us = ts zip uv
 
         // fake the result
-        val tr = Trace(us, Signal.empty)
+        val tr = Trace(i, us, Signal.empty)
         val rs = Robustness(Array((0.0, score)))
 
         val res = Result(tr, rs)

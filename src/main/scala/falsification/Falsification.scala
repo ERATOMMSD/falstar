@@ -10,6 +10,7 @@ import mtl.Robustness
 import hybrid.Rho
 import util.Probability
 import hybrid.Input
+import hybrid.Trace
 
 trait Falsification {
   def repeat(sys: System, phi: Formula, seed: Option[Long], n: Int): Table = {
@@ -46,11 +47,13 @@ trait Falsification {
     println()
 
     println("inputs")
-    val us = res.tr.us
+    val Trace(i, us, _) = res.tr
+    val i__ = i.data
     val t__ = us map { case (t, u) => Array(t) }
     val u__ = us map { case (t, u) => u.data }
     val U = u__.last
     val T = res.T
+    println("  i__ = [" + i__.mkString(", ") + "]")
     println("  t__ = [" + t__.map(_.mkString(" ")).mkString("; ") + "; " + T + "]")
     println("  u__ = [" + u__.map(_.mkString(" ")).mkString("; ") + "; " + U.mkString(" ") + "]")
 

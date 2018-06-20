@@ -94,7 +94,7 @@ case class SimulinkSystem(
 
     assert(Math.abs(ts.last - T) < 0.1, "inconcistent simulink stopping time " + ts.last + " expected " + T)
 
-    Trace(us, zs)
+    Trace(i, us, zs)
   }
 }
 
