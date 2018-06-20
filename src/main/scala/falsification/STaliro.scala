@@ -20,6 +20,7 @@ import mtl.True
 import mtl.Not
 import mtl.Implies
 import mtl.Proposition
+import hybrid.Config
 
 object STaliro {
   case class dummy(prefix: String) extends Falsification {
@@ -54,7 +55,7 @@ object STaliro {
       case Eventually(t0, t1, phi) => "(<>_[" + t0 + "," + t1 + "] " + print(phi) + ")"
     }
 
-    def search(sys: System, phi: Formula): (Result, Statistics) = {
+    def search(sys: System, cfg: Config, phi: Formula): (Result, Statistics) = {
       println(sys.name + "_phi" + fi + "' = " + print(phi) + "';")
       fi += 1
 

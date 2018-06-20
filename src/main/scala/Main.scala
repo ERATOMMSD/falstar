@@ -88,13 +88,13 @@ object Main {
   }
 
   def run(cmd: Command): Unit = cmd match {
-    case Falsify(search, sys, phi, seed, repeat, log) =>
+    case Falsify(search, sys, phi, cfg, seed, repeat, log) =>
       seed match {
         case None => Probability.setUniqueSeed()
         case Some(seed) => Probability.seed = seed
       }
 
-      val table = search.repeat(sys, phi, seed, repeat)
+      val table = search.repeat(sys, phi, cfg, seed, repeat)
       val res @ Result(tr, rs) = table.best
 
       for (name <- log) {

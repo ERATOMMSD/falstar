@@ -8,7 +8,8 @@ import linear.Integrator
 case class ContinuousSystem(
   name: String,
   x0: State,
-  inputs: Seq[(String, (Double, Double))],
+  params: Seq[String],
+  inputs: Seq[String],
   outputs: Seq[String],
   flow: Flow,
   dt: Duration)
@@ -60,10 +61,10 @@ object Flow {
 
 object ContinuousSystem {
   def linear(name: String, x0: State, A: Matrix, dt: Duration) = {
-    ContinuousSystem(name, x0, Seq(), Seq(), Flow.linear(A), dt)
+    ContinuousSystem(name, x0, Seq(), Seq(), Seq(), Flow.linear(A), dt)
   }
 
-  def linear(name: String, x0: State, inputs: Seq[(String, (Double, Double))], outputs: Seq[String], A: Matrix, B: Matrix, dt: Duration) = {
-    ContinuousSystem(name, x0, inputs, outputs, Flow.linear(A, B), dt)
+  def linear(name: String, x0: State, params: Seq[String], inputs: Seq[String], outputs: Seq[String], A: Matrix, B: Matrix, dt: Duration) = {
+    ContinuousSystem(name, x0, params, inputs, outputs, Flow.linear(A, B), dt)
   }
 }

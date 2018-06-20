@@ -18,13 +18,12 @@ case class Switch(from: String, to: String, enabled: Guard, jump: Transition) {
 case class HybridSystem(
   name: String,
   init: (String, State),
-  inputs: Seq[(String, (Double, Double))],
+  params: Seq[String],
+  inputs: Seq[String],
   outputs: Seq[String],
   readout: (String, State) => Vector,
   modes: Map[String, Mode],
-  dt: Duration)
-
-  extends System {
+  dt: Duration) extends System {
 
   val (m0, x0) = init
 

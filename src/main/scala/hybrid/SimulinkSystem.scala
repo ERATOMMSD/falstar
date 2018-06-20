@@ -11,10 +11,9 @@ import java.io.BufferedWriter
 
 case class SimulinkSystem(
   path: String, name: String,
-  inputs: Seq[(String, (Double, Double))],
+  params: Seq[String],
+  inputs: Seq[String],
   outputs: Seq[String],
-  params: Seq[(String, String)] = Nil,
-  vars: Seq[(String, String)] = Nil,
   load: Seq[String] = Nil)
   extends System {
 
@@ -31,19 +30,13 @@ case class SimulinkSystem(
     eval("addpath('" + path + "')")
     eval("load_system('" + name + "')")
 
-    if (!params.isEmpty) {
-      eval("set_param('" + name + "'," + params.map { case (k, v) => k + "," + v }.mkString(", ") + ")")
-    }
+    ??? // eval("set_param('" + name + "'," + params.map { case (k, v) => k + "," + v }.mkString(", ") + ")")
 
-    if (!vars.isEmpty) {
-      for ((x, a) <- vars)
-        eval(x + " = " + a)
-    }
+//      for ((x, a) <- vars)
+//        eval(x + " = " + a)
 
-    if (!load.isEmpty) {
       for (file <- load)
         eval("load('" + file + "')")
-    }
 
     setup.stop()
     println(" done (" + setup.seconds + "s)")

@@ -7,6 +7,7 @@ import hybrid.Region
 import hybrid.Signal
 import hybrid.Time
 import hybrid.Rho
+import hybrid.Config
 
 object UniformRandom {
   case class falsification(controlpoints: Int, budget: Int) extends Falsification with WithStatistics {
@@ -18,7 +19,7 @@ object UniformRandom {
       "controlpoints" -> controlpoints,
       "budget" -> budget)
 
-    def search(sys: System, phi: Formula, T: Time, sim: (Signal, Time) => Result): Result = {
+    def search(sys: System, cfg: Config,  phi: Formula, T: Time, sim: (Signal, Time) => Result): Result = {
       val C = 0
       val dt = T / controlpoints
 
@@ -29,7 +30,7 @@ object UniformRandom {
       Falsification.observer.reset(phi)
 
       for (k <- 1 to budget) {
-        val us = Signal.uniform(0, dt, T)(sys.in.sample)
+        val us = Signal.uniform(0, dt, T)(cfg.in.sample)
         val next = sim(us, T)
         print(".")
 

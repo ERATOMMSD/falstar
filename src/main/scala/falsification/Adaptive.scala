@@ -15,6 +15,7 @@ import mtl.Value
 import util.Combinatorics
 import util.Proportional
 import util.Uniform
+import hybrid.Config
 
 class Bin[A](val level: Int, actions: Seq[A]) {
   val todo = ArrayBuffer[A](actions: _*)
@@ -53,7 +54,7 @@ class Bin[A](val level: Int, actions: Seq[A]) {
 }
 
 class Node(val time: Time, val levels: Seq[Seq[(Input, Duration)]]) {
-    var visited = 0
+  var visited = 0
   var exhausted = false
   var local_score = Score.MaxValue
   var global_score = Score.MaxValue
@@ -126,11 +127,11 @@ object Adaptive {
       "exploration ratio" -> exploration,
       "budget" -> budget)
 
-    def search(sys: System, phi: Formula, T: Time, sim: (Signal, Time) => Result): Result = {
+    def search(sys: System, cfg: Config, phi: Formula, T: Time, sim: (Signal, Time) => Result): Result = {
       Falsification.observer.reset(phi)
       Adaptive.observer.reset()
 
-      val in = sys.in
+      val in = cfg.in
       val levels = controlpoints.zipWithIndex map {
         case (cp, i) => level(i, T / cp, in)
       }

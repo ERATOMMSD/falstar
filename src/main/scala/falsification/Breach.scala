@@ -28,6 +28,7 @@ import mtl.True
 import mtl.Transform
 import mtl.Not
 import mtl.Implies
+import hybrid.Config
 
 object Breach {
   def print(tm: Term): String = tm match {
@@ -62,7 +63,7 @@ object Breach {
     def identification = "Breach (print formulas only)"
     def params = Seq()
 
-    def search(sys: System, phi: Formula): (Result, Statistics) = {
+    def search(sys: System, cfg: Config, phi: Formula): (Result, Statistics) = {
       println(print(phi))
 
       val us = Signal((0, Vector.zero(sys.inports.length)))
@@ -84,12 +85,12 @@ object Breach {
       "solver" -> solver,
       "budget" -> budget)
 
-    def search(sys: System, _phi: Formula): (Result, Statistics) = sys match {
-      case sys @ SimulinkSystem(path, name, _, _, params, vars, load) =>
+    def search(sys: System, cfg: Config, _phi: Formula): (Result, Statistics) = sys match {
+      case sys @ SimulinkSystem(path, name, params, inputs, outputs, load) =>
         val dt = 0.01
         val T = _phi.T
 
-        val in = sys.in
+        val in = cfg.in
         val inports = sys.inports
 
         val phi = print(_phi)

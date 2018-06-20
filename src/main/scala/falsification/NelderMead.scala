@@ -8,6 +8,7 @@ import linear.Vector
 import mtl.Formula
 import mtl.Robustness
 import hybrid.Rho
+import hybrid.Config
 
 object NelderMead {
   case class falsification(controlpoints: Int, budget: Int) extends Falsification with WithStatistics {
@@ -19,9 +20,9 @@ object NelderMead {
       "controlpoints" -> controlpoints,
       "budget" -> budget)
 
-    def search(sys: System, phi: Formula, T: Time, sim: (Signal, Time) => Result): Result = {
+    def search(sys: System, cfg: Config, phi: Formula, T: Time, sim: (Signal, Time) => Result): Result = {
       val dt = T / controlpoints
-      val in = sys.in
+      val in = cfg.in
 
       val n = in.dimensions * controlpoints
 

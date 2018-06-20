@@ -9,9 +9,10 @@ import hybrid.Time
 import mtl.Robustness
 import hybrid.Rho
 import util.Probability
+import hybrid.Config
 
 trait Falsification {
-  def repeat(sys: System, phi: Formula, seed: Option[Long], n: Int): Table = {
+  def repeat(sys: System, cfg: Config, phi: Formula, seed: Option[Long], n: Int): Table = {
     import util.IntOps
 
     seed match {
@@ -22,7 +23,7 @@ trait Falsification {
     val data = (1 to n) map {
       i =>
         println("trial " + i + "/" + n)
-        apply(sys, phi)
+        apply(sys, cfg, phi)
     }
 
     val (best, _) = data.minBy(_._1.score)
@@ -34,14 +35,14 @@ trait Falsification {
     table
   }
 
-  def apply(sys: System, phi: Formula): (Result, Statistics) = {
+  def apply(sys: System, cfg: Config, phi: Formula): (Result, Statistics) = {
     println("property " + phi)
     println("algorithm " + identification)
     for ((name, value) <- this.params) {
       println("  " + name + ": " + value)
     }
 
-    val (res, stats) = search(sys, phi)
+    val (res, stats) = search(sys,cfg, phi)
     println()
 
     println("inputs")
@@ -72,13 +73,13 @@ trait Falsification {
 
   def identification: String
   def params: Seq[(String, Any)]
-  def search(sys: System, phi: Formula): (Result, Statistics)
+  def search(sys: System, cfg: Config, phi: Formula): (Result, Statistics)
 }
 
 trait WithStatistics {
   this: Falsification =>
 
-  def search(sys: System, phi: Formula): (Result, Statistics) = {
+  def search(sys: System, cfg: Config, phi: Formula): (Result, Statistics) = {
     var simulations = 0
     object simulation extends Timer
     object formula extends Timer
@@ -98,7 +99,7 @@ trait WithStatistics {
     }
 
     val res = total.during {
-      search(sys, phi, T, sim)
+      search(sys, cfg, phi, T, sim)
     }
 
     val stats = Statistics(simulations, total.seconds, 0)
@@ -106,7 +107,7 @@ trait WithStatistics {
     (res, stats)
   }
 
-  def search(sys: System, phi: Formula, T: Time, sim: (Signal, Time) => Result): Result
+  def search(sys: System, cfg: Config, phi: Formula, T: Time, sim: (Signal, Time) => Result): Result
 }
 
 object Falsification {
