@@ -51,10 +51,6 @@ case class SimulinkSystem(
     true
   }
 
-  def sim(tr: Trace, us: Signal, T: Time): Trace = {
-    sim(tr.us ++ us, T)
-  }
-
   def sim(us: Signal, T: Time) = {
     assert(initialized)
     // println("simulate " + name + " from " + 0 + " to " + T)

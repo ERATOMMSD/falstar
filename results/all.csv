@@ -1,0 +1,16 @@
+model,property,algorithm,control points,exploration ratio,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",adaptive,2 2 3 3 3 4,0.25,100,0,10,10,2,0,29,26,8,3,-17.980199361426514
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",adaptive,2 2 3 3 3 4,0.25,100,0,10,10,3,0,75,13,28,4,-10.20098067004583
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",adaptive,2 2 3 3 3 4,0.25,100,0,10,10,5,0,54,9,27,4,-5.24145448916066
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",adaptive,2 2 3 3 3 4,0.25,100,0,7,10,7,1,86,17,46,7,-0.5108737655039377
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",adaptive,2 2 3 3 3 4,0.25,100,0,10,10,2,0,40,6,17,2,-6.0439516000248545
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",adaptive,2 2 3 3 3 4,0.25,100,0,10,10,13,2,97,19,51,9,-1.5044496074318587
+
+model,property,algorithm,control points,exploration ratio,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",adaptive,2 2 3 3 3 4,0.25,100,0,10,10,1,0,16,30,9,4,-11.220951438219288
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",adaptive,2 2 3 3 3 4,0.25,100,0,10,10,2,0,84,13,31,4,-7.496731856419107
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",adaptive,2 2 3 3 3 4,0.25,100,0,9,10,2,0,29,4,18,2,-5.202173954350442
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",adaptive,2 2 3 3 3 4,0.25,100,0,7,10,21,3,81,12,49,7,-2.0667873250845616
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",adaptive,2 2 3 3 3 4,0.25,100,0,10,10,12,1,36,5,22,3,-2.2262107994370837
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",adaptive,2 2 3 3 3 4,0.25,100,0,8,10,25,4,90,14,48,7,-1.5044496074318587
+

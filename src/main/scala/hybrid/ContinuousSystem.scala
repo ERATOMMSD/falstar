@@ -18,12 +18,6 @@ case class ContinuousSystem(
     sim(0, x0, us, T)
   }
 
-  def sim(tr1: Trace, us: Signal, T: Time): Trace = {
-    val (t1, x1) = if (tr1.isEmpty) (0.0, x0) else tr1.ys.last
-    val tr2 = sim(t1, x1, us, T)
-    tr1 ++ tr2
-  }
-
   def sim(t0: Time, x0: State, us: Signal, T: Time): Trace = {
     val hmin = 0.001
     val hmax = dt

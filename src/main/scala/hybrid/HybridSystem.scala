@@ -79,8 +79,4 @@ case class HybridSystem(
     val ys = xs.toArray[(Time, State)]
     Trace(us, ys)
   }
-
-  def sim(tr: Trace, us: Signal, T: Time): Trace = {
-    sim(tr.us ++ us, T)
-  }
 }

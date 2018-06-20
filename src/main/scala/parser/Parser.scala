@@ -19,6 +19,7 @@ import mtl.◇
 import mtl.Transform
 import falsification.STaliro
 import falsification.LaTeX
+import falsification.UniformRandom
 
 sealed trait Command
 case object Quit extends Command
@@ -178,6 +179,10 @@ class Parser {
 
     case Node(Keyword("set-system"), Identifier(id)) =>
       state.system = state.systems(id)
+      Seq()
+
+    case Node(Keyword("set-solver"), Identifier("random"), Literal(controlpoints: Double), Literal(budget: Double)) =>
+      state.search = UniformRandom.falsification(controlpoints.toInt, budget.toInt)
       Seq()
 
     case Node(Keyword("set-solver"), Identifier("adaptive"), Node(controlpoints @ _*), Literal(exploration: Double), Literal(budget: Double)) =>

@@ -47,7 +47,6 @@ package object hybrid {
     val outports = OutPorts(outputs: _*)
 
     def sim(us: Signal, T: Time): Trace
-    def sim(tr: Trace, us: Signal, T: Time): Trace
   }
 
   object Score {
