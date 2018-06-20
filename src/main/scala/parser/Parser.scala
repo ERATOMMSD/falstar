@@ -61,7 +61,7 @@ class Parser {
     else name
   }
 
-  def defineSystem(name: String, system: Syntax, initials: Seq[Syntax], inputs: Seq[Syntax], outputs: Seq[Syntax], options: Seq[Syntax]) = {
+  def defineSystem(name: String, system: Syntax, initials: Seq[Syntax], inputs: Seq[Syntax], outputs: Seq[Syntax], interface: Seq[Syntax]) = {
     val inits = initials map {
       case Node(Identifier(name), Number(min), Number(max)) =>
         name -> (min, max)
@@ -77,17 +77,17 @@ class Parser {
         name
     }
 
-    var params = Seq[(String, String)]()
-    var vars = Seq[(String, String)]()
+    var options = Seq[(String, String)]()
+    var constants = Seq[(String, String)]()
     var load = Seq[String]()
 
-    options map {
+    interface map {
       case Node(Keyword("params"), ps @ _*) =>
-        params ++= ps map {
+        options ++= ps map {
           case Node(Identifier(key), Literal(value)) => (key, value.toString)
         }
       case Node(Keyword("vars"), vs @ _*) =>
-        vars ++= vs map {
+        constants ++= vs map {
           case Node(Identifier(name), Literal(value)) => (name, value.toString)
         }
       case Node(Keyword("load"), ms @ _*) =>
@@ -101,7 +101,7 @@ class Parser {
         val file = new File(name)
         val path = file.getParent
         val model = splitFilename(file.getName)
-        SimulinkSystem(path, model, inits, ins, outs, params, vars, load)
+        SimulinkSystem(path, model, inits, ins, outs, options, constants, load)
     }
 
     assert(!(state.systems contains name))

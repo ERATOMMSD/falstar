@@ -18,7 +18,7 @@ case class Switch(from: String, to: String, enabled: Guard, jump: Transition) {
 case class HybridSystem(
   name: String,
   start: (String, State),
-  initials: Seq[(String, (Double, Double))],
+  parameters: Seq[(String, (Double, Double))],
   inputs: Seq[(String, (Double, Double))],
   outputs: Seq[String],
   readout: (String, State) => Vector,

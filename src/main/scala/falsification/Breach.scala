@@ -86,7 +86,7 @@ object Breach {
       "budget" -> budget)
 
     def search(sys: System, _phi: Formula): (Result, Statistics) = sys match {
-      case sys @ SimulinkSystem(path, name, initials, inputs, outputs, params, vars, load) =>
+      case sys @ SimulinkSystem(path, name, parameters, inputs, outputs, options, constants, load) =>
         val dt = 0.01
         val T = _phi.T
 

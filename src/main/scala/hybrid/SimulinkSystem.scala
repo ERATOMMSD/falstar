@@ -11,11 +11,11 @@ import java.io.BufferedWriter
 
 case class SimulinkSystem(
   path: String, name: String,
-  initials: Seq[(String, (Double, Double))],
+  parameters: Seq[(String, (Double, Double))],
   inputs: Seq[(String, (Double, Double))],
   outputs: Seq[String],
-  params: Seq[(String, String)] = Nil,
-  vars: Seq[(String, String)] = Nil,
+  options: Seq[(String, String)] = Nil,
+  constants: Seq[(String, String)] = Nil,
   load: Seq[String] = Nil)
   extends System {
 
@@ -32,11 +32,11 @@ case class SimulinkSystem(
     eval("addpath('" + path + "')")
     eval("load_system('" + name + "')")
 
-    if (!params.isEmpty) {
-      eval("set_param('" + name + "'," + params.map { case (k, v) => k + "," + v }.mkString(", ") + ")")
+    if (!options.isEmpty) {
+      eval("set_param('" + name + "'," + options.map { case (k, v) => k + "," + v }.mkString(", ") + ")")
     }
 
-    for ((x, a) <- vars)
+    for ((x, a) <- constants)
       eval(x + " = " + a)
 
     for (file <- load)

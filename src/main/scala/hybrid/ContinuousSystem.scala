@@ -8,7 +8,7 @@ import linear.Integrator
 case class ContinuousSystem(
   name: String,
   x0: State,
-  initials: Seq[(String, (Double, Double))],
+  parameters: Seq[(String, (Double, Double))],
   inputs: Seq[(String, (Double, Double))],
   outputs: Seq[String],
   flow: Flow,

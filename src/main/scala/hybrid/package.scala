@@ -31,33 +31,6 @@ package object hybrid {
     val skip = (t: Time, x: State, u: Input) => x
   }
 
-  trait System {
-    def name: String
-    def initials: Seq[(String, (Double, Double))]
-    def inputs: Seq[(String, (Double, Double))]
-    def outputs: Seq[String]
-
-    val initial_region = {
-      val (left, right) = initials.map(_._2).unzip
-      Region(
-        Vector(left: _*),
-        Vector(right: _*))
-    }
-
-    val input_region = {
-      val (left, right) = inputs.map(_._2).unzip
-      Region(
-        Vector(left: _*),
-        Vector(right: _*))
-    }
-
-    val initports = InPorts(initials map (_._1): _*)
-    val inports = InPorts(inputs map (_._1): _*)
-    val outports = OutPorts(outputs: _*)
-
-    def sim(i: Input, us: Signal, T: Time): Trace
-  }
-
   object Score {
     val MinValue: Score = Double.NegativeInfinity
     val MaxValue: Score = Double.PositiveInfinity
