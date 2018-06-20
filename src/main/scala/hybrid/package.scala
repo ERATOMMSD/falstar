@@ -26,13 +26,14 @@ package object hybrid {
   type Rho = Trace => Robustness
 
   type Traces = Seq[Trace]
-  
+
   object Transition {
     val skip = (t: Time, x: State, u: Input) => x
   }
 
   trait System {
     def name: String
+    def initials: Seq[(String, (Double, Double))]
     def inputs: Seq[(String, (Double, Double))]
     def outputs: Seq[String]
 
@@ -43,6 +44,7 @@ package object hybrid {
         Vector(right: _*))
     }
 
+    val initports = InPorts(initials map (_._1): _*)
     val inports = InPorts(inputs map (_._1): _*)
     val outports = OutPorts(outputs: _*)
 

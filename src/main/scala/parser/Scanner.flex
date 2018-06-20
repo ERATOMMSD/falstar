@@ -33,7 +33,7 @@ AlphaNum = {Alpha}|{Num}
 
 Operators = "<" | ">" | "<=" | ">=" | "+" | "-" | "*" | "/" | abs
 Connectives = "!" | "=>" | "||" | "&&" | "==" | "!=" | true | false | not | implies | and | or | always | eventually | in
-Toplevel = include | define-system | define | push | pop | simulink | inputs | outputs | params | vars | load | set-solver | set-system | set-repeat | set-seed | clear-seed |set-log | clear-log | falsify | simulate | robustness | quit
+Toplevel = include | define-system | define | push | pop | simulink | initial | inputs | outputs | params | vars | load | set-solver | set-system | set-repeat | set-seed | clear-seed |set-log | clear-log | falsify | simulate | robustness | quit
 Keyword = "(" | ")" | {Operators} | {Connectives} | {Toplevel}
 
 Number  = [-]?{Num}+(\.{Num}+)?

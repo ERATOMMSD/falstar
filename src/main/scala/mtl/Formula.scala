@@ -79,25 +79,26 @@ case object True extends Constant
 case object False extends Constant
 
 case class Less(left: Term, right: Term) extends Constraint {
-  override def toString = left + " < " + right
+  override def toString = "(" + left + " < " + right + ")"
 }
 
 case class LessEqual(left: Term, right: Term) extends Constraint {
-  override def toString = left + " <= " + right
+  override def toString = "(" + left + " <= " + right + ")"
 }
 
 case class Equal(left: Term, right: Term) extends Constraint {
-  override def toString = left + " == " + right
+  override def toString = "(" + left + " == " + right + ")"
 }
 
 case class NotEqual(left: Term, right: Term) extends Constraint {
-  override def toString = left + " != " + right
+  override def toString = "(" + left + " != " + right + ")"
 }
 
 case class Not(phi: Formula) extends Formula {
   def T = phi.T
   def dim = phi.dim
   def times = phi.times
+  override def toString = "!" + phi
 }
 
 case class And(left: Formula, right: Formula) extends Connective {

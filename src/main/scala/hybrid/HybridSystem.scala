@@ -17,7 +17,8 @@ case class Switch(from: String, to: String, enabled: Guard, jump: Transition) {
 
 case class HybridSystem(
   name: String,
-  init: (String, State),
+  start: (String, State),
+  initials: Seq[(String, (Double, Double))],
   inputs: Seq[(String, (Double, Double))],
   outputs: Seq[String],
   readout: (String, State) => Vector,
@@ -26,7 +27,7 @@ case class HybridSystem(
 
   extends System {
 
-  val (m0, x0) = init
+  val (m0, x0) = start
 
   def sim(us: Signal, T: Time): Trace = {
     sim(0, x0, m0, us, T)

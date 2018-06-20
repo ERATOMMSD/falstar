@@ -11,6 +11,7 @@ import java.io.BufferedWriter
 
 case class SimulinkSystem(
   path: String, name: String,
+  initials: Seq[(String, (Double, Double))],
   inputs: Seq[(String, (Double, Double))],
   outputs: Seq[String],
   params: Seq[(String, String)] = Nil,

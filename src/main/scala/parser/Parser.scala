@@ -19,6 +19,7 @@ import mtl.◇
 import mtl.Transform
 import falsification.STaliro
 import falsification.LaTeX
+import falsification.UniformRandom
 
 sealed trait Command
 case object Quit extends Command
@@ -59,7 +60,12 @@ class Parser {
     else name
   }
 
-  def defineSystem(name: String, system: Syntax, inputs: Seq[Syntax], outputs: Seq[Syntax], options: Seq[Syntax]) = {
+  def defineSystem(name: String, system: Syntax, initials: Seq[Syntax], inputs: Seq[Syntax], outputs: Seq[Syntax], options: Seq[Syntax]) = {
+    val inits = initials map {
+      case Node(Identifier(name), Number(min), Number(max)) =>
+        name -> (min, max)
+    }
+
     val ins = inputs map {
       case Node(Identifier(name), Number(min), Number(max)) =>
         name -> (min, max)
@@ -94,7 +100,7 @@ class Parser {
         val file = new File(name)
         val path = file.getParent
         val model = splitFilename(file.getName)
-        SimulinkSystem(path, model, ins, outs, params, vars, load)
+        SimulinkSystem(path, model, inits, ins, outs, params, vars, load)
     }
 
     assert(!(state.systems contains name))
@@ -173,11 +179,19 @@ class Parser {
       Seq()
 
     case Node(Keyword("define-system"), Identifier(name), system, Node(Keyword("inputs"), inputs @ _*), Node(Keyword("outputs"), outputs @ _*), options @ _*) =>
-      defineSystem(name, system, inputs, outputs, options)
+      defineSystem(name, system, Seq(), inputs, outputs, options)
+      Seq()
+
+    case Node(Keyword("define-system"), Identifier(name), system, Node(Keyword("initials"), initials @ _*), Node(Keyword("inputs"), inputs @ _*), Node(Keyword("outputs"), outputs @ _*), options @ _*) =>
+      defineSystem(name, system, initials, inputs, outputs, options)
       Seq()
 
     case Node(Keyword("set-system"), Identifier(id)) =>
       state.system = state.systems(id)
+      Seq()
+
+    case Node(Keyword("set-solver"), Identifier("random"), Literal(controlpoints: Double), Literal(budget: Double)) =>
+      state.search = UniformRandom.falsification(controlpoints.toInt, budget.toInt)
       Seq()
 
     case Node(Keyword("set-solver"), Identifier("adaptive"), Node(controlpoints @ _*), Literal(exploration: Double), Literal(budget: Double)) =>

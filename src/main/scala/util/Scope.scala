@@ -32,6 +32,7 @@ object Scope {
     val sys = ContinuousSystem(
       "simple",
       Vector(0),
+      Seq(),
       Seq("u" -> (-1.0, 1.0)),
       Seq("y"),
       (t: Time, x: State, u: Input) => u,
