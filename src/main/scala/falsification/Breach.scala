@@ -29,6 +29,7 @@ import mtl.Transform
 import mtl.Not
 import mtl.Implies
 import hybrid.Config
+import util.Probability
 
 object Breach {
   def print(tm: Term): String = tm match {
@@ -122,8 +123,9 @@ object Breach {
         eval("solver = '" + solver + "'")
         eval("stages = " + controlpoints)
         eval("samples = " + budget / controlpoints)
+        eval("seed = " + Probability.seed)
 
-        eval("[score, sims, time, t__, u__] = Breach(model, inputs, phi, T, solver, stages, samples)")
+        eval("[score, sims, time, t__, u__] = Breach(model, inputs, phi, T, solver, stages, samples, seed)")
 
         val score: Double = get("score")
         val sims: Double = get("sims")
