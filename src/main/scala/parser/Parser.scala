@@ -26,6 +26,7 @@ import hybrid.PiecewiseConstant
 import hybrid.Constant
 
 sealed trait Command
+case object Flush extends Command
 case object Quit extends Command
 case class Falsify(search: Falsification, sys: System, cfg: Config, phi: Formula, seed: Option[Long], repeat: Int, log: Option[String]) extends Command
 case class Simulate(sys: System, phi: Formula, us: Signal, T: Time) extends Command
@@ -61,7 +62,7 @@ class Parser {
 
   def identifiers(nodes: Seq[Syntax]) = {
     nodes map {
-      case Node(Identifier(name)) =>
+      case Identifier(name) =>
         name
     }
   }
@@ -78,17 +79,17 @@ class Parser {
     var options = cfg.options
 
     _config map {
-      case Node(Identifier("constant"), Literal(name: String), Number(value)) if sys.params contains name =>
+      case Node(Keyword("constant"), Identifier(name), Number(value)) if sys.params contains name =>
         params = params + (name -> Value(value))
-      case Node(Identifier("constant"), Literal(name: String), Number(value)) if sys.inputs contains name =>
+      case Node(Keyword("constant"), Identifier(name), Number(value)) if sys.inputs contains name =>
         inputs = inputs + (name -> Value(value))
-      case Node(Identifier("constant"), Literal(name: String), Number(min), Number(max)) if sys.params contains name =>
+      case Node(Keyword("constant"), Identifier(name), Number(min), Number(max)) if sys.params contains name =>
         params = params + (name -> Constant(min, max))
-      case Node(Identifier("constant"), Literal(name: String), Number(min), Number(max)) if sys.inputs contains name =>
+      case Node(Keyword("constant"), Identifier(name), Number(min), Number(max)) if sys.inputs contains name =>
         inputs = inputs + (name -> Constant(min, max))
-      case Node(Identifier("piecewise-constant"), Literal(name: String), Number(min), Number(max)) if sys.inputs contains name =>
+      case Node(Keyword("piecewise-constant"), Identifier(name), Number(min), Number(max)) if sys.inputs contains name =>
         inputs = inputs + (name -> PiecewiseConstant(min, max))
-      case Node(Identifier("piecewise-constant"), Literal(name: String), Literal(value)) =>
+      case Node(Identifier(name), Literal(value)) =>
         options = options + (name -> value)
     }
 
@@ -101,11 +102,17 @@ class Parser {
     val outputs = identifiers(_outputs)
 
     val sys = system match {
+      case Node(Keyword("simulink"), Literal(name: String)) =>
+        val file = new File(name)
+        val path = file.getParent
+        val model = splitFilename(file.getName)
+        SimulinkSystem(path, model, params, inputs, outputs, Seq())
+        
       case Node(Keyword("simulink"), Literal(name: String), Literal(load: String)) =>
         val file = new File(name)
         val path = file.getParent
         val model = splitFilename(file.getName)
-        SimulinkSystem(path, model, params, ???, outputs, Seq(load))
+        SimulinkSystem(path, model, params, inputs, outputs, Seq(load))
     }
 
     val cfg = configureSystem(sys, Config.empty, _config)
@@ -252,6 +259,9 @@ class Parser {
       state.log = None
       Seq()
 
+    case Node(Keyword("flush-log")) =>
+      Seq(Flush)
+      
     case Node(Keyword("quit")) =>
       Seq(Quit)
 

@@ -22,7 +22,7 @@ object NelderMead {
 
     def search(sys: System, cfg: Config, phi: Formula, T: Time, sim: (Signal, Time) => Result): Result = {
       val dt = T / controlpoints
-      val in = cfg.in
+      val in = cfg.in(sys.inputs)
 
       val n = in.dimensions * controlpoints
 

@@ -27,6 +27,10 @@ object Probability {
     uniquifier *= 181783497276652981L
     seed = uniquifier ^ System.nanoTime()
   }
+
+  def setNextDeterministicSeed() = {
+    seed = Random.nextLong
+  }
 }
 
 object Uniform {

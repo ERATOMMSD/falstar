@@ -18,6 +18,7 @@ import parser.Simulate
 import parser.parse
 import util.Probability
 import util.Scope
+import parser.Flush
 
 object Main {
   object quit extends Breaks
@@ -115,6 +116,10 @@ object Main {
     case Robustness(phi, us, ys, t) =>
       val rs = mtl.Robustness(phi, us, ys)
 
+    case Flush =>
+      writeall(results)
+      results.clear()
+
     case Quit =>
       quit.break
   }
@@ -126,6 +131,18 @@ object Main {
       for (cmd <- commands) {
         run(cmd)
       }
+    }
+  }
+
+  def writeall(results: Iterable[(String, mutable.Buffer[Table])]) {
+    for ((name, data) <- results) {
+      safe { write(name, data) }
+    }
+  }
+
+  def runall(files: Iterable[String]) = {
+    for (file <- files) {
+      safe { run(file) }
     }
   }
 
@@ -182,13 +199,8 @@ object Main {
           files += line
       }
 
-      for (file <- files) {
-        safe { run(file) }
-      }
-
-      for ((name, data) <- results) {
-        safe { write(name, data) }
-      }
+      runall(files)
+      writeall(results)
     }
 
     println("bye")

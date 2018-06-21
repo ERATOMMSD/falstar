@@ -131,7 +131,7 @@ object Adaptive {
       Falsification.observer.reset(phi)
       Adaptive.observer.reset()
 
-      val in = cfg.in
+      val in = cfg.in(sys.inputs)
       val levels = controlpoints.zipWithIndex map {
         case (cp, i) => level(i, T / cp, in)
       }

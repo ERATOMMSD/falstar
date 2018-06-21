@@ -75,7 +75,6 @@ object Breach {
       val stat = Statistics.empty
       (res, stat)
     }
-
   }
 
   case class falsification(controlpoints: Int, solver: String, budget: Int) extends Falsification {
@@ -91,7 +90,7 @@ object Breach {
         val dt = 0.01
         val T = _phi.T
 
-        val in = cfg.in
+        val in = cfg.in(sys.inputs)
         val inports = sys.inports
 
         val phi = print(_phi)
@@ -102,6 +101,7 @@ object Breach {
         // set params and variables
         assert(sys.initialized)
 
+        eval("InitBreach")
         eval("addpath 'src/main/matlab'")
 
         eval("model.name = '" + name + "'")
@@ -124,6 +124,7 @@ object Breach {
         eval("stages = " + controlpoints)
         eval("samples = " + budget / controlpoints)
         eval("seed = " + Probability.seed)
+        Probability.setNextDeterministicSeed()
 
         eval("[score, sims, time, t__, u__] = Breach(model, inputs, phi, T, solver, stages, samples, seed)")
 

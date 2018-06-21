@@ -13,8 +13,9 @@ case class Constant(min: Double, max: Double) extends InputType { def range = (m
 case class PiecewiseConstant(min: Double, max: Double) extends InputType { def range = (min, max) }
 
 case class Config(params: Map[String, InputType], inputs: Map[String, InputType], options: Map[String, Any]) {
-  val in = {
-    val (left, right) = inputs.map(_._2.range).toSeq.unzip
+  def in(names: Seq[String]) = {
+    val ranges = names map { name => inputs(name).range }
+    val (left, right) = ranges.unzip
     Region(
       Vector(left: _*),
       Vector(right: _*))

@@ -11,17 +11,18 @@ import hybrid.Config
 
 object UniformRandom {
   case class falsification(controlpoints: Int, budget: Int) extends Falsification with WithStatistics {
-    override def productPrefix = "Falsification.random"
+    override def productPrefix = "UniformRandom.falsification"
 
-    def identification = "UR"
+    def identification = "uniform random"
 
     val params = Seq(
       "controlpoints" -> controlpoints,
       "budget" -> budget)
 
-    def search(sys: System, cfg: Config,  phi: Formula, T: Time, sim: (Signal, Time) => Result): Result = {
+    def search(sys: System, cfg: Config, phi: Formula, T: Time, sim: (Signal, Time) => Result): Result = {
       val C = 0
       val dt = T / controlpoints
+      val in = cfg.in(sys.inputs)
 
       print("falsification with " + budget + " random samples ")
 
@@ -30,7 +31,7 @@ object UniformRandom {
       Falsification.observer.reset(phi)
 
       for (k <- 1 to budget) {
-        val us = Signal.uniform(0, dt, T)(cfg.in.sample)
+        val us = Signal(controlpoints, i => (dt * i, in.sample))
         val next = sim(us, T)
         print(".")
 
@@ -38,6 +39,8 @@ object UniformRandom {
 
         if (best == null) best = next
         else if (next.score <= best.score) best = next
+        
+        if(best.score < 0) return best
       }
 
       best
