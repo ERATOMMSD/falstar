@@ -10,5 +10,5 @@ if [ -n "$MATLABROOT" ]; then
     ln -s $MATLABROOT/java/jar/util.jar lib
     ln -s $MATLABROOT/bin/$ARCH lib
 else
-    echo "./link <MATLABROOT>"
+    echo "./link <MATLABROOT> <ARCH>"
 fi
