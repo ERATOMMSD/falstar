@@ -181,7 +181,7 @@ object Main {
     }
 
     val pre = List()
-    val post = List("src/test/configuration/all.cfg")
+    val post = List("src/test/configuration/paper.cfg")
     val rest = setup(pre ++ args ++ post)
 
     var files = Buffer[String]()

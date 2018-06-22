@@ -16,7 +16,7 @@ object UniformRandom {
     def identification = "uniform random"
 
     val params = Seq(
-      "controlpoints" -> controlpoints,
+      "control points" -> controlpoints,
       "budget" -> budget)
 
     def search(sys: System, cfg: Config, phi: Formula, T: Time, sim: (Signal, Time) => Result): Result = {

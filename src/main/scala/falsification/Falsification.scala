@@ -12,13 +12,15 @@ import util.Probability
 import hybrid.Config
 
 trait Falsification {
-  def repeat(sys: System, cfg: Config, phi: Formula, seed: Option[Long], n: Int): Table = {
+  def repeat(sys: System, cfg: Config, phi: Formula, _seed: Option[Long], n: Int): Table = {
     import util.IntOps
 
-    seed match {
+    _seed match {
       case None => Probability.setUniqueSeed()
       case Some(seed) => Probability.seed = seed
     }
+    
+    val seed = Probability.seed
 
     val data = (1 to n) map {
       i =>
@@ -30,7 +32,7 @@ trait Falsification {
     val (good, bad) = data.partition(_._1.isFalsified)
 
     val (_, stats) = good.unzip
-    val table = Table(sys, phi, this, Probability.seed, good.size, n, Statistics.min(stats), Statistics.max(stats), Statistics.avg(stats), best)
+    val table = Table(sys, phi, this, seed, good.size, n, Statistics.min(stats), Statistics.max(stats), Statistics.avg(stats), best)
 
     table
   }
