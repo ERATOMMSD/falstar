@@ -19,10 +19,16 @@ import mtl.◇
 import mtl.Transform
 import falsification.STaliro
 import falsification.LaTeX
+import falsification.UniformRandom
+import hybrid.Config
+import hybrid.Value
+import hybrid.PiecewiseConstant
+import hybrid.Constant
 
 sealed trait Command
+case object Flush extends Command
 case object Quit extends Command
-case class Falsify(search: Falsification, sys: System, phi: Formula, seed: Option[Long], repeat: Int, log: Option[String]) extends Command
+case class Falsify(search: Falsification, sys: System, cfg: Config, phi: Formula, seed: Option[Long], repeat: Int, log: Option[String]) extends Command
 case class Simulate(sys: System, phi: Formula, us: Signal, T: Time) extends Command
 case class Robustness(phi: Formula, us: Signal, ys: Signal, T: Time) extends Command
 
@@ -30,8 +36,9 @@ class Parser {
   case class State(
     var search: Falsification,
     var system: System,
+    var config: Config,
     var defines: Map[String, Syntax],
-    var systems: Map[String, System],
+    var systems: Map[String, (System, Config)],
 
     // for experiments
     var seed: Option[Long],
@@ -39,7 +46,7 @@ class Parser {
     var log: Option[String])
 
   object State {
-    def empty = State(null, null, Map(), Map(), None, 1, None)
+    def empty = State(null, null, null, Map(), Map(), None, 1, None)
   }
 
   var stack = List(State.empty)
@@ -53,52 +60,65 @@ class Parser {
     }
   }
 
+  def identifiers(nodes: Seq[Syntax]) = {
+    nodes map {
+      case Identifier(name) =>
+        name
+    }
+  }
+
   def splitFilename(name: String) = {
     val dot = name.lastIndexOf('.')
     if (dot > 0) name.substring(0, dot)
     else name
   }
 
-  def defineSystem(name: String, system: Syntax, inputs: Seq[Syntax], outputs: Seq[Syntax], options: Seq[Syntax]) = {
-    val ins = inputs map {
-      case Node(Identifier(name), Number(min), Number(max)) =>
-        name -> (min, max)
+  def configureSystem(sys: System, cfg: Config, _config: Seq[Syntax]) = {
+    var params = cfg.params
+    var inputs = cfg.inputs
+    var options = cfg.options
+
+    _config map {
+      case Node(Keyword("constant"), Identifier(name), Number(value)) if sys.params contains name =>
+        params = params + (name -> Value(value))
+      case Node(Keyword("constant"), Identifier(name), Number(value)) if sys.inputs contains name =>
+        inputs = inputs + (name -> Value(value))
+      case Node(Keyword("constant"), Identifier(name), Number(min), Number(max)) if sys.params contains name =>
+        params = params + (name -> Constant(min, max))
+      case Node(Keyword("constant"), Identifier(name), Number(min), Number(max)) if sys.inputs contains name =>
+        inputs = inputs + (name -> Constant(min, max))
+      case Node(Keyword("piecewise-constant"), Identifier(name), Number(min), Number(max)) if sys.inputs contains name =>
+        inputs = inputs + (name -> PiecewiseConstant(min, max))
+      case Node(Identifier(name), Literal(value)) =>
+        options = options + (name -> value)
     }
 
-    val outs = outputs map {
-      case Node(Identifier(name)) =>
-        name
-    }
+    Config(params, inputs, options)
+  }
 
-    var params = Seq[(String, String)]()
-    var vars = Seq[(String, String)]()
-    var load = Seq[String]()
-
-    options map {
-      case Node(Keyword("params"), ps @ _*) =>
-        params ++= ps map {
-          case Node(Identifier(key), Literal(value)) => (key, value.toString)
-        }
-      case Node(Keyword("vars"), vs @ _*) =>
-        vars ++= vs map {
-          case Node(Identifier(name), Literal(value)) => (name, value.toString)
-        }
-      case Node(Keyword("load"), ms @ _*) =>
-        load ++= ms map {
-          case Literal(file: String) => file
-        }
-    }
+  def defineSystem(name: String, system: Syntax, _params: Seq[Syntax], _inputs: Seq[Syntax], _outputs: Seq[Syntax], _config: Seq[Syntax]) = {
+    val params = identifiers(_params)
+    val inputs = identifiers(_inputs)
+    val outputs = identifiers(_outputs)
 
     val sys = system match {
       case Node(Keyword("simulink"), Literal(name: String)) =>
         val file = new File(name)
         val path = file.getParent
         val model = splitFilename(file.getName)
-        SimulinkSystem(path, model, ins, outs, params, vars, load)
+        SimulinkSystem(path, model, params, inputs, outputs, Seq())
+        
+      case Node(Keyword("simulink"), Literal(name: String), Literal(load: String)) =>
+        val file = new File(name)
+        val path = file.getParent
+        val model = splitFilename(file.getName)
+        SimulinkSystem(path, model, params, inputs, outputs, Seq(load))
     }
 
+    val cfg = configureSystem(sys, Config.empty, _config)
+
     assert(!(state.systems contains name))
-    state.systems += name -> sys
+    state.systems += name -> (sys, cfg)
   }
 
   def term(ports: Map[String, Port], tm: Syntax): Term = tm match {
@@ -172,12 +192,18 @@ class Parser {
       state.defines += name -> syntax
       Seq()
 
-    case Node(Keyword("define-system"), Identifier(name), system, Node(Keyword("inputs"), inputs @ _*), Node(Keyword("outputs"), outputs @ _*), options @ _*) =>
-      defineSystem(name, system, inputs, outputs, options)
+    case Node(Keyword("define-system"), Identifier(name), system, Node(Keyword("parameters"), params @ _*), Node(Keyword("inputs"), inputs @ _*), Node(Keyword("outputs"), outputs @ _*), config @ _*) =>
+      defineSystem(name, system, params, inputs, outputs, config)
       Seq()
 
-    case Node(Keyword("set-system"), Identifier(id)) =>
-      state.system = state.systems(id)
+    case Node(Keyword("select-system"), Identifier(id), _cfg @ _*) =>
+      val (sys, cfg) = state.systems(id)
+      state.system = sys
+      state.config = configureSystem(sys, cfg, _cfg)
+      Seq()
+
+    case Node(Keyword("set-solver"), Identifier("random"), Literal(controlpoints: Double), Literal(budget: Double)) =>
+      state.search = UniformRandom.falsification(controlpoints.toInt, budget.toInt)
       Seq()
 
     case Node(Keyword("set-solver"), Identifier("adaptive"), Node(controlpoints @ _*), Literal(exploration: Double), Literal(budget: Double)) =>
@@ -205,7 +231,7 @@ class Parser {
       Seq()
 
     case Node(Keyword("falsify"), phis @ _*) =>
-      phis map { phi => Falsify(state.search, state.system, formula(phi), state.seed, state.repeat, state.log) }
+      phis map { phi => Falsify(state.search, state.system, state.config, formula(phi), state.seed, state.repeat, state.log) }
 
     case Node(Keyword("simulate"), Number(time), phi, input @ _*) =>
       Seq(Simulate(state.system, formula(phi), signal(input), time))
@@ -233,6 +259,9 @@ class Parser {
       state.log = None
       Seq()
 
+    case Node(Keyword("flush-log")) =>
+      Seq(Flush)
+      
     case Node(Keyword("quit")) =>
       Seq(Quit)
 

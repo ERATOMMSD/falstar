@@ -1,2 +1,2 @@
 #!/bin/sh
-java -jar lib/jflex-1.7.0-SNAPSHOT.jar $@
+java -jar lib/jflex-1.6.1.jar $@

@@ -1,5 +1,6 @@
 package falsification
 
+import hybrid.Config
 import hybrid.Signal
 import hybrid.System
 import hybrid.Trace
@@ -60,7 +61,7 @@ object LaTeX {
     def identification = "LaTeX (print formulas only)"
     def params = Seq()
 
-    def search(sys: System, phi: Formula): (Result, Statistics) = {
+    def search(sys: System, cfg: Config,  phi: Formula): (Result, Statistics) = {
       println(print(phi))
 
       val us = Signal((0, Vector.zero(sys.inports.length)))

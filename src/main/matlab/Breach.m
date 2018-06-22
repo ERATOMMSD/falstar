@@ -1,4 +1,4 @@
-function [score, sims, time, t__, u__] = Breach(model, inputs, phi, T, solver, stages, samples)
+function [score, sims, time, t__, u__] = Breach(model, inputs, phi, T, solver, stages, samples, seed)
 
 sys = BreachSimulinkSystem(model.name);
 gen.type = 'UniStep';
@@ -30,7 +30,7 @@ problem.max_time = 600; % ten minutes should be enough
 problem.setup_solver(solver);
 
 % random seed for cmaes
-problem.solver_options.Seed = randi(1000);
+problem.solver_options.Seed = seed;
 
 problem.solve();
 

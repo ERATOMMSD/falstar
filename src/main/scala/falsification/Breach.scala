@@ -28,6 +28,8 @@ import mtl.True
 import mtl.Transform
 import mtl.Not
 import mtl.Implies
+import hybrid.Config
+import util.Probability
 
 object Breach {
   def print(tm: Term): String = tm match {
@@ -63,6 +65,7 @@ object Breach {
     def params = Seq()
 
     def search(sys: System, _phi: Formula): (Result, Statistics) = {
+      println(print(phi))
       val T = _phi.T
       val in = sys.in
       val phi = print(_phi)
@@ -100,7 +103,6 @@ object Breach {
       val stat = Statistics.empty
       (res, stat)
     }
-
   }
 
   case class falsification(controlpoints: Int, solver: String, budget: Int) extends Falsification {
@@ -111,12 +113,12 @@ object Breach {
       "solver" -> solver,
       "budget" -> budget)
 
-    def search(sys: System, _phi: Formula): (Result, Statistics) = sys match {
-      case sys @ SimulinkSystem(path, name, _, _, params, vars, load) =>
+    def search(sys: System, cfg: Config, _phi: Formula): (Result, Statistics) = sys match {
+      case sys @ SimulinkSystem(path, name, params, inputs, outputs, load) =>
         val dt = 0.01
         val T = _phi.T
 
-        val in = sys.in
+        val in = cfg.in(sys.inputs)
         val inports = sys.inports
 
         val phi = print(_phi)
@@ -127,6 +129,7 @@ object Breach {
         // set params and variables
         assert(sys.initialized)
 
+        eval("InitBreach")
         eval("addpath 'src/main/matlab'")
 
         eval("model.name = '" + name + "'")
@@ -148,8 +151,10 @@ object Breach {
         eval("solver = '" + solver + "'")
         eval("stages = " + controlpoints)
         eval("samples = " + budget / controlpoints)
+        eval("seed = " + Probability.seed)
+        Probability.setNextDeterministicSeed()
 
-        eval("[score, sims, time, t__, u__] = Breach(model, inputs, phi, T, solver, stages, samples)")
+        eval("[score, sims, time, t__, u__] = Breach(model, inputs, phi, T, solver, stages, samples, seed)")
 
         val score: Double = get("score")
         val sims: Double = get("sims")

@@ -24,7 +24,7 @@ import hybrid.State
 import java.awt.Dimension
 
 object Scope {
-  def main(args: Array[String]) {
+  /* def main(args: Array[String]) {
     val T = 2.0
 
     val us = Signal((0.0, Vector(1)), (1.0, Vector(-1)))
@@ -44,7 +44,7 @@ object Scope {
     val rs = Robustness(x > 0, tr.us, tr.ys)
     val res = Result(tr, rs)
     val scope = new Scope("test", sys, res)
-  }
+  } */
 }
 
 class Scope(title: String, sys: System, _res: Result) extends JFrame(title) {

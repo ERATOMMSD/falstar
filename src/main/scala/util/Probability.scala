@@ -22,10 +22,14 @@ object Probability {
     _seed = seed
     Random.setSeed(seed)
   }
-  
+
   def setUniqueSeed() = {
     uniquifier *= 181783497276652981L
     seed = uniquifier ^ System.nanoTime()
+  }
+
+  def setNextDeterministicSeed() = {
+    seed = Random.nextLong
   }
 }
 
@@ -54,7 +58,7 @@ object Uniform {
   }
 
   def sample(min: Double, max: Double): Double = {
-    assert(min <= max)
+    assert(min <= max, min + " > " + max)
     val dist = max - min
     min + sample() * dist
   }

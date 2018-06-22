@@ -9,39 +9,42 @@ import hybrid.Time
 import mtl.Robustness
 import hybrid.Rho
 import util.Probability
+import hybrid.Config
 
 trait Falsification {
-  def repeat(sys: System, phi: Formula, seed: Option[Long], n: Int): Table = {
+  def repeat(sys: System, cfg: Config, phi: Formula, _seed: Option[Long], n: Int): Table = {
     import util.IntOps
 
-    seed match {
+    _seed match {
       case None => Probability.setUniqueSeed()
       case Some(seed) => Probability.seed = seed
     }
+    
+    val seed = Probability.seed
 
     val data = (1 to n) map {
       i =>
         println("trial " + i + "/" + n)
-        apply(sys, phi)
+        apply(sys, cfg, phi)
     }
 
     val (best, _) = data.minBy(_._1.score)
     val (good, bad) = data.partition(_._1.isFalsified)
 
     val (_, stats) = good.unzip
-    val table = Table(sys, phi, this, Probability.seed, good.size, n, Statistics.min(stats), Statistics.max(stats), Statistics.avg(stats), best)
+    val table = Table(sys, phi, this, seed, good.size, n, Statistics.min(stats), Statistics.max(stats), Statistics.avg(stats), best)
 
     table
   }
 
-  def apply(sys: System, phi: Formula): (Result, Statistics) = {
+  def apply(sys: System, cfg: Config, phi: Formula): (Result, Statistics) = {
     println("property " + phi)
     println("algorithm " + identification)
     for ((name, value) <- this.params) {
       println("  " + name + ": " + value)
     }
 
-    val (res, stats) = search(sys, phi)
+    val (res, stats) = search(sys,cfg, phi)
     println()
 
     println("inputs")
@@ -72,13 +75,13 @@ trait Falsification {
 
   def identification: String
   def params: Seq[(String, Any)]
-  def search(sys: System, phi: Formula): (Result, Statistics)
+  def search(sys: System, cfg: Config, phi: Formula): (Result, Statistics)
 }
 
 trait WithStatistics {
   this: Falsification =>
 
-  def search(sys: System, phi: Formula): (Result, Statistics) = {
+  def search(sys: System, cfg: Config, phi: Formula): (Result, Statistics) = {
     var simulations = 0
     object simulation extends Timer
     object formula extends Timer
@@ -98,7 +101,7 @@ trait WithStatistics {
     }
 
     val res = total.during {
-      search(sys, phi, T, sim)
+      search(sys, cfg, phi, T, sim)
     }
 
     val stats = Statistics(simulations, total.seconds, 0)
@@ -106,7 +109,7 @@ trait WithStatistics {
     (res, stats)
   }
 
-  def search(sys: System, phi: Formula, T: Time, sim: (Signal, Time) => Result): Result
+  def search(sys: System, cfg: Config, phi: Formula, T: Time, sim: (Signal, Time) => Result): Result
 }
 
 object Falsification {

@@ -8,7 +8,8 @@ import linear.Integrator
 case class ContinuousSystem(
   name: String,
   x0: State,
-  inputs: Seq[(String, (Double, Double))],
+  params: Seq[String],
+  inputs: Seq[String],
   outputs: Seq[String],
   flow: Flow,
   dt: Duration)
@@ -16,12 +17,6 @@ case class ContinuousSystem(
 
   def sim(us: Signal, T: Time): Trace = {
     sim(0, x0, us, T)
-  }
-
-  def sim(tr1: Trace, us: Signal, T: Time): Trace = {
-    val (t1, x1) = if (tr1.isEmpty) (0.0, x0) else tr1.ys.last
-    val tr2 = sim(t1, x1, us, T)
-    tr1 ++ tr2
   }
 
   def sim(t0: Time, x0: State, us: Signal, T: Time): Trace = {
@@ -66,10 +61,10 @@ object Flow {
 
 object ContinuousSystem {
   def linear(name: String, x0: State, A: Matrix, dt: Duration) = {
-    ContinuousSystem(name, x0, Seq(), Seq(), Flow.linear(A), dt)
+    ContinuousSystem(name, x0, Seq(), Seq(), Seq(), Flow.linear(A), dt)
   }
 
-  def linear(name: String, x0: State, inputs: Seq[(String, (Double, Double))], outputs: Seq[String], A: Matrix, B: Matrix, dt: Duration) = {
-    ContinuousSystem(name, x0, inputs, outputs, Flow.linear(A, B), dt)
+  def linear(name: String, x0: State, params: Seq[String], inputs: Seq[String], outputs: Seq[String], A: Matrix, B: Matrix, dt: Duration) = {
+    ContinuousSystem(name, x0, params, inputs, outputs, Flow.linear(A, B), dt)
   }
 }
