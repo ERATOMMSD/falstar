@@ -196,8 +196,8 @@ class Parser {
       state.search = LaTeX.dummy
       Seq()
 
-    case Node(Keyword("set-solver"), Identifier("breachprinter")) =>
-      state.search = Breach.dummy
+    case Node(Keyword("set-solver"), Identifier("breachprinter"), Literal(cp: Double)) =>
+      state.search = Breach.dummy(cp.toInt)
       Seq()
 
     case Node(Keyword("set-solver"), Identifier("staliroprinter"), Literal(prefix: String)) =>

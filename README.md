@@ -2,14 +2,15 @@
 
 Requirements
 
-- **Java 1.8**
-- **Matlab (tested with R2017)**
-- Scala 2.12 (build only)
+- Java 1.8, Scala 2.12
+- Matlab (tested with R2017)
+
+Contact: gidonernst (*) gmail.com
 
 See also [ARCH 2018 friendly competition](https://cps-vo.org/group/ARCH/FriendlyCompetition)
 
 
-## Quickstart:
+## Quickstart
 
 Link the necessary MATLAB files and binaries
 
@@ -58,3 +59,33 @@ Here is an example output:
 	  peak memory 37111 kb
 	
 	bye
+
+## Overview
+
+This is a tool for the falsification of hybrid systems.
+It takes as an input a model (currently: Simulink) and a configuration file
+and tries to come up with an input signal such that the output signal produced by
+the model falsifies given requirements.
+
+### Simulink model set up
+
+Simulink models are accessed through their input and output ports
+and through the Matlab function `sim`.
+The model must be prepared for use as follows
+
+- In the model configuration parameter setup, set the input to `[t__, u__]`.
+  This will cause the simulation to read these two variables off the workspace
+  and interpret them as the simulation input.
+  `t__` is a column matrix of time points and `u__` provides the corresponding input vectors
+  in each row for the respective time points (see an example above).
+  The falsification tool provides these variables to the Matlab simulation engine in this form.
+- The output format should be set to `Data structure with time`
+  (although this will be selected automatically in the future).
+  The output signal should be recorded to `tout` and `yout` (which are the default settings).
+- Make sure the output signal is not truncated
+- Make sure that the interpolation settings on the input ports are as desired,
+  for piecewise constant inputs disable interpolation.
+
+### Configuration file syntax
+
+

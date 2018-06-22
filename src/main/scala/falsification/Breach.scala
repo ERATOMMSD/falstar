@@ -58,12 +58,39 @@ object Breach {
     case Eventually(t0, t1, phi) => "(ev_[" + t0 + "," + t1 + "] " + print(phi) + ")"
   }
 
-  case object dummy extends Falsification {
-    def identification = "Breach (print formulas only)"
+  case class dummy(cp: Int) extends Falsification {
+    def identification = "Breach (print)"
     def params = Seq()
 
-    def search(sys: System, phi: Formula): (Result, Statistics) = {
-      println(print(phi))
+    def search(sys: System, _phi: Formula): (Result, Statistics) = {
+      val T = _phi.T
+      val in = sys.in
+      val phi = print(_phi)
+
+      println("sys = BreachSimulinkSystem('" + sys.name + "');")
+      println("phi = STL_Formula('" + phi + "', '" + phi + "')")
+
+      println("gen.type = 'UniStep';")
+
+      println("gen.cp = " + cp + ";")
+      println("sys.SetInputGen(gen);")
+      println("sys.Sys.tspan = 0:" + T + ";")
+
+      for (k <- 0 until cp) {
+        for (InPort(name, i) <- sys.inports) yield {
+          println("sys.SetParamRanges({'" + name + "_u" + k + "'}, [" + in.left(i) + " " + in.right(i) + "]);")
+        }
+      }
+      
+      println()
+
+      println("problem = FalsificationProblem(sys, phi);")
+      println("problem.max_obj_eval = 100;")
+      println("problem.max_time = 600; % ten minutes should be enough")
+      println("problem.setup_solver('cmaes');")
+      println("problem.solver_options.Seed = randi(1000);")
+      println("problem.solve();")
+      println()
 
       val us = Signal((0, Vector.zero(sys.inports.length)))
       val ys = Signal((0, Vector.zero(sys.outports.length)))
