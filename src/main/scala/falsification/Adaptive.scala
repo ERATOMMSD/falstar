@@ -142,19 +142,22 @@ object Adaptive {
       "exploration ratio" -> exploration,
       "budget" -> budget)
 
-    def search(sys: System, cfg: Config, phi: Formula, T: Time, sim: (Signal, Time) => Result): Result = {
+    def search(sys: System, cfg: Config, phi: Formula, T: Time, sim: (Input, Signal, Time) => Result): Result = {
       Falsification.observer.reset(phi)
       Adaptive.observer.reset()
 
+      val pn = cfg.pn(sys.params)
       val in = cfg.in(sys.inputs)
       val cs = cfg.cs(sys.inputs)
+      
+      val ps = pn.sample // ok if constant
 
       val levels = controlpoints.zipWithIndex map {
         case (cp, i) => level(i, T / cp, in)
       }
 
-      def playout(us: Signal): Result = {
-        val res = sim(us, T)
+      def playout(ps: Input, us: Signal): Result = {
+        val res = sim(ps, us, T)
         res
       }
 
@@ -168,7 +171,7 @@ object Adaptive {
           case (bin, Left((u, dt))) if T <= t + dt =>
             explore += 1
 
-            val result = playout(us ++ Signal.point(t, u))
+            val result = playout(ps, us ++ Signal.point(t, u))
             // Falsification.observer.update(result)
             val dummy = new Node(-1, Seq())
             dummy.local_score = result.score

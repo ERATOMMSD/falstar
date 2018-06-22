@@ -27,7 +27,7 @@ case class HybridSystem(
 
   val (m0, x0) = init
 
-  def sim(us: Signal, T: Time): Trace = {
+  def sim(ps: Input, us: Signal, T: Time): Trace = {
     sim(0, x0, m0, us, T)
   }
 

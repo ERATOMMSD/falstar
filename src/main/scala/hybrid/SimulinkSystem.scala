@@ -33,11 +33,8 @@ case class SimulinkSystem(
     println("WARNING: set_param not implemented")
     // eval("set_param('" + name + "'," + params.map { case (k, v) => k + "," + v }.mkString(", ") + ")")
 
-//      for ((x, a) <- vars)
-//        eval(x + " = " + a)
-
-      for (file <- load)
-        eval("load('" + file + "')")
+    for (file <- load)
+      eval("load('" + file + "')")
 
     setup.stop()
     println(" done (" + setup.seconds + "s)")
@@ -45,13 +42,16 @@ case class SimulinkSystem(
     true
   }
 
-  def sim(us: Signal, T: Time) = {
+  def sim(ps: Input, us: Signal, T: Time) = {
     assert(initialized)
     // println("simulate " + name + " from " + 0 + " to " + T)
     // println("simulate " + name + " to " + T + " with inputs " + us /*.collapse*/ .mkString(" "))
 
     val t__ = us map { case (t, u) => Array(t) }
     val u__ = us map { case (t, u) => u.data }
+
+    for ((x, a) <- (params, ps.data).zipped)
+      eval(x + " = " + a)
 
     // NOTE: need to duplicate last entry in the input signal
     val U = u__.last

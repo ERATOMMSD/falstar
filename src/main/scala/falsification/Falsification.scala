@@ -10,6 +10,7 @@ import mtl.Robustness
 import hybrid.Rho
 import util.Probability
 import hybrid.Config
+import hybrid.Input
 
 trait Falsification {
   def repeat(sys: System, cfg: Config, phi: Formula, _seed: Option[Long], n: Int): Table = {
@@ -89,10 +90,10 @@ trait WithStatistics {
 
     val T = phi.T
 
-    def sim(us: Signal, T: Time): Result = {
+    def sim(ps: Input, us: Signal, T: Time): Result = {
       simulations += 1
       val tr = simulation.during {
-        sys.sim(us, T)
+        sys.sim(ps, us, T)
       }
       val rs = formula.during {
         Robustness(phi, tr.us, tr.ys)
@@ -109,7 +110,7 @@ trait WithStatistics {
     (res, stats)
   }
 
-  def search(sys: System, cfg: Config, phi: Formula, T: Time, sim: (Signal, Time) => Result): Result
+  def search(sys: System, cfg: Config, phi: Formula, T: Time, sim: (Input, Signal, Time) => Result): Result
 }
 
 object Falsification {

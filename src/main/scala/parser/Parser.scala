@@ -24,12 +24,13 @@ import hybrid.Config
 import hybrid.Value
 import hybrid.PiecewiseConstant
 import hybrid.Constant
+import hybrid.Input
 
 sealed trait Command
 case object Flush extends Command
 case object Quit extends Command
 case class Falsify(search: Falsification, sys: System, cfg: Config, phi: Formula, seed: Option[Long], repeat: Int, log: Option[String]) extends Command
-case class Simulate(sys: System, phi: Formula, us: Signal, T: Time) extends Command
+case class Simulate(sys: System, phi: Formula, ps: Input, us: Signal, T: Time) extends Command
 case class Robustness(phi: Formula, us: Signal, ys: Signal, T: Time) extends Command
 
 class Parser {
@@ -107,7 +108,7 @@ class Parser {
         val path = file.getParent
         val model = splitFilename(file.getName)
         SimulinkSystem(path, model, params, inputs, outputs, Seq())
-        
+
       case Node(Keyword("simulink"), Literal(name: String), Literal(load: String)) =>
         val file = new File(name)
         val path = file.getParent
@@ -173,10 +174,14 @@ class Parser {
     formula(inports ++ outports, phi)
   }
 
+  def vector(syntax: Syntax) = syntax match {
+    case Node(vs @ _*) =>
+      Vector(vs map { case Literal(xi: Double) => xi }: _*)
+  }
+
   def controlpoint(syntax: Syntax) = syntax match {
-    case Node(Literal(t: Time), Node(vs @ _*)) =>
-      val x = Vector(vs map { case Literal(xi: Double) => xi }: _*)
-      (t, x)
+    case Node(Literal(t: Time), x) =>
+      (t, vector(x))
   }
 
   def signal(input: Seq[Syntax]): Signal = {
@@ -233,8 +238,8 @@ class Parser {
     case Node(Keyword("falsify"), phis @ _*) =>
       phis map { phi => Falsify(state.search, state.system, state.config, formula(phi), state.seed, state.repeat, state.log) }
 
-    case Node(Keyword("simulate"), Number(time), phi, input @ _*) =>
-      Seq(Simulate(state.system, formula(phi), signal(input), time))
+    case Node(Keyword("simulate"), Number(time), phi, params, input @ _*) =>
+      Seq(Simulate(state.system, formula(phi), vector(params), signal(input), time))
 
     case Node(Keyword("robustness"), Number(time), phi, input @ _*) =>
       Seq(Robustness(formula(phi), Signal((0: Time, Vector())), signal(input), time))
@@ -261,7 +266,7 @@ class Parser {
 
     case Node(Keyword("flush-log")) =>
       Seq(Flush)
-      
+
     case Node(Keyword("quit")) =>
       Seq(Quit)
 
