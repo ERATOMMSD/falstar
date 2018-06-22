@@ -14,7 +14,7 @@ scanner: $(SCANNER)
 
 main.jar: bin $(SRC)
 	scalac -d bin -cp lib/engine.jar $(SRC)
-       javac  -d bin -cp bin $(SCANNER)
+	javac  -d bin -cp bin $(SCANNER)
 	jar cf $@ -C bin .
 
 %.html: %.md
