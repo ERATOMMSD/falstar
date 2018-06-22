@@ -19,12 +19,12 @@
 <h1 id="fast-falsification-with-adaptive-inputs">Fast Falsification with Adaptive Inputs</h1>
 <p>Requirements</p>
 <ul>
-<li><strong>Java 1.8</strong></li>
-<li><strong>Matlab (tested with R2017)</strong></li>
-<li>Scala 2.12 (build only)</li>
+<li>Java 1.8, Scala 2.12</li>
+<li>Matlab (tested with R2017)</li>
 </ul>
+<p>Contact: gidonernst (*) gmail.com</p>
 <p>See also <a href="https://cps-vo.org/group/ARCH/FriendlyCompetition">ARCH 2018 friendly competition</a></p>
-<h2 id="quickstart">Quickstart:</h2>
+<h2 id="quickstart">Quickstart</h2>
 <p>Link the necessary MATLAB files and binaries</p>
 <pre><code>./link $MATLABROOT $ARCH</code></pre>
 <p>where <code>$MATLABROOT</code> points to the top-level of a specific Matlab installation (e.g., ending in <code>../MATLAB/R2017b</code>) and where <code>$ARCH</code> <a href="https://www.mathworks.com/help/matlab/matlab_external/setup-environment.html">depends on your OS</a>. For 64 bit systems:</p>
@@ -60,5 +60,16 @@ statistics
   peak memory 37111 kb
 
 bye</code></pre>
+<h2 id="overview">Overview</h2>
+<p>This is a tool for the falsification of hybrid systems. It takes as an input a model (currently: Simulink) and a configuration file and tries to come up with an input signal such that the output signal produced by the model falsifies given requirements.</p>
+<h3 id="simulink-model-set-up">Simulink model set up</h3>
+<p>Simulink models are accessed through their input and output ports and through the Matlab function <code>sim</code>. The model must be prepared for use as follows</p>
+<ul>
+<li>In the model configuration parameter setup, set the input to <code>[t__, u__]</code>. This will cause the simulation to read these two variables off the workspace and interpret them as the simulation input. <code>t__</code> is a column matrix of time points and <code>u__</code> provides the corresponding input vectors in each row for the respective time points (see an example above). The falsification tool provides these variables to the Matlab simulation engine in this form.</li>
+<li>The output format should be set to <code>Data structure with time</code> (although this will be selected automatically in the future). The output signal should be recorded to <code>tout</code> and <code>yout</code> (which are the default settings).</li>
+<li>Make sure the output signal is not truncated</li>
+<li>Make sure that the interpolation settings on the input ports are as desired, for piecewise constant inputs disable interpolation.</li>
+</ul>
+<h3 id="configuration-file-syntax">Configuration file syntax</h3>
 </body>
 </html>

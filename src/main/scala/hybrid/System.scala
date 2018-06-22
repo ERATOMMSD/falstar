@@ -20,6 +20,10 @@ case class Config(params: Map[String, InputType], inputs: Map[String, InputType]
       Vector(left: _*),
       Vector(right: _*))
   }
+
+  def cs(names: Seq[String]) = {
+    for((name, i) <- names.zipWithIndex if inputs(name).isInstanceOf[Constant]) yield i
+  }
 }
 
 object Config {

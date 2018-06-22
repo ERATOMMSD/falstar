@@ -64,10 +64,11 @@ object Breach {
     def identification = "Breach (print)"
     def params = Seq()
 
-    def search(sys: System, _phi: Formula): (Result, Statistics) = {
-      println(print(phi))
+    def search(sys: System, cfg: Config, _phi: Formula): (Result, Statistics) = {
+      println(print(_phi))
+
       val T = _phi.T
-      val in = sys.in
+      val in = cfg.in(sys.inputs)
       val phi = print(_phi)
 
       println("sys = BreachSimulinkSystem('" + sys.name + "');")
@@ -84,7 +85,7 @@ object Breach {
           println("sys.SetParamRanges({'" + name + "_u" + k + "'}, [" + in.left(i) + " " + in.right(i) + "]);")
         }
       }
-      
+
       println()
 
       println("problem = FalsificationProblem(sys, phi);")

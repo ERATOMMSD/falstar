@@ -2,6 +2,7 @@ package falsification
 
 import scala.collection.mutable.ArrayBuffer
 
+import hybrid.Config
 import hybrid.Duration
 import hybrid.Input
 import hybrid.Region
@@ -9,13 +10,13 @@ import hybrid.Score
 import hybrid.Signal
 import hybrid.System
 import hybrid.Time
+import linear.Vector
 import mtl.Formula
 import mtl.Robustness
 import mtl.Value
 import util.Combinatorics
 import util.Proportional
 import util.Uniform
-import hybrid.Config
 
 class Bin[A](val level: Int, actions: Seq[A]) {
   val todo = ArrayBuffer[A](actions: _*)
@@ -113,6 +114,20 @@ object Adaptive {
     }
   }
 
+  def get_constants(u: Input, is: Seq[Int]) = {
+    val res = is map (i => (i, u(i)))
+    res.toMap
+  }
+
+  def fix_constants(levels: Seq[Seq[(Input, Duration)]], c: Map[Int, Double]) = {
+    for (level <- levels) yield {
+      for ((u, dt) <- level) yield {
+        val v = Vector(u.length, i => if (c contains i) c(i) else u(i))
+        (v, dt)
+      }
+    }
+  }
+
   case class falsification(controlpoints: Seq[Int], exploration: Double, budget: Int) extends Falsification with WithStatistics {
     override def productPrefix = "Adaptive.falsification"
 
@@ -132,6 +147,8 @@ object Adaptive {
       Adaptive.observer.reset()
 
       val in = cfg.in(sys.inputs)
+      val cs = cfg.cs(sys.inputs)
+
       val levels = controlpoints.zipWithIndex map {
         case (cp, i) => level(i, T / cp, in)
       }
@@ -140,7 +157,8 @@ object Adaptive {
         val res = sim(us, T)
         res
       }
-      def sample(node: Node, us: Signal): Result = {
+
+      def sample(node: Node, us: Signal, c: Map[Int, Double]): Result = {
         val t = node.time
         node.visited += 1
 
@@ -161,8 +179,10 @@ object Adaptive {
             explore += 1
             //            print(bin.level + "@" + t + " ")
             // create new child node and a trace
-            val child = new Node(t + dt, levels)
-            val result = sample(child, us ++ Signal.point(t, u))
+            val newc = get_constants(u, cs)
+            val newlevels = fix_constants(levels, newc)
+            val child = new Node(t + dt, newlevels)
+            val result = sample(child, us ++ Signal.point(t, u), newc)
             val Result(tr, rs) = result
 
             // check feasibility
@@ -188,7 +208,7 @@ object Adaptive {
 
           case (bin, Right((u, child))) =>
             exploit += 1
-            val result = sample(child, us ++ Signal.point(t, u))
+            val result = sample(child, us ++ Signal.point(t, u), c)
             node update result
             result
         }
@@ -199,7 +219,7 @@ object Adaptive {
       var result = Result.empty
 
       for (i <- 0 until budget if !solved) {
-        result = sample(root, Signal.empty)
+        result = sample(root, Signal.empty, Map.empty)
         solved |= result.score < 0
 
         print(".")
