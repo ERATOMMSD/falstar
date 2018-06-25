@@ -25,6 +25,7 @@ object UniformRandom {
       val dt = T / controlpoints
       val pn = cfg.pn(sys.params)
       val in = cfg.in(sys.inputs)
+      val cs = cfg.cs(sys.inputs)
 
       print("falsification with " + budget + " random samples ")
 
@@ -34,7 +35,16 @@ object UniformRandom {
 
       for (k <- 1 to budget) {
         val ps = pn.sample
-        val us = Signal(controlpoints, i => (dt * i, in.sample))
+        val u0 = in.sample
+
+        val us = Signal(
+          controlpoints,
+          i => {
+            val ui = in.sample
+            for (c <- cs) ui(c) = u0(c)
+            (dt * i, ui)
+          })
+
         val next = sim(ps, us, T)
         print(".")
 
@@ -42,8 +52,8 @@ object UniformRandom {
 
         if (best == null) best = next
         else if (next.score <= best.score) best = next
-        
-        if(best.score < 0) return best
+
+        if (best.score < 0) return best
       }
 
       best
