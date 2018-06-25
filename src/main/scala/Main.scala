@@ -24,9 +24,10 @@ object Main {
   object quit extends Breaks
 
   object options {
-    var a = false
-    var v = false
-    var g = false
+    var ask = false
+    var verbose = false
+    var graphics = false
+    var dummy = false
     val sep = ","
   }
 
@@ -104,7 +105,7 @@ object Main {
         results(name) += table
       }
 
-      if (options.g) {
+      if (options.graphics) {
         val title = if (res.isFalsified) "falsified | " + sys.name + " | " + phi else "not falsified: " + phi
         val scope = new Scope(title, sys, res)
       }
@@ -126,6 +127,9 @@ object Main {
 
   def run(file: String): Unit = {
     val commands = parse(new File(file))
+    
+    if(options.dummy)
+      return
 
     quit.breakable {
       for (cmd <- commands) {
@@ -149,14 +153,17 @@ object Main {
   @tailrec
   def setup(args: List[String]): List[String] = args match {
     case "-a" :: rest =>
-      options.a = true
+      options.ask = true
       setup(rest)
     case "-v" :: rest =>
       Simulink.verbose = true
-      options.v = true
+      options.verbose = true
       setup(rest)
     case "-g" :: rest =>
-      options.g = true
+      options.graphics = true
+      setup(rest)
+    case "-d" :: rest =>
+      options.dummy = true
       setup(rest)
     case _ =>
       args
@@ -177,6 +184,7 @@ object Main {
       println("  -a    ask for additional input files:")
       println("          enter one filename per line followed by a blank line")
       println("          a blank line acknowledges, EOF (CTRL+d) aborts")
+      println("  -d    dummy run, parse and validate configuration only") 
       println("  -g    show a graphical diagram for each trial")
       println("  -v    be verbose")
     }
@@ -189,13 +197,13 @@ object Main {
     files ++= rest
 
     quit.breakable {
-      while (options.a) {
+      while (options.ask) {
         val line = StdIn.readLine
 
         if (line == null)
           quit.break
         else if (line.isEmpty)
-          options.a = false
+          options.ask = false
         else
           files += line
       }
