@@ -152,6 +152,7 @@ object Main {
       options.a = true
       setup(rest)
     case "-v" :: rest =>
+      Simulink.verbose = true
       options.v = true
       setup(rest)
     case "-g" :: rest =>
@@ -181,7 +182,7 @@ object Main {
     }
 
     val pre = List()
-    val post = List("src/test/configuration/afc.cfg")
+    val post = List()
     val rest = setup(pre ++ args ++ post)
 
     var files = Buffer[String]()

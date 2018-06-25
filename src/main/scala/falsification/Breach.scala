@@ -1,9 +1,14 @@
 package falsification
 
+import hybrid.Config
+import hybrid.Constant
+import hybrid.PiecewiseConstant
 import hybrid.Signal
+import hybrid.Signal.SignalOps
 import hybrid.SimulinkSystem
 import hybrid.System
 import hybrid.Trace
+import hybrid.Value
 import linear.Vector
 import mtl.Always
 import mtl.And
@@ -13,10 +18,12 @@ import mtl.Equal
 import mtl.Eventually
 import mtl.False
 import mtl.Formula
+import mtl.Implies
 import mtl.InPort
 import mtl.Less
 import mtl.LessEqual
 import mtl.Minus
+import mtl.Not
 import mtl.NotEqual
 import mtl.Or
 import mtl.Plus
@@ -24,11 +31,8 @@ import mtl.Port
 import mtl.Robustness
 import mtl.Term
 import mtl.Times
-import mtl.True
 import mtl.Transform
-import mtl.Not
-import mtl.Implies
-import hybrid.Config
+import mtl.True
 import util.Probability
 
 object Breach {
@@ -120,6 +124,7 @@ object Breach {
         val T = _phi.T
 
         val in = cfg.in(sys.inputs)
+        val params = sys.params
         val inports = sys.inports
 
         val phi = print(_phi)
@@ -131,31 +136,56 @@ object Breach {
         assert(sys.initialized)
 
         eval("InitBreach")
-        eval("addpath 'src/main/matlab'")
 
-        eval("model.name = '" + name + "'")
-        eval("model.dt = " + dt)
-
-        val inx = for (InPort(name, index) <- inports) yield {
-          val min = in.left(index)
-          val max = in.right(index)
-          val ui = "u" + index
-          eval(ui + ".name = '" + name + "'")
-          eval(ui + ".range = [" + min + " " + max + "]")
-          ui
+        for (name <- params) {
+          cfg.params(name) match {
+            case Value(x) =>
+              eval(name + " = " + x)
+          }
         }
 
-        eval("inputs = " + inx.mkString("[", " ", "]"))
-
+        eval("sys = BreachSimulinkSystem('" + sys.name + "');")
         eval("phi = STL_Formula('" + phi + "', '" + phi + "')")
-        eval("T = " + T)
-        eval("solver = '" + solver + "'")
-        eval("stages = " + controlpoints)
-        eval("samples = " + budget / controlpoints)
-        eval("seed = " + Probability.seed)
+
+        for (InPort(name, i) <- inports) {
+          cfg.inputs(name) match {
+            case Value(x) =>
+            case Constant(min, max) =>
+              eval("gen_" + name + " = constant_signal_gen({'" + name + "'})");
+            case PiecewiseConstant(min, max) =>
+              eval("gen_" + name + " = fixed_cp_signal_gen({'" + name + "'}, " + controlpoints + ")");
+          }
+        }
+
+        val gens = inports map ("gen_" + _.name)
+        eval("gen = BreachSignalGen(" + gens.mkString("{", ", ", "}") + ")");
+        eval("sys.SetInputGen(gen);")
+
+        for (InPort(name, i) <- inports) {
+          cfg.inputs(name) match {
+            case Value(x) =>
+            case Constant(min, max) =>
+              eval("sys.SetParamRanges({'" + name + "_u0'}, [" + in.left(i) + " " + in.right(i) + "]);")
+
+            case PiecewiseConstant(min, max) =>
+              for (k <- 0 until controlpoints) {
+                eval("sys.SetParamRanges({'" + name + "_u" + k + "'}, [" + in.left(i) + " " + in.right(i) + "]);")
+              }
+          }
+        }
+
+        eval("problem = FalsificationProblem(sys, phi);")
+        eval("problem.max_obj_eval = 100;")
+        eval("problem.setup_solver('cmaes');")
+        eval("problem.solver_options.Seed = " + Probability.seed + ";")
+        eval("problem.solve();")
         Probability.setNextDeterministicSeed()
 
-        eval("[score, sims, time, t__, u__] = Breach(model, inputs, phi, T, solver, stages, samples, seed)")
+        eval("time = problem.time_spent;")
+        eval("sims = problem.nb_obj_eval;")
+        eval("score = problem.obj_best;")
+
+        eval("best = problem.BrSet_Best;")
 
         val score: Double = get("score")
         val sims: Double = get("sims")
@@ -167,7 +197,7 @@ object Breach {
         val us = ts zip uv
 
         // fake the result
-        val tr = Trace(us, Signal.empty)
+        val tr = Trace(us.collapse, Signal.empty)
         val rs = Robustness(Array((0.0, score)))
 
         val res = Result(tr, rs)
