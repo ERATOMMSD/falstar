@@ -1,0 +1,18 @@
+model,property,algorithm,control points,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.02)",uniform random,4,100,0,100,100,1,0,6,3,1,0,-0.16161950380798104
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.04)",uniform random,4,100,0,95,100,1,0,96,50,27,13,-0.17125236922262402
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.05)",uniform random,4,100,0,87,100,1,0,98,48,33,16,-0.16125236922262404
+fuel_control,"□_[11.0, 50.0] ((((throttle < 1.0) && ◇_[0.0, 0.1] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.1] (throttle < 1.0))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",uniform random,4,100,0,80,100,2,0,97,48,32,15,-0.08177154354339278
+fuel_control,"□_[49.0, 50.0] (rms < 0.05)",uniform random,4,100,0,100,100,1,0,18,8,3,1,-0.2856779066554114
+fuel_control,"□_[11.0, 50.0] (((mode == 1.0) && ◇_[0.0, 0.1] (mode == 0.0)) ==> □_[1.0, 5.0] (abs(mu) < 0.02))",uniform random,4,100,0,100,100,1,0,11,7,2,0,-0.08995968850668684
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.2)",uniform random,4,100,0,9,100,15,7,94,46,43,21,-0.017244763508502514
+
+model,property,algorithm,control points,exploration ratio,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.02)",adaptive,2 2 3 3 3 4,0.25,100,0,100,100,1,0,4,2,1,0,-0.1611689595156068
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.04)",adaptive,2 2 3 3 3 4,0.25,100,0,100,100,1,0,4,1,1,0,-0.1411689595156068
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.05)",adaptive,2 2 3 3 3 4,0.25,100,0,100,100,1,0,4,2,1,0,-0.1311689595156068
+fuel_control,"□_[11.0, 50.0] ((((throttle < 1.0) && ◇_[0.0, 0.1] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.1] (throttle < 1.0))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",adaptive,2 2 3 3 3 4,0.25,100,0,100,100,1,0,10,5,2,0,-0.10625256571358133
+fuel_control,"□_[49.0, 50.0] (rms < 0.05)",adaptive,2 2 3 3 3 4,0.25,100,0,100,100,1,0,6,2,1,0,-0.34429423928492836
+fuel_control,"□_[11.0, 50.0] (((mode == 1.0) && ◇_[0.0, 0.1] (mode == 0.0)) ==> □_[1.0, 5.0] (abs(mu) < 0.02))",adaptive,2 2 3 3 3 4,0.25,100,0,100,100,1,0,20,9,3,1,-0.07311389864272769
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.2)",adaptive,2 2 3 3 3 4,0.25,100,0,0,100,0,0,0,0,0,0,0.019930412222238514
+
