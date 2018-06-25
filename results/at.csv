@@ -30,3 +30,35 @@ automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",
 automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,4,global_nelder_mead,100,-4962768465676381896,0,1,0,0,0,0,0,0,74.75435044459373
 automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,4,global_nelder_mead,100,-4962768465676381896,0,1,0,0,0,0,0,0,44.75435044459372
 
+model,property,algorithm,control points,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",uniform random,4,100,0,54,100,1,0,97,17,40,7,-9.436981437846242
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",uniform random,4,100,0,95,100,1,0,95,17,27,4,-10.211716855294394
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",uniform random,4,100,0,79,100,1,0,97,18,41,7,-5.220879676772924
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",uniform random,4,100,0,12,100,7,1,86,15,46,8,-2.9941285369106936
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",uniform random,4,100,0,37,100,1,0,95,17,41,7,-4.633092853834043
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",uniform random,4,100,0,3,100,2,0,67,12,41,7,-1.453537972487915
+
+model,property,algorithm,control points,exploration ratio,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",adaptive,2 2 3 3 3 4,0.25,100,0,100,100,1,0,29,5,8,1,-17.980199361426514
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",adaptive,2 2 3 3 3 4,0.25,100,0,99,100,1,0,99,17,31,5,-10.233300566297903
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",adaptive,2 2 3 3 3 4,0.25,100,0,100,100,1,0,89,15,22,3,-5.243896093430678
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",adaptive,2 2 3 3 3 4,0.25,100,0,59,100,7,1,98,17,57,9,-2.0667873250845616
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",adaptive,2 2 3 3 3 4,0.25,100,0,100,100,1,0,51,9,20,3,-6.0439516000248545
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",adaptive,2 2 3 3 3 4,0.25,100,0,96,100,13,2,97,17,48,8,-1.5044496074318587
+
+model,property,algorithm,control points,solver,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,4,cmaes,100,0,94,100,22,15,97,64,47,31,-16.634290819587903
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,4,cmaes,100,0,100,100,2,1,55,37,13,8,-1.0
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,4,cmaes,100,0,60,100,2,1,78,54,32,21,-1.0
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,4,cmaes,100,0,79,100,2,1,98,66,56,38,-3.2549628218035953
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,4,cmaes,100,0,20,100,12,8,96,68,59,41,-3.884777217784503
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,4,cmaes,100,0,72,100,12,8,99,69,25,17,-4.36140404017074
+
+model,property,algorithm,control points,solver,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,4,global_nelder_mead,100,0,1,1,8,5,8,5,8,5,-5.388547334358492
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,4,global_nelder_mead,100,0,0,1,0,0,0,0,0,0,2.0
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,4,global_nelder_mead,100,0,1,1,98,69,98,69,98,69,-1.0
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,4,global_nelder_mead,100,0,0,1,0,0,0,0,0,0,6.238498009089212
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,4,global_nelder_mead,100,0,0,1,0,0,0,0,0,0,74.75435044459373
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,4,global_nelder_mead,100,0,0,1,0,0,0,0,0,0,44.75435044459372
+
