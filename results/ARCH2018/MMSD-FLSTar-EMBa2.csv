@@ -1,2 +1,0 @@
-model;property;algorithm;control points;exploration ratio;budget;seed;success;tries;min simulations;min time;max simulations;max time;avg simulations;avg time;best robustness
-emb_controller;□_[0.0, 1.0] ((0.05 <= x || □_[0.0, 0.01] x <= 0.05) || 0.2 <= v);adaptive;2 2 3 3 3 4;0.25;20;0;10;10;1;8;5;41;1;11;-3.0907834927667725E-4
