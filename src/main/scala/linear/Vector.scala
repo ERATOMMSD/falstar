@@ -60,8 +60,12 @@ class Vector(val length: Int) extends Traversable[Double] {
     Vector(length, i => -this(i))
   }
 
+  def sum = {
+    Sum(length, i => data(i))
+  }
+
   def mean = {
-    Sum(length, i => data(i)) / length
+    sum / length
   }
 
   def stddev = {

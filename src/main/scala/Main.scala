@@ -109,8 +109,8 @@ object Main {
         val scope = new Scope(title, sys, res)
       }
 
-    case Simulate(sys, phi, us, t) =>
-      val tr = sys.sim(us, t)
+    case Simulate(sys, phi, ps, us, t) =>
+      val tr = sys.sim(ps, us, t)
       val rs = mtl.Robustness(phi, tr.us, tr.ys)
 
     case Robustness(phi, us, ys, t) =>
@@ -181,7 +181,7 @@ object Main {
     }
 
     val pre = List()
-    val post = List()
+    val post = List("src/test/configuration/afc.cfg")
     val rest = setup(pre ++ args ++ post)
 
     var files = Buffer[String]()

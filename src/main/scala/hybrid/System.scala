@@ -13,12 +13,19 @@ case class Constant(min: Double, max: Double) extends InputType { def range = (m
 case class PiecewiseConstant(min: Double, max: Double) extends InputType { def range = (min, max) }
 
 case class Config(params: Map[String, InputType], inputs: Map[String, InputType], options: Map[String, Any]) {
-  def in(names: Seq[String]) = {
-    val ranges = names map { name => inputs(name).range }
+  def region(names: Seq[String], data: Map[String, InputType]) = { 
+    val ranges = names map { name => data(name).range }
     val (left, right) = ranges.unzip
     Region(
       Vector(left: _*),
       Vector(right: _*))
+  }
+  
+  def pn(names: Seq[String]) = region(names, params)
+  def in(names: Seq[String]) = region(names, inputs)
+
+  def cs(names: Seq[String]) = {
+    for((name, i) <- names.zipWithIndex if inputs(name).isInstanceOf[Constant]) yield i
   }
 }
 
@@ -35,5 +42,5 @@ trait System {
   val inports = InPorts(inputs: _*)
   val outports = OutPorts(outputs: _*)
 
-  def sim(us: Signal, T: Time): Trace
+  def sim(ps: Input, us: Signal, T: Time): Trace
 }
