@@ -75,29 +75,29 @@ object Breach {
       val in = cfg.in(sys.inputs)
       val phi = print(_phi)
 
-      println("sys = BreachSimulinkSystem('" + sys.name + "');")
+      println("sys = BreachSimulinkSystem('" + sys.name + "')")
       println("phi = STL_Formula('" + phi + "', '" + phi + "')")
 
       println("gen.type = 'UniStep';")
 
       println("gen.cp = " + cp + ";")
-      println("sys.SetInputGen(gen);")
+      println("sys.SetInputGen(gen)")
       println("sys.Sys.tspan = 0:" + T + ";")
 
       for (k <- 0 until cp) {
         for (InPort(name, i) <- sys.inports) yield {
-          println("sys.SetParamRanges({'" + name + "_u" + k + "'}, [" + in.left(i) + " " + in.right(i) + "]);")
+          println("sys.SetParamRanges({'" + name + "_u" + k + "'}, [" + in.left(i) + " " + in.right(i) + "])")
         }
       }
 
       println()
 
-      println("problem = FalsificationProblem(sys, phi);")
+      println("problem = FalsificationProblem(sys, phi)")
       println("problem.max_obj_eval = 100;")
       println("problem.max_time = 600; % ten minutes should be enough")
-      println("problem.setup_solver('cmaes');")
-      println("problem.solver_options.Seed = randi(1000);")
-      println("problem.solve();")
+      println("problem.setup_solver('cmaes')")
+      println("problem.solver_options.Seed = randi(1000)")
+      println("problem.solve()")
       println()
 
       val us = Signal((0, Vector.zero(sys.inports.length)))
@@ -144,48 +144,49 @@ object Breach {
           }
         }
 
-        eval("sys = BreachSimulinkSystem('" + sys.name + "');")
+        eval("sys = BreachSimulinkSystem('" + sys.name + "')")
+        eval("sys.Sys.tspan = 0:" + T)
         eval("phi = STL_Formula('" + phi + "', '" + phi + "')")
 
         for (InPort(name, i) <- inports) {
           cfg.inputs(name) match {
             case Value(x) =>
             case Constant(min, max) =>
-              eval("gen_" + name + " = constant_signal_gen({'" + name + "'})");
+              eval("gen_" + name + " = constant_signal_gen({'" + name + "'})")
             case PiecewiseConstant(min, max) =>
-              eval("gen_" + name + " = fixed_cp_signal_gen({'" + name + "'}, " + controlpoints + ")");
+              eval("gen_" + name + " = fixed_cp_signal_gen({'" + name + "'}, " + controlpoints + ")")
           }
         }
 
         val gens = inports map ("gen_" + _.name)
-        eval("gen = BreachSignalGen(" + gens.mkString("{", ", ", "}") + ")");
-        eval("sys.SetInputGen(gen);")
+        eval("gen = BreachSignalGen(" + gens.mkString("{", ", ", "}") + ")")
+        eval("sys.SetInputGen(gen)")
 
         for (InPort(name, i) <- inports) {
           cfg.inputs(name) match {
             case Value(x) =>
             case Constant(min, max) =>
-              eval("sys.SetParamRanges({'" + name + "_u0'}, [" + in.left(i) + " " + in.right(i) + "]);")
+              eval("sys.SetParamRanges({'" + name + "_u0'}, [" + in.left(i) + " " + in.right(i) + "])")
 
             case PiecewiseConstant(min, max) =>
               for (k <- 0 until controlpoints) {
-                eval("sys.SetParamRanges({'" + name + "_u" + k + "'}, [" + in.left(i) + " " + in.right(i) + "]);")
+                eval("sys.SetParamRanges({'" + name + "_u" + k + "'}, [" + in.left(i) + " " + in.right(i) + "])")
               }
           }
         }
 
-        eval("problem = FalsificationProblem(sys, phi);")
-        eval("problem.max_obj_eval = 100;")
-        eval("problem.setup_solver('cmaes');")
-        eval("problem.solver_options.Seed = " + Probability.seed + ";")
-        eval("problem.solve();")
+        eval("problem = FalsificationProblem(sys, phi)")
+        eval("problem.max_obj_eval = 100")
+        eval("problem.setup_solver('cmaes')")
+        eval("problem.solver_options.Seed = " + Probability.seed)
+        eval("problem.solve()")
         Probability.setNextDeterministicSeed()
 
-        eval("time = problem.time_spent;")
-        eval("sims = problem.nb_obj_eval;")
-        eval("score = problem.obj_best;")
+        eval("time = problem.time_spent")
+        eval("sims = problem.nb_obj_eval")
+        eval("score = problem.obj_best")
 
-        eval("best = problem.BrSet_Best;")
+        eval("best = problem.BrSet_Best")
 
         val score: Double = get("score")
         val sims: Double = get("sims")
