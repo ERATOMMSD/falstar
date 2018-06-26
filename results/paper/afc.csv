@@ -1,0 +1,21 @@
+model,property,algorithm,control points,solver,budget,exploration ratio,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+fuel_control,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.05] (throttle < 8.8))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",Breach,10,cmaes,100,,0,1,1,30,36,30,36,30,36,-0.011706703519293031
+fuel_control,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.05] (throttle < 8.8))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",Breach,10,global_nelder_mead,100,,0,1,1,30,33,30,33,30,33,-0.011706703519293031
+fuel_control,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.05] (throttle < 8.8))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",adaptive,10 10 10 10 10,,100,0.25,0,1,1,54,33,54,33,54,33,-0.011763490332511634
+
+model,property,algorithm,control points,solver,budget,exploration ratio,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+fuel_control,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.05] (throttle < 8.8))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",Breach,10,cmaes,100,,0,1,1,30,34,30,34,30,34,-0.011706703519293031
+fuel_control,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.05] (throttle < 8.8))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",Breach,10,global_nelder_mead,100,,0,1,1,30,33,30,33,30,33,-0.011706703519293031
+fuel_control,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.05] (throttle < 8.8))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",adaptive,10 10 10 10 10,,100,0.25,0,1,1,54,33,54,33,54,33,-0.011763490332511634
+
+model,property,algorithm,control points,budget,solver,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.02)",uniform random,10,100,,0,47,50,1,0,86,47,23,12,-0.015238736948717229
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.04)",uniform random,10,100,,0,0,50,0,0,0,0,0,0,0.0040615544051266425
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.05)",uniform random,10,100,,0,0,50,0,0,0,0,0,0,0.014061554405126644
+fuel_control,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.05] (throttle < 8.8))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",uniform random,10,100,,0,44,50,1,0,97,57,44,23,-0.025216781387073076
+fuel_control,"□_[49.0, 50.0] (rms < 0.05)",uniform random,10,100,,0,50,50,1,0,91,47,18,9,-0.08245721529142118
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.02)",Breach,10,100,cmaes,0,10,50,18,22,56,60,38,41,-0.0164474483402688
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.04)",Breach,10,100,cmaes,0,0,50,0,0,0,0,0,0,0.0035525516597312012
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.05)",Breach,10,100,cmaes,0,0,50,0,0,0,0,0,0,0.013552551659731203
+fuel_control,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.05] (throttle < 8.8))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",Breach,10,100,cmaes,0,41,50,18,23,53,58,35,40,-0.025805391670092007
+
