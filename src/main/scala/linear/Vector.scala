@@ -137,7 +137,7 @@ object Vector {
       res.data(i) = init(i)
     res
   }
-
+  
   def apply(data: Double*): Vector = {
     val length = data.length
     Vector(length, data(_))

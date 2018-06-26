@@ -13,10 +13,13 @@ import hybrid.Time
 import linear.Vector
 import mtl.Formula
 import mtl.Robustness
-import mtl.Value
 import util.Combinatorics
 import util.Proportional
 import util.Uniform
+import hybrid.InputType
+import hybrid.Constant
+import hybrid.PiecewiseConstant
+import hybrid.Value
 
 class Bin[A](val level: Int, actions: Seq[A]) {
   val todo = ArrayBuffer[A](actions: _*)
@@ -100,31 +103,41 @@ object Adaptive {
   var verbose: Boolean = false
   var observer: Observer = Observer.default
 
-  def level(n: Int, in: Region): Seq[Input] = {
-    for (ps <- Combinatorics.splits(0, in.dimensions, n)) yield {
-      val u = in.split(ps)
-      u
+  // second call: just set some inputs to constant
+  def level(l: Int, dt: Duration, inputs: Seq[(String, InputType)]) = {
+    val varying = inputs collect {
+      case (name, _: Constant) => name
+      case (name, _: PiecewiseConstant) => name
     }
-  }
 
-  def level(n: Int, dt: Duration, in: Region): Seq[(Input, Duration)] = {
-    for (ps <- Combinatorics.splits(0, in.dimensions, n)) yield {
-      val u = in.split(ps)
+    val splits = Combinatorics.splits(varying.toList, l)
+
+    for (split <- splits) yield {
+      val u = Vector(inputs map {
+        case (name, Value(value)) =>
+          value
+        case (name, Constant(min, max)) =>
+          val p = split(name)
+          min + p * (max - min)
+        case (name, PiecewiseConstant(min, max)) =>
+          val p = split(name)
+          min + p * (max - min)
+      }: _*)
+
       (u, dt)
     }
   }
 
-  def get_constants(u: Input, is: Seq[Int]) = {
-    val res = is map (i => (i, u(i)))
-    res.toMap
+  def levels(cps: Seq[Int], T: Time, inputs: Seq[(String, InputType)]) = {
+    cps.zipWithIndex map {
+      case (cp, l) => level(l, T / cp, inputs)
+    }
   }
 
-  def fix_constants(levels: Seq[Seq[(Input, Duration)]], c: Map[Int, Double]) = {
-    for (level <- levels) yield {
-      for ((u, dt) <- level) yield {
-        val v = Vector(u.length, i => if (c contains i) c(i) else u(i))
-        (v, dt)
-      }
+  def fix_constants(u: Input, inputs: Seq[(String, InputType)]) = {
+    inputs.zipWithIndex map {
+      case ((name, _: Constant), i) => (name, Value(u(i)))
+      case ((name, typ), i) => (name, typ)
     }
   }
 
@@ -149,19 +162,19 @@ object Adaptive {
       val pn = cfg.pn(sys.params)
       val in = cfg.in(sys.inputs)
       val cs = cfg.cs(sys.inputs)
-      
-      val ps = pn.sample // ok if constant
 
-      val levels = controlpoints.zipWithIndex map {
-        case (cp, i) => level(i, T / cp, in)
+      val inputs = sys.inputs map {
+        name => (name, cfg.inputs(name))
       }
+
+      val ps = pn.sample // Value or Constant, established by Parser.configureSystem
 
       def playout(ps: Input, us: Signal): Result = {
         val res = sim(ps, us, T)
         res
       }
 
-      def sample(node: Node, us: Signal, c: Map[Int, Double]): Result = {
+      def sample(node: Node, us: Signal, inputs: Seq[(String, InputType)]): Result = {
         val t = node.time
         node.visited += 1
 
@@ -182,16 +195,21 @@ object Adaptive {
             explore += 1
             //            print(bin.level + "@" + t + " ")
             // create new child node and a trace
-            val newc = get_constants(u, cs)
-            val newlevels = fix_constants(levels, newc)
-            val child = new Node(t + dt, newlevels)
-            val result = sample(child, us ++ Signal.point(t, u), newc)
+            val new_inputs = fix_constants(u, inputs)
+            val new_levels = levels(controlpoints, T, new_inputs)
+
+            println("making new levels")
+            for (level <- new_levels)
+              println(level)
+
+            val child = new Node(t + dt, new_levels)
+            val result = sample(child, us ++ Signal.point(t, u), new_inputs)
             val Result(tr, rs) = result
 
             // check feasibility
             val pr = tr until child.time
 
-            val Value(lower, upper) = Robustness.bounds(phi, pr.us, pr.ys)
+            val mtl.Value(lower, upper) = Robustness.bounds(phi, pr.us, pr.ys)
 
             if (lower < 0) {
               Falsification.observer.update(result until child.time)
@@ -211,18 +229,19 @@ object Adaptive {
 
           case (bin, Right((u, child))) =>
             exploit += 1
-            val result = sample(child, us ++ Signal.point(t, u), c)
+            val result = sample(child, us ++ Signal.point(t, u), inputs)
             node update result
             result
         }
       }
 
-      val root = new Node(0, levels)
+      val root_levels = levels(controlpoints, T, inputs)
+      val root = new Node(0, root_levels)
       var solved = false
       var result = Result.empty
 
       for (i <- 0 until budget if !solved) {
-        result = sample(root, Signal.empty, Map.empty)
+        result = sample(root, Signal.empty, inputs)
         solved |= result.score < 0
 
         print(".")
