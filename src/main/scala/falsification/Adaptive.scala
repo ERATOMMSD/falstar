@@ -198,10 +198,6 @@ object Adaptive {
             val new_inputs = fix_constants(u, inputs)
             val new_levels = levels(controlpoints, T, new_inputs)
 
-            println("making new levels")
-            for (level <- new_levels)
-              println(level)
-
             val child = new Node(t + dt, new_levels)
             val result = sample(child, us ++ Signal.point(t, u), new_inputs)
             val Result(tr, rs) = result
