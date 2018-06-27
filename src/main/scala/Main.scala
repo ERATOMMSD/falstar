@@ -125,17 +125,21 @@ object Main {
       quit.break
   }
 
-  def run(file: String): Unit = {
-    val commands = parse(new File(file))
-    
-    if(options.dummy)
-      return
-
+  def run(commands: Seq[Command]) {
     quit.breakable {
       for (cmd <- commands) {
         run(cmd)
       }
     }
+  }
+
+  def run(file: String): Unit = {
+    val commands = parse(new File(file))
+
+    if (options.dummy)
+      return
+
+    run(commands)
   }
 
   def writeall(results: Iterable[(String, mutable.Buffer[Table])]) {
@@ -184,7 +188,7 @@ object Main {
       println("  -a    ask for additional input files:")
       println("          enter one filename per line followed by a blank line")
       println("          a blank line acknowledges, EOF (CTRL+d) aborts")
-      println("  -d    dummy run, parse and validate configuration only") 
+      println("  -d    dummy run, parse and validate configuration only")
       println("  -g    show a graphical diagram for each trial")
       println("  -v    be verbose")
     }

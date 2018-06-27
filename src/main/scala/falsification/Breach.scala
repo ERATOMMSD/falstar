@@ -177,6 +177,7 @@ object Breach {
 
         eval("problem = FalsificationProblem(sys, phi)")
         eval("problem.max_obj_eval = 100")
+        eval("problem.max_time = 0")
         eval("problem.setup_solver('cmaes')")
         eval("problem.solver_options.Seed = " + Probability.seed)
         eval("problem.solve()")
