@@ -97,9 +97,13 @@ object Breach {
       import hybrid.Simulink.eval
       import hybrid.Simulink.get
 
-
+      // add directory
       // set params and variables
-      // assert(sys.initialized)
+      sys match {
+        case sys: SimulinkSystem =>
+          assert(sys.initialized)
+      }
+
       run(controlpoints, solver, budget, phi, cfg, sys, eval)
 
       val score: Double = get("score")
