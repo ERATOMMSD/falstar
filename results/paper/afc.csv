@@ -19,3 +19,21 @@ fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.04)",Breach,10,100,cmaes,0,0,50,0,0,
 fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.05)",Breach,10,100,cmaes,0,0,50,0,0,0,0,0,0,0.013552551659731203
 fuel_control,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.05] (throttle < 8.8))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",Breach,10,100,cmaes,0,41,50,18,23,53,58,35,40,-0.025805391670092007
 
+model,property,algorithm,control points,solver,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.02)",Breach,10,global_nelder_mead,100,0,0,1,0,0,0,0,0,0,0.012266671108620335
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.04)",Breach,10,global_nelder_mead,100,0,0,1,0,0,0,0,0,0,0.03226667110862034
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.05)",Breach,10,global_nelder_mead,100,0,0,1,0,0,0,0,0,0,0.04226667110862034
+fuel_control,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.05] (throttle < 8.8))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",Breach,10,global_nelder_mead,100,0,1,1,30,32,30,32,30,32,-0.011706703519293031
+
+model,property,algorithm,control points,solver,budget,exploration ratio,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+fuel_control,"□_[49.0, 50.0] (rms < 0.05)",Breach,10,cmaes,100,,0,47,50,14,17,99,95,75,73,-0.0736129364020692
+fuel_control,"□_[49.0, 50.0] (rms < 0.05)",Breach,10,global_nelder_mead,100,,0,0,1,0,0,0,0,0,0,0.01773605063094949
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.02)",adaptive,10 10 10 10 10,,100,0.25,0,45,50,1,0,100,54,34,17,-0.015714267893876862
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.04)",adaptive,10 10 10 10 10,,100,0.25,0,0,50,0,0,0,0,0,0,0.014324687916181921
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.05)",adaptive,10 10 10 10 10,,100,0.25,0,0,50,0,0,0,0,0,0,0.024324687916181923
+fuel_control,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.05] (throttle < 8.8))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",adaptive,10 10 10 10 10,,100,0.25,0,47,50,1,0,92,52,30,16,-0.02179788775798646
+fuel_control,"□_[49.0, 50.0] (rms < 0.05)",adaptive,10 10 10 10 10,,100,0.25,0,48,50,1,0,92,50,24,13,-0.057611683165321795
+
+model,property,algorithm,control points,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+fuel_control,"□_[11.0, 50.0] (((mode == 1.0) && ◇_[0.0, 0.1] (mode == 0.0)) ==> □_[1.0, 5.0] (abs(mu) < 0.02))",uniform random,10,100,0,50,50,1,0,3,3,1,0,-0.15609631072757596
+
