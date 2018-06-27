@@ -73,7 +73,7 @@ object Breach {
       "budget" -> budget)
 
     def search(sys: System, cfg: Config, phi: Formula): (Result, Statistics) = {
-      extracted(controlpoints, solver, budget, phi, cfg, sys, println)
+      run(controlpoints, solver, budget, phi, cfg, sys, println)
 
       val us = Signal((0, Vector.zero(sys.inports.length)))
       val ys = Signal((0, Vector.zero(sys.outports.length)))
@@ -97,7 +97,10 @@ object Breach {
       import hybrid.Simulink.eval
       import hybrid.Simulink.get
 
-      extracted(controlpoints, solver, budget, phi, cfg, sys, eval)
+
+      // set params and variables
+      // assert(sys.initialized)
+      run(controlpoints, solver, budget, phi, cfg, sys, eval)
 
       val score: Double = get("score")
       val sims: Double = get("sims")
@@ -119,7 +122,7 @@ object Breach {
     }
   }
 
-  def extracted(controlpoints: Int, solver: String, budget: Int, _phi: Formula, cfg: Config, sys: System, eval: String => Unit) = sys match {
+  def run(controlpoints: Int, solver: String, budget: Int, _phi: Formula, cfg: Config, sys: System, eval: String => Unit) = sys match {
     case sys @ SimulinkSystem(path, name, params, inputs, outputs, load) =>
       val dt = 0.01
       val T = _phi.T
@@ -129,9 +132,6 @@ object Breach {
       val inports = sys.inports
 
       val phi = print(_phi)
-
-      // set params and variables
-      assert(sys.initialized)
 
       eval("InitBreach")
 
@@ -175,7 +175,7 @@ object Breach {
 
       eval("problem = FalsificationProblem(sys, phi)")
       eval("problem.max_obj_eval = 100")
-      eval("problem.max_time = 0")
+      eval("problem.max_time = 3600") // 1h (can't be 0)
       eval("problem.setup_solver('cmaes')")
       eval("problem.solver_options.Seed = " + Probability.seed)
       eval("problem.solve()")

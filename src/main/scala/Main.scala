@@ -193,9 +193,7 @@ object Main {
       println("  -v    be verbose")
     }
 
-    val pre = List()
-    val post = List("src/test/configuration/test.cfg")
-    val rest = setup(pre ++ args ++ post)
+    val rest = setup(args.toList)
 
     var files = Buffer[String]()
     files ++= rest
