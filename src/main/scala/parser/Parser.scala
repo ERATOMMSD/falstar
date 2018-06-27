@@ -227,8 +227,13 @@ class Parser {
       state.search = Breach.generate(controlpoints.toInt, solver, budget.toInt)
       Seq()
 
-    case Node(Keyword("set-solver"), Identifier("latexprinter")) =>
-      state.search = LaTeX.dummy
+    case Node(Keyword("latex"), phis @ _*) =>
+      for (phi <- phis) phi match {
+        case Identifier(name) =>
+          println(name + " = " + LaTeX.print(formula(phi)))
+        case _ =>
+          println(LaTeX.print(formula(phi)))
+      }
       Seq()
 
     case Node(Keyword("set-solver"), Identifier("staliroprinter"), Literal(prefix: String)) =>
