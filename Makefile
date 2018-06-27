@@ -29,6 +29,8 @@ bin:
 clean:
 	rm -fr bin
 	rm -fr slprj
+	rm -f outcmaes*.dat
+	rm -f variablescmaes*.mat
 	rm -f main.jar
 	rm -f *.slxc *.mexa64
 
