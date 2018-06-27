@@ -29,7 +29,7 @@ Whitespace = {Newline}|{Space}
 
 Num = [0-9]
 Alpha = [a-zA-Z_]
-AlphaNum = {Alpha}|{Num}
+AlphaNum = {Alpha}|{Num}|"-"
 
 Operators = "<" | ">" | "<=" | ">=" | "+" | "-" | "*" | "/" | abs
 Connectives = "!" | "=>" | "||" | "&&" | "==" | "!=" | true | false | not | implies | and | or | always | eventually | in

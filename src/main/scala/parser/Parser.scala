@@ -223,12 +223,12 @@ class Parser {
       state.search = Breach.falsification(controlpoints.toInt, solver, budget.toInt)
       Seq()
 
-    case Node(Keyword("set-solver"), Identifier("latexprinter")) =>
-      state.search = LaTeX.dummy
+    case Node(Keyword("set-solver"), Identifier("breach-generator"), Literal(controlpoints: Double), Identifier(solver), Literal(budget: Double)) =>
+      state.search = Breach.generate(controlpoints.toInt, solver, budget.toInt)
       Seq()
 
-    case Node(Keyword("set-solver"), Identifier("breachprinter"), Literal(cp: Double)) =>
-      state.search = Breach.dummy(cp.toInt)
+    case Node(Keyword("set-solver"), Identifier("latexprinter")) =>
+      state.search = LaTeX.dummy
       Seq()
 
     case Node(Keyword("set-solver"), Identifier("staliroprinter"), Literal(prefix: String)) =>
