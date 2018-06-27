@@ -31,7 +31,7 @@ import mtl.True
 object LaTeX {
   def print(tm: Term): String = tm match {
     case c: Const => c.toString
-    case p: Port => p.name + "[t]"
+    case p: Port => "\\mathit{"+p.name + "}"
     case Plus(left, right) => "(" + print(left) + " + " + print(right) + ")"
     case Minus(left, right) => "(" + print(left) + " - " + print(right) + ")"
     case Times(left, right) => "(" + print(left) + " * " + print(right) + ")"
@@ -56,23 +56,4 @@ object LaTeX {
     case Always(t0, t1, phi) => "(\\Box_{[" + t0 + "," + t1 + "]} " + print(phi) + ")"
     case Eventually(t0, t1, phi) => "(\\Diamond_{[" + t0 + "," + t1 + "]} " + print(phi) + ")"
   }
-
-  case object dummy extends Falsification {
-    def identification = "LaTeX (print formulas only)"
-    def params = Seq()
-
-    def search(sys: System, cfg: Config,  phi: Formula): (Result, Statistics) = {
-      println(print(phi))
-
-      val us = Signal((0, Vector.zero(sys.inports.length)))
-      val ys = Signal((0, Vector.zero(sys.outports.length)))
-      val tr = Trace(us, Signal.empty)
-      val rs = Robustness(Array((0.0, 0.0)))
-      val res = Result(tr, rs)
-      val stat = Statistics.empty
-      (res, stat)
-    }
-
-  }
-
 }
