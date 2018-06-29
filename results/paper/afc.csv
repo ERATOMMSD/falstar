@@ -55,3 +55,6 @@ fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.2)",Breach,10,cmaes,100,0,0,50,0,0,0
 model,property,algorithm,control points,solver,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
 fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.2)",Breach,10,global_nelder_mead,100,0,0,1,0,0,0,0,0,0,0.15802907627811963
 
+model,property,algorithm,control points,exploration ratio,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.2)",adaptive,10 10 10 10 10,0.25,100,0,0,50,0,0,0,0,0,0,0.1703944726858228
+
