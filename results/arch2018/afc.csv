@@ -13,3 +13,7 @@ fuel_control,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < th
 model,property,algorithm,control points,exploration ratio,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
 fuel_control,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.05] (throttle < 8.8))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",adaptive,10 10 10 10 10,0.25,100,0,49,50,1,0,71,40,22,12,-0.02179788775798646
 
+model,property,algorithm,control points,budget,exploration ratio,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+AbstractFuelControl_M1,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.05] (throttle < 8.8))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",uniform random,10,100,,0,10,50,19,34,76,134,47,84,-2.701002400977773E-4
+AbstractFuelControl_M1,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.05] (throttle < 8.8))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",adaptive,10 10 10 10 10,100,0.25,0,50,50,1,1,23,41,6,11,-6.108916091822694E-4
+
