@@ -1,7 +1,7 @@
 addpath 'src/test/simulink/'
 
 simTime = 50.0
-en_speed = 1000.0
+% en_speed = 1000.0
 measureTime = 1.0
 fault_time = 60.0
 spec_num = 1.0
