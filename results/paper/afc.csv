@@ -58,3 +58,45 @@ fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.2)",Breach,10,global_nelder_mead,100
 model,property,algorithm,control points,exploration ratio,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
 fuel_control,"□_[11.0, 50.0] (abs(mu) < 0.2)",adaptive,10 10 10 10 10,0.25,100,0,0,50,0,0,0,0,0,0,0.1703944726858228
 
+model,property,algorithm,control points,budget,solver,exploration ratio,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+AbstractFuelControl_M1,"□_[11.0, 50.0] (abs(mu) < 0.02)",uniform random,10,100,,,0,0,50,0,0,0,0,0,0,0.0103986406792199
+AbstractFuelControl_M1,"□_[11.0, 50.0] (abs(mu) < 0.04)",uniform random,10,100,,,0,0,50,0,0,0,0,0,0,0.0303986406792199
+AbstractFuelControl_M1,"□_[11.0, 50.0] (abs(mu) < 0.05)",uniform random,10,100,,,0,0,50,0,0,0,0,0,0,0.0403986406792199
+AbstractFuelControl_M1,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.05] (throttle < 8.8))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",uniform random,10,100,,,0,9,50,9,30,85,282,45,153,-3.3306926479471227E-4
+AbstractFuelControl_M1,"□_[11.0, 50.0] (abs(mu) < 0.02)",Breach,10,100,cmaes,,0,0,50,0,0,0,0,0,0,0.011635542704634388
+AbstractFuelControl_M1,"□_[11.0, 50.0] (abs(mu) < 0.04)",Breach,10,100,cmaes,,0,0,50,0,0,0,0,0,0,0.03163554270463439
+AbstractFuelControl_M1,"□_[11.0, 50.0] (abs(mu) < 0.05)",Breach,10,100,cmaes,,0,0,50,0,0,0,0,0,0,0.04163554270463439
+AbstractFuelControl_M1,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.05] (throttle < 8.8))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",Breach,10,100,cmaes,,0,12,50,31,123,92,364,59,231,-3.036301126542254E-4
+AbstractFuelControl_M1,"□_[11.0, 50.0] (abs(mu) < 0.02)",Breach,10,100,global_nelder_mead,,0,0,1,0,0,0,0,0,0,0.011646658524747427
+AbstractFuelControl_M1,"□_[11.0, 50.0] (abs(mu) < 0.04)",Breach,10,100,global_nelder_mead,,0,0,1,0,0,0,0,0,0,0.03164665852474743
+AbstractFuelControl_M1,"□_[11.0, 50.0] (abs(mu) < 0.05)",Breach,10,100,global_nelder_mead,,0,0,1,0,0,0,0,0,0,0.04164665852474743
+AbstractFuelControl_M1,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.05] (throttle < 8.8))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",Breach,10,100,global_nelder_mead,,0,0,1,0,0,0,0,0,0,1.2267244803387117E-4
+AbstractFuelControl_M1,"□_[11.0, 50.0] (abs(mu) < 0.02)",adaptive,10 10 10 10 10,100,,0.25,0,0,50,0,0,0,0,0,0,0.010245494291558504
+AbstractFuelControl_M1,"□_[11.0, 50.0] (abs(mu) < 0.04)",adaptive,10 10 10 10 10,100,,0.25,0,0,50,0,0,0,0,0,0,0.030245494291558504
+AbstractFuelControl_M1,"□_[11.0, 50.0] (abs(mu) < 0.05)",adaptive,10 10 10 10 10,100,,0.25,0,0,50,0,0,0,0,0,0,0.040245494291558506
+AbstractFuelControl_M1,"□_[11.0, 50.0] ((((throttle < 8.8) && ◇_[0.0, 0.05] (40.0 < throttle)) || ((40.0 < throttle) && ◇_[0.0, 0.05] (throttle < 8.8))) ==> □_[1.0, 5.0] (abs(mu) < 0.008))",adaptive,10 10 10 10 10,100,,0.25,0,50,50,1,3,22,84,5,22,-6.11279064047128E-4
+
+model,property,algorithm,control points,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+AbstractFuelControl_M1,"□_[11.0, 50.0] (((mode == 1.0) && ◇_[0.0, 0.1] (mode == 0.0)) ==> □_[1.0, 5.0] (abs(mu) < 0.02))",uniform random,10,100,0,50,50,1,3,2,8,1,4,-0.1560105630700819
+
+model,property,algorithm,control points,solver,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+AbstractFuelControl_M1,"□_[11.0, 50.0] (((mode == 1.0) && ◇_[0.0, 0.1] (mode == 0.0)) ==> □_[1.0, 5.0] (abs(mu) < 0.02))",Breach,10,cmaes,100,0,10,50,3,11,10,40,8,31,-0.12247584411307712
+
+model,property,algorithm,control points,solver,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+AbstractFuelControl_M1,"□_[11.0, 50.0] (((mode == 1.0) && ◇_[0.0, 0.1] (mode == 0.0)) ==> □_[1.0, 5.0] (abs(mu) < 0.02))",Breach,10,global_nelder_mead,100,0,0,1,0,0,0,0,0,0,1.0
+
+model,property,algorithm,control points,exploration ratio,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+AbstractFuelControl_M1,"□_[11.0, 50.0] (((mode == 1.0) && ◇_[0.0, 0.1] (mode == 0.0)) ==> □_[1.0, 5.0] (abs(mu) < 0.02))",adaptive,10 10 10 10 10,0.25,100,0,50,50,1,3,3,11,1,4,-0.15604369115365382
+
+model,property,algorithm,control points,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+AbstractFuelControl_M1,"□_[11.0, 50.0] (abs(mu) < 0.2)",uniform random,10,100,0,0,50,0,0,0,0,0,0,0.19441096282239295
+
+model,property,algorithm,control points,solver,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+AbstractFuelControl_M1,"□_[11.0, 50.0] (abs(mu) < 0.2)",Breach,10,cmaes,100,0,0,50,0,0,0,0,0,0,0.19438004150186933
+
+model,property,algorithm,control points,solver,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+AbstractFuelControl_M1,"□_[11.0, 50.0] (abs(mu) < 0.2)",Breach,10,global_nelder_mead,100,0,0,1,0,0,0,0,0,0,0.1944131617728187
+
+model,property,algorithm,control points,exploration ratio,budget,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+AbstractFuelControl_M1,"□_[11.0, 50.0] (abs(mu) < 0.2)",adaptive,10 10 10 10 10,0.25,100,0,0,50,0,0,0,0,0,0,0.19440748868198737
+
