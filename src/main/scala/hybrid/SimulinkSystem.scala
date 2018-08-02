@@ -36,6 +36,12 @@ case class SimulinkSystem(
     for (file <- load)
       eval("load('" + file + "')")
 
+    if (accelerated) {
+      println(" compiling ")
+      // eval("accelbuild('" + name + "')")
+      eval("set_param('" + name + "','SimulationMode','rapid')")
+    }
+
     setup.stop()
     println(" done (" + setup.seconds + "s)")
 
@@ -43,15 +49,17 @@ case class SimulinkSystem(
   }
 
   def sim(ps: Input, us: Signal, T: Time) = {
+
+    for ((x, a) <- (params, ps.data).zipped)
+      eval(x + " = " + a)
+
     assert(initialized)
+
     // println("simulate " + name + " from " + 0 + " to " + T)
     // println("simulate " + name + " to " + T + " with inputs " + us /*.collapse*/ .mkString(" "))
 
     val t__ = us map { case (t, u) => Array(t) }
     val u__ = us map { case (t, u) => u.data }
-
-    for ((x, a) <- (params, ps.data).zipped)
-      eval(x + " = " + a)
 
     // NOTE: need to duplicate last entry in the input signal
     val U = u__.last
@@ -93,6 +101,7 @@ case class SimulinkSystem(
 }
 
 object Simulink {
+  var accelerated = true
   var verbose = false
   var connected = false
 
