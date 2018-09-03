@@ -103,7 +103,7 @@ object Simulink {
 
   val threshold = 0.0
   val separator = "-" * 20
-  val nextResult = util.numbers(0)
+  val nextResult = falstar.util.numbers(0)
 
   def main(args: Array[String]) {
     engine

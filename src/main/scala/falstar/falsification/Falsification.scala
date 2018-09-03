@@ -68,7 +68,7 @@ trait Falsification {
     println("statistics")
     println("  simulations " + stats.simulations)
     println("  total time  " + stats.time + "s")
-    println("  peak memory " + util.peakMemBytes / 1000 + " kb")
+    println("  peak memory " + falstar.util.peakMemBytes / 1000 + " kb")
     println()
 
     (res, stats)
