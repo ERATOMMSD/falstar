@@ -1,8 +1,8 @@
-package hybrid
+package falstar.hybrid
 
-import linear.Vector
-import mtl.InPorts
-import mtl.OutPorts
+import falstar.linear.Vector
+import falstar.mtl.InPorts
+import falstar.mtl.OutPorts
 
 sealed trait InputType {
   def range: (Double, Double)

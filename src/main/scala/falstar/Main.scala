@@ -1,3 +1,5 @@
+package falstar
+
 import java.io.File
 import java.io.FileWriter
 
@@ -7,18 +9,18 @@ import scala.collection.mutable.Buffer
 import scala.io.StdIn
 import scala.util.control.Breaks
 
-import falsification.Result
-import falsification.Table
-import hybrid.Simulink
-import parser.Command
-import parser.Falsify
-import parser.Quit
-import parser.Robustness
-import parser.Simulate
-import parser.parse
-import util.Probability
-import util.Scope
-import parser.Flush
+import falstar.falsification.Result
+import falstar.falsification.Table
+import falstar.hybrid.Simulink
+import falstar.parser.Command
+import falstar.parser.Falsify
+import falstar.parser.Quit
+import falstar.parser.Robustness
+import falstar.parser.Simulate
+import falstar.parser.parse
+import falstar.util.Probability
+import falstar.util.Scope
+import falstar.parser.Flush
 
 object Main {
   object quit extends Breaks

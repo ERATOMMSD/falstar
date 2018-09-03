@@ -1,4 +1,4 @@
-package util
+package falstar.util
 
 import java.util.ArrayDeque
 

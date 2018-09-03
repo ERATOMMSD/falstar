@@ -1,14 +1,14 @@
-package falsification
+package falstar.falsification
 
-import mtl.Robustness
-import mtl.Formula
-import hybrid.System
-import hybrid.Region
-import hybrid.Signal
-import hybrid.Time
-import hybrid.Rho
-import hybrid.Config
-import hybrid.Input
+import falstar.mtl.Robustness
+import falstar.mtl.Formula
+import falstar.hybrid.System
+import falstar.hybrid.Region
+import falstar.hybrid.Signal
+import falstar.hybrid.Time
+import falstar.hybrid.Rho
+import falstar.hybrid.Config
+import falstar.hybrid.Input
 
 object UniformRandom {
   case class falsification(controlpoints: Int, budget: Int) extends Falsification with WithStatistics {

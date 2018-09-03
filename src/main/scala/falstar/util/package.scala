@@ -1,3 +1,5 @@
+package falstar
+
 import java.awt.Color
 import java.lang.management.ManagementFactory
 import java.lang.management.MemoryType

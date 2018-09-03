@@ -1,25 +1,25 @@
-package falsification
+package falstar.falsification
 
 import scala.collection.mutable.ArrayBuffer
 
-import hybrid.Config
-import hybrid.Duration
-import hybrid.Input
-import hybrid.Region
-import hybrid.Score
-import hybrid.Signal
-import hybrid.System
-import hybrid.Time
-import linear.Vector
-import mtl.Formula
-import mtl.Robustness
-import util.Combinatorics
-import util.Proportional
-import util.Uniform
-import hybrid.InputType
-import hybrid.Constant
-import hybrid.PiecewiseConstant
-import hybrid.Value
+import falstar.hybrid.Config
+import falstar.hybrid.Duration
+import falstar.hybrid.Input
+import falstar.hybrid.Region
+import falstar.hybrid.Score
+import falstar.hybrid.Signal
+import falstar.hybrid.System
+import falstar.hybrid.Time
+import falstar.linear.Vector
+import falstar.mtl.Formula
+import falstar.mtl.Robustness
+import falstar.util.Combinatorics
+import falstar.util.Proportional
+import falstar.util.Uniform
+import falstar.hybrid.InputType
+import falstar.hybrid.Constant
+import falstar.hybrid.PiecewiseConstant
+import falstar.hybrid.Value
 
 class Bin[A](val level: Int, actions: Seq[A]) {
   val todo = ArrayBuffer[A](actions: _*)
@@ -205,7 +205,7 @@ object Adaptive {
             // check feasibility
             val pr = tr until child.time
 
-            val mtl.Value(lower, upper) = Robustness.bounds(phi, pr.us, pr.ys)
+            val falstar.mtl.Value(lower, upper) = Robustness.bounds(phi, pr.us, pr.ys)
 
             if (lower < 0) {
               Falsification.observer.update(result until child.time)

@@ -1,11 +1,13 @@
+package falstar
+
 import scala.language.implicitConversions
-import mtl.Robustness
-import mtl.Port
-import mtl.OutPorts
-import mtl.InPorts
+import falstar.mtl.Robustness
+import falstar.mtl.Port
+import falstar.mtl.OutPorts
+import falstar.mtl.InPorts
 
 package object hybrid {
-  import linear._
+  import falstar.linear._
 
   type Time = Double
   type Duration = Double

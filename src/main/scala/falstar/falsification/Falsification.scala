@@ -1,20 +1,20 @@
-package falsification
+package falstar.falsification
 
-import hybrid.Region
-import hybrid.System
-import mtl.Formula
-import hybrid.Signal
-import util.Timer
-import hybrid.Time
-import mtl.Robustness
-import hybrid.Rho
-import util.Probability
-import hybrid.Config
-import hybrid.Input
+import falstar.hybrid.Region
+import falstar.hybrid.System
+import falstar.mtl.Formula
+import falstar.hybrid.Signal
+import falstar.util.Timer
+import falstar.hybrid.Time
+import falstar.mtl.Robustness
+import falstar.hybrid.Rho
+import falstar.util.Probability
+import falstar.hybrid.Config
+import falstar.hybrid.Input
 
 trait Falsification {
   def repeat(sys: System, cfg: Config, phi: Formula, _seed: Option[Long], n: Int): Table = {
-    import util.IntOps
+    import falstar.util.IntOps
 
     _seed match {
       case None => Probability.setUniqueSeed()

@@ -1,8 +1,8 @@
-package hybrid
+package falstar.hybrid
 
 import scala.collection.mutable.ArrayBuffer
 
-import linear.Vector
+import falstar.linear.Vector
 
 object Signal {
   def length(t0: Time, dt: Duration, T: Time): Int = {

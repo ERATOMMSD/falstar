@@ -1,9 +1,9 @@
-package hybrid
+package falstar.hybrid
 
-import linear.Matrix
-import linear.Vector
+import falstar.linear.Matrix
+import falstar.linear.Vector
 import scala.collection.mutable.ArrayBuffer
-import linear.Integrator
+import falstar.linear.Integrator
 
 case class ContinuousSystem(
   name: String,

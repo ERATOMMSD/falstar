@@ -1,4 +1,4 @@
-package parser
+package falstar.parser
 
 sealed trait Syntax {
 }

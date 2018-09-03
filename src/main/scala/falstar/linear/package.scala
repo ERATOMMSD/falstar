@@ -1,3 +1,5 @@
+package falstar
+
 package object linear {
   implicit class DoubleOps(a: Double) {
     def *(that: Vector) = { that * a }

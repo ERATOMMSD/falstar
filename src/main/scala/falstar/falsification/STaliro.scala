@@ -1,26 +1,26 @@
-package falsification
+package falstar.falsification
 
-import hybrid.Signal
-import hybrid.System
-import hybrid.Trace
-import linear.Vector
-import mtl.Always
-import mtl.And
-import mtl.Equal
-import mtl.Eventually
-import mtl.False
-import mtl.Formula
-import mtl.Less
-import mtl.LessEqual
-import mtl.NotEqual
-import mtl.Or
-import mtl.Robustness
-import mtl.Term
-import mtl.True
-import mtl.Not
-import mtl.Implies
-import mtl.Proposition
-import hybrid.Config
+import falstar.hybrid.Signal
+import falstar.hybrid.System
+import falstar.hybrid.Trace
+import falstar.linear.Vector
+import falstar.mtl.Always
+import falstar.mtl.And
+import falstar.mtl.Equal
+import falstar.mtl.Eventually
+import falstar.mtl.False
+import falstar.mtl.Formula
+import falstar.mtl.Less
+import falstar.mtl.LessEqual
+import falstar.mtl.NotEqual
+import falstar.mtl.Or
+import falstar.mtl.Robustness
+import falstar.mtl.Term
+import falstar.mtl.True
+import falstar.mtl.Not
+import falstar.mtl.Implies
+import falstar.mtl.Proposition
+import falstar.hybrid.Config
 
 object STaliro {
   case class dummy(prefix: String) extends Falsification {

@@ -1,7 +1,9 @@
+package falstar
+
 import scala.language.implicitConversions
 
 package object mtl {
-  import hybrid.Time
+  import falstar.hybrid.Time
 
   def ◇(t0: Time, T: Time, phi: Formula) = {
     Eventually(t0, T, phi)

@@ -1,4 +1,4 @@
-package util
+package falstar.util
 
 class Timer {
   var _running = false

@@ -1,4 +1,4 @@
-package util
+package falstar.util
 
 import java.awt.Color
 import java.awt.Graphics
@@ -6,21 +6,21 @@ import java.awt.Graphics2D
 import java.awt.Paint
 import java.awt.Rectangle
 
-import falsification.Result
-import hybrid.Signal
-import hybrid.Time
-import hybrid.System
-import hybrid.Trace
+import falstar.falsification.Result
+import falstar.hybrid.Signal
+import falstar.hybrid.Time
+import falstar.hybrid.System
+import falstar.hybrid.Trace
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.WindowConstants
-import linear.Vector
+import falstar.linear.Vector
 import scala.collection.mutable.ArrayBuffer
 import java.awt.BasicStroke
-import mtl.Robustness
-import hybrid.ContinuousSystem
-import hybrid.Input
-import hybrid.State
+import falstar.mtl.Robustness
+import falstar.hybrid.ContinuousSystem
+import falstar.hybrid.Input
+import falstar.hybrid.State
 import java.awt.Dimension
 
 object Scope {

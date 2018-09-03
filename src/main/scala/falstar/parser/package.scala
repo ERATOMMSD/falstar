@@ -1,3 +1,5 @@
+package falstar
+
 import java.io.File
 import java.io.FileReader
 import scala.collection.mutable.ListBuffer

@@ -1,4 +1,4 @@
-package linear
+package falstar.linear
 
 import scala.util.Random
 import java.util.Arrays

@@ -1,4 +1,4 @@
-package util
+package falstar.util
 
 object Combinatorics {
   def splits[A](as: List[A], M: Int): Seq[Map[A, Double]] = as match {

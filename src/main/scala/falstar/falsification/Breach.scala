@@ -1,39 +1,39 @@
-package falsification
+package falstar.falsification
 
-import hybrid.Config
-import hybrid.Constant
-import hybrid.PiecewiseConstant
-import hybrid.Signal
-import hybrid.Signal.SignalOps
-import hybrid.SimulinkSystem
-import hybrid.System
-import hybrid.Trace
-import hybrid.Value
-import linear.Vector
-import mtl.Always
-import mtl.And
-import mtl.Const
-import mtl.DividedBy
-import mtl.Equal
-import mtl.Eventually
-import mtl.False
-import mtl.Formula
-import mtl.Implies
-import mtl.InPort
-import mtl.Less
-import mtl.LessEqual
-import mtl.Minus
-import mtl.Not
-import mtl.NotEqual
-import mtl.Or
-import mtl.Plus
-import mtl.Port
-import mtl.Robustness
-import mtl.Term
-import mtl.Times
-import mtl.Transform
-import mtl.True
-import util.Probability
+import falstar.hybrid.Config
+import falstar.hybrid.Constant
+import falstar.hybrid.PiecewiseConstant
+import falstar.hybrid.Signal
+import falstar.hybrid.Signal.SignalOps
+import falstar.hybrid.SimulinkSystem
+import falstar.hybrid.System
+import falstar.hybrid.Trace
+import falstar.hybrid.Value
+import falstar.linear.Vector
+import falstar.mtl.Always
+import falstar.mtl.And
+import falstar.mtl.Const
+import falstar.mtl.DividedBy
+import falstar.mtl.Equal
+import falstar.mtl.Eventually
+import falstar.mtl.False
+import falstar.mtl.Formula
+import falstar.mtl.Implies
+import falstar.mtl.InPort
+import falstar.mtl.Less
+import falstar.mtl.LessEqual
+import falstar.mtl.Minus
+import falstar.mtl.Not
+import falstar.mtl.NotEqual
+import falstar.mtl.Or
+import falstar.mtl.Plus
+import falstar.mtl.Port
+import falstar.mtl.Robustness
+import falstar.mtl.Term
+import falstar.mtl.Times
+import falstar.mtl.Transform
+import falstar.mtl.True
+import falstar.util.Probability
 
 object Breach {
   def print(tm: Term): String = tm match {
@@ -94,8 +94,8 @@ object Breach {
       "budget" -> budget)
 
     def search(sys: System, cfg: Config, phi: Formula): (Result, Statistics) = {
-      import hybrid.Simulink.eval
-      import hybrid.Simulink.get
+      import falstar.hybrid.Simulink.eval
+      import falstar.hybrid.Simulink.get
 
       // add directory
       // set params and variables

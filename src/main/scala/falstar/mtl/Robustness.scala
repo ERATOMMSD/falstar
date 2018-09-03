@@ -1,12 +1,12 @@
-package mtl
+package falstar.mtl
 
-import hybrid.Score
-import hybrid.Signal
-import hybrid.State
-import hybrid.Time
-import util.Lemire
-import hybrid.Signal.SignalOps
-import hybrid.Input
+import falstar.hybrid.Score
+import falstar.hybrid.Signal
+import falstar.hybrid.State
+import falstar.hybrid.Time
+import falstar.util.Lemire
+import falstar.hybrid.Signal.SignalOps
+import falstar.hybrid.Input
 import scala.collection.mutable.ArrayBuffer
 
 case class Robustness(rs: Array[(Time, Score)]) {

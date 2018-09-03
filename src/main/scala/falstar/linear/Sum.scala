@@ -1,4 +1,4 @@
-package linear
+package falstar.linear
 
 object Sum {
   def apply(length: Int, elem: Int => Double): Double = {

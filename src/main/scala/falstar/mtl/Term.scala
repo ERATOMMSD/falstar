@@ -1,4 +1,4 @@
-package mtl
+package falstar.mtl
 
 object Term {
   def binary(t1: Term, t2: Term, op: (Double, Double) => Double, constr: (Term, Term) => Term) = (t1, t2) match {

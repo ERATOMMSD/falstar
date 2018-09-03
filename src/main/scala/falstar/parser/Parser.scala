@@ -1,30 +1,30 @@
-package parser
+package falstar.parser
 
 import java.io.File
 
-import falsification.Adaptive
-import falsification.Breach
-import falsification.Falsification
-import hybrid.Signal
-import hybrid.SimulinkSystem
-import hybrid.System
-import hybrid.Time
-import linear.Vector
-import mtl.Const
-import mtl.Formula
-import mtl.Port
-import mtl.Term
-import mtl.□
-import mtl.◇
-import mtl.Transform
-import falsification.STaliro
-import falsification.LaTeX
-import falsification.UniformRandom
-import hybrid.Config
-import hybrid.Value
-import hybrid.PiecewiseConstant
-import hybrid.Constant
-import hybrid.Input
+import falstar.falsification.Adaptive
+import falstar.falsification.Breach
+import falstar.falsification.Falsification
+import falstar.hybrid.Signal
+import falstar.hybrid.SimulinkSystem
+import falstar.hybrid.System
+import falstar.hybrid.Time
+import falstar.linear.Vector
+import falstar.mtl.Const
+import falstar.mtl.Formula
+import falstar.mtl.Port
+import falstar.mtl.Term
+import falstar.mtl.□
+import falstar.mtl.◇
+import falstar.mtl.Transform
+import falstar.falsification.STaliro
+import falstar.falsification.LaTeX
+import falstar.falsification.UniformRandom
+import falstar.hybrid.Config
+import falstar.hybrid.Value
+import falstar.hybrid.PiecewiseConstant
+import falstar.hybrid.Constant
+import falstar.hybrid.Input
 
 sealed trait Command
 case object Flush extends Command
@@ -139,8 +139,8 @@ class Parser {
   }
 
   def formula(ports: Map[String, Port], phi: Syntax): Formula = phi match {
-    case Keyword("true") => mtl.True
-    case Keyword("false") => mtl.False
+    case Keyword("true") => falstar.mtl.True
+    case Keyword("false") => falstar.mtl.False
 
     case Node(Keyword("in"), tm, min, max) => term(ports, tm) in (term(ports, min), term(ports, max))
 
@@ -152,13 +152,13 @@ class Parser {
     case Node(Keyword("!="), left, right) => term(ports, left) !== term(ports, right)
 
     case Node(Keyword("!"), phi) => !formula(ports, phi)
-    case Node(Keyword("&&"), phis @ _*) => formulas(ports, phis).fold(mtl.True: Formula)(_ && _)
-    case Node(Keyword("||"), phis @ _*) => formulas(ports, phis).fold(mtl.False: Formula)(_ || _)
+    case Node(Keyword("&&"), phis @ _*) => formulas(ports, phis).fold(falstar.mtl.True: Formula)(_ && _)
+    case Node(Keyword("||"), phis @ _*) => formulas(ports, phis).fold(falstar.mtl.False: Formula)(_ || _)
     case Node(Keyword("=>"), phi, psi) => formula(ports, phi) ==> formula(ports, psi)
 
     case Node(Keyword("not"), phi) => !formula(ports, phi)
-    case Node(Keyword("and"), phis @ _*) => formulas(ports, phis).fold(mtl.True: Formula)(_ && _)
-    case Node(Keyword("or"), phis @ _*) => formulas(ports, phis).fold(mtl.False: Formula)(_ || _)
+    case Node(Keyword("and"), phis @ _*) => formulas(ports, phis).fold(falstar.mtl.True: Formula)(_ && _)
+    case Node(Keyword("or"), phis @ _*) => formulas(ports, phis).fold(falstar.mtl.False: Formula)(_ || _)
     case Node(Keyword("implies"), phi, psi) => formula(ports, phi) ==> formula(ports, psi)
 
     case Node(Keyword("always"), Node(Number(from), Number(to)), psi) => □(from, to, formula(ports, psi))

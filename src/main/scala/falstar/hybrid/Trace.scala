@@ -1,6 +1,6 @@
-package hybrid
+package falstar.hybrid
 
-import linear.Vector
+import falstar.linear.Vector
 
 case class Trace(us: Signal, ys: Signal) {
   import Signal.SignalOps

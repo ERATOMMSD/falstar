@@ -1,12 +1,14 @@
-import mtl.Formula
+package falstar
+
+import falstar.mtl.Formula
 
 package object falsification {
-  import hybrid.Score
-  import hybrid.Time
-  import hybrid.Trace
-  import hybrid.System
-  import mtl.Robustness
-  import util.Timer
+  import falstar.hybrid.Score
+  import falstar.hybrid.Time
+  import falstar.hybrid.Trace
+  import falstar.hybrid.System
+  import falstar.mtl.Robustness
+  import falstar.util.Timer
 
   type Results = Seq[Result]
 

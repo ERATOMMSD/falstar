@@ -1,8 +1,8 @@
-package mtl
+package falstar.mtl
 
-import hybrid.Score
-import hybrid.Time
-import linear.Vector
+import falstar.hybrid.Score
+import falstar.hybrid.Time
+import falstar.linear.Vector
 
 sealed trait Formula {
   def T: Time

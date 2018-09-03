@@ -1,9 +1,9 @@
-package hybrid
+package falstar.hybrid
 
 import scala.collection.mutable.ArrayBuffer
 
-import linear.Integrator
-import linear.Vector
+import falstar.linear.Integrator
+import falstar.linear.Vector
 
 case class Mode(name: String, flow: Flow, switches: Seq[Switch]) {
 }

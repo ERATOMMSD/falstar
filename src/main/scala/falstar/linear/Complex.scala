@@ -1,4 +1,4 @@
-package linear
+package falstar.linear
 
 case class Complex(real: Double, imag: Double) {
   def unary_- = {

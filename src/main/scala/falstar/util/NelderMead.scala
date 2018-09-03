@@ -1,6 +1,6 @@
-package util
+package falstar.util
 
-import linear.Vector
+import falstar.linear.Vector
 import java.util.Arrays
 import scala.annotation.elidable
 import scala.annotation.elidable.ASSERTION

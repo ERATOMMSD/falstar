@@ -1,8 +1,8 @@
-package hybrid
+package falstar.hybrid
 
-import linear.DoubleOps
-import linear.Vector
-import util.Uniform
+import falstar.linear.DoubleOps
+import falstar.linear.Vector
+import falstar.util.Uniform
 
 case class Region(left: Vector, right: Vector) {
   assert(left.length == right.length)

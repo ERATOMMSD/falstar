@@ -1,4 +1,4 @@
-package util
+package falstar.util
 
 import java.awt.Graphics2D
 import java.awt.Graphics
@@ -6,8 +6,8 @@ import javax.swing.JFrame
 import javax.swing.JPanel
 import java.awt.Paint
 import java.awt.Dimension
-import falsification.Results
-import falsification.Result
+import falstar.falsification.Results
+import falstar.falsification.Result
 import javax.swing.WindowConstants
 
 trait Plot {

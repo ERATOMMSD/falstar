@@ -1,4 +1,4 @@
-package linear
+package falstar.linear
 
 object Integrator {
   def euler(flow: (Double, Vector, Vector) => Vector, t: Double, dt: Double, x: Vector, u: Vector) = {
