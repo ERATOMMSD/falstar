@@ -30,11 +30,13 @@ case class Table(rows: Seq[Row]) {
       first = true
       for (column <- columns) {
         if (!first) writer.write(sep)
-        val entry = map(column).toString
-        val escape = (entry contains ' ') || (entry contains sep)
-        if (escape) writer.write("\"")
-        writer.write(entry)
-        if (escape) writer.write("\"")
+        if (map contains column) {
+          val entry = map(column).toString
+          val escape = (entry contains ' ') || (entry contains sep)
+          if (escape) writer.write("\"")
+          writer.write(entry)
+          if (escape) writer.write("\"")
+        }
         first = false
       }
       writer.write("\n")
