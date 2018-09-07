@@ -35,3 +35,8 @@ automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",
 automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",adaptive,2 2 3 3 3 4,0.25,100,0,50,50,2,0,49,9,20,3,-6.0439516000248545
 automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",adaptive,2 2 3 3 3 4,0.25,100,0,48,50,13,2,97,18,50,9,-1.5044496074318587
 
+model,property,algorithm,control points,solver,budget,exploration ratio,seed,success,tries,min simulations,min time,max simulations,max time,avg simulations,avg time,best robustness
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,10,cmaes,100,,0,0,1,0,0,0,0,0,0,10.965587992374196
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,10,global_nelder_mead,100,,0,0,1,0,0,0,0,0,0,10.965587992374196
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",adaptive,10 10 10 10 10,,100,0.25,0,0,1,0,0,0,0,0,0,25.85476084724442
+

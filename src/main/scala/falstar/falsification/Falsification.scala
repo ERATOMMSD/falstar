@@ -1,26 +1,23 @@
 package falstar.falsification
 
-import falstar.hybrid.Region
-import falstar.hybrid.System
-import falstar.mtl.Formula
-import falstar.hybrid.Signal
-import falstar.util.Timer
-import falstar.hybrid.Time
-import falstar.mtl.Robustness
-import falstar.hybrid.Rho
-import falstar.util.Probability
 import falstar.hybrid.Config
 import falstar.hybrid.Input
+import falstar.hybrid.Signal
+import falstar.hybrid.System
+import falstar.hybrid.Time
+import falstar.mtl.Formula
+import falstar.mtl.Robustness
+import falstar.util.Probability
+import falstar.util.Row
+import falstar.util.Timer
 
 trait Falsification {
   def repeat(sys: System, cfg: Config, phi: Formula, _seed: Option[Long], n: Int): Table = {
-    import falstar.util.IntOps
-
     _seed match {
       case None => Probability.setUniqueSeed()
       case Some(seed) => Probability.seed = seed
     }
-    
+
     val seed = Probability.seed
 
     val data = (1 to n) map {
@@ -29,23 +26,27 @@ trait Falsification {
         apply(sys, cfg, phi)
     }
 
-    val (best, _) = data.minBy(_._1.score)
+    val (best, _, _) = data.minBy(_._1.score)
     val (good, bad) = data.partition(_._1.isFalsified)
 
-    val (_, stats) = good.unzip
+    val (_, stats, rows) = good.unzip3
     val table = Table(sys, phi, this, seed, good.size, n, Statistics.min(stats), Statistics.max(stats), Statistics.avg(stats), best)
 
     table
   }
 
-  def apply(sys: System, cfg: Config, phi: Formula): (Result, Statistics) = {
+  def apply(sys: System, cfg: Config, phi: Formula): (Result, Statistics, Row) = {
+    val seed = Probability.seed
+
     println("property " + phi)
     println("algorithm " + identification)
+    println("seed " + seed)
+
     for ((name, value) <- this.params) {
       println("  " + name + ": " + value)
     }
 
-    val (res, stats) = search(sys,cfg, phi)
+    val (res, stats) = search(sys, cfg, phi)
     println()
 
     println("inputs")
@@ -71,7 +72,12 @@ trait Falsification {
     println("  peak memory " + falstar.util.peakMemBytes / 1000 + " kb")
     println()
 
-    (res, stats)
+    val data = Seq(
+      "model" -> sys.name, "property" -> phi, "algorithm" -> this.identification,
+      "seed" -> seed, "simulations" -> stats.simulations, "time" -> stats.time, "robustness" -> res.score)
+    val row = Row(data ++ params)
+
+    (res, stats, row)
   }
 
   def identification: String

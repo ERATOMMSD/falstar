@@ -1,6 +1,6 @@
 .PHONY: all scanner compile doc test clean
 
-SCANNER=src/main/scala/parser/Scanner.java
+SCANNER=src/main/scala/falstar/parser/Scanner.java
 
 CP=lib/mvm.jar:lib/engine.jar:lib/util.jar
 
@@ -8,11 +8,11 @@ SRC=$(shell find src/main/scala -iname "*.scala") $(SCANNER)
 
 all: compile doc
 
-compile: main.jar
+compile: falstar.jar
 doc: README.html
 scanner: $(SCANNER)
 
-main.jar: bin $(SRC)
+falstar.jar: bin $(SRC)
 	scalac -d bin -cp lib/engine.jar $(SRC)
 	javac  -d bin -cp bin $(SCANNER)
 	jar cf $@ -C bin .
@@ -31,10 +31,5 @@ clean:
 	rm -fr slprj
 	rm -f outcmaes*.dat
 	rm -f variablescmaes*.mat
-	rm -f main.jar
+	rm -f falstar.jar
 	rm -f *.slxc *.mexa64
-
-test: src/test/configuration/afc.cfg src/test/configuration/emb.cfg
-	./run src/test/configuration/afc.cfg
-	./run src/test/configuration/emb.cfg
-	ls results/ARCH2018/
