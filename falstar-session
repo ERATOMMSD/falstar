@@ -1,0 +1,3 @@
+#~/bin/sh
+export LD_LIBRARY_PATH=lib/bin/glnxa64:lib/sys/os/glnxa64
+java -cp falstar.jar:lib/scala-library.jar:lib/mvm.jar:lib/engine.jar:lib/util.jar falstar.hybrid.Simulink $@

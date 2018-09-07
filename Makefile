@@ -26,6 +26,9 @@ falstar.jar: bin $(SRC)
 bin:
 	mkdir -p bin
 
+test: src/test/configuration/test.cfg src/test/configuration/models/at.cfg
+	./falstar $< 
+
 clean:
 	rm -fr bin
 	rm -fr slprj

@@ -12,7 +12,7 @@ import falstar.util.Row
 import falstar.util.Timer
 
 trait Falsification {
-  def repeat(sys: System, cfg: Config, phi: Formula, _seed: Option[Long], n: Int): Table = {
+  def repeat(sys: System, cfg: Config, phi: Formula, _seed: Option[Long], n: Int): (Result, Seq[Row]) = {
     _seed match {
       case None => Probability.setUniqueSeed()
       case Some(seed) => Probability.seed = seed
@@ -23,16 +23,19 @@ trait Falsification {
     val data = (1 to n) map {
       i =>
         println("trial " + i + "/" + n)
-        apply(sys, cfg, phi)
+        val (res, stat, row) = apply(sys, cfg, phi)
+        ((res, stat), row)
     }
 
-    val (best, _, _) = data.minBy(_._1.score)
-    val (good, bad) = data.partition(_._1.isFalsified)
+    val (all, rows) = data.unzip
 
-    val (_, stats, rows) = good.unzip3
-    val table = Table(sys, phi, this, seed, good.size, n, Statistics.min(stats), Statistics.max(stats), Statistics.avg(stats), best)
+    val (best, _) = all.minBy(_._1.score)
+    val (good, bad) = all.partition(_._1.isFalsified)
 
-    table
+    val (_, stats) = good.unzip
+    // val table = Table(sys, phi, this, seed, good.size, n, Statistics.min(stats), Statistics.max(stats), Statistics.avg(stats), best)
+
+    (best, rows)
   }
 
   def apply(sys: System, cfg: Config, phi: Formula): (Result, Statistics, Row) = {
@@ -74,7 +77,9 @@ trait Falsification {
 
     val data = Seq(
       "model" -> sys.name, "property" -> phi, "algorithm" -> this.identification,
-      "seed" -> seed, "simulations" -> stats.simulations, "time" -> stats.time, "robustness" -> res.score)
+      "seed" -> seed, "simulations" -> stats.simulations, "time" -> stats.time, "robustness" -> res.score,
+      "falsified" -> { if (res.isFalsified) "yes" else "no" })
+
     val row = Row(data ++ params)
 
     (res, stats, row)

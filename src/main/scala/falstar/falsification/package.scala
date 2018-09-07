@@ -35,7 +35,7 @@ package object falsification {
     }
   }
 
-  case class Table(sys: System, phi: Formula, search: Falsification, seed: Long, success: Int, tries: Int, min: Statistics, max: Statistics, avg: Statistics, best: Result)
+  // case class Table(sys: System, phi: Formula, search: Falsification, seed: Long, success: Int, tries: Int, min: Statistics, max: Statistics, avg: Statistics, best: Result)
 
   case class Statistics(simulations: Long, time: Long, memory: Long)
 

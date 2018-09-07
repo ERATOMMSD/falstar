@@ -101,7 +101,7 @@ case class SimulinkSystem(
 }
 
 object Simulink {
-  var accelerated = true
+  var accelerated = false
   var verbose = false
   var connected = false
 

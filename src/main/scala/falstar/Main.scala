@@ -10,7 +10,6 @@ import scala.io.StdIn
 import scala.util.control.Breaks
 
 import falstar.falsification.Result
-import falstar.falsification.Table
 import falstar.hybrid.Simulink
 import falstar.parser.Command
 import falstar.parser.Falsify
@@ -21,6 +20,8 @@ import falstar.parser.parse
 import falstar.util.Probability
 import falstar.util.Scope
 import falstar.parser.Flush
+import falstar.util.Table
+import falstar.util.Row
 
 object Main {
   object quit extends Breaks
@@ -33,17 +34,20 @@ object Main {
     val sep = ","
   }
 
-  val results = mutable.Map[String, mutable.Buffer[Table]]()
+  val results = mutable.Map[String, mutable.Buffer[Row]]()
 
-  def write(name: String, data: Seq[Table]) {
+  def write(name: String, data: Seq[Row]) {
+    val table = Table(data)
+    table.write(name, options.sep)
+  }
+
+  /* def write(name: String, data: Seq[Table]) {
+
     /* val hostname = InetAddress.getLocalHost.getHostName
     val os = System.getProperty("os.name") + " " + System.getProperty("os.version")
 
     val date = new SimpleDateFormat("yyyyMMdd-HHmm").format(new Date)
     val file = new File(path + File.separator + date + "-" + hostname + ".csv") */
-
-    val file = new File(name)
-    import options.sep
 
     // ensure parent directory exists
     file.getParentFile.mkdirs()
@@ -89,7 +93,7 @@ object Main {
 
     writer.write("\n")
     writer.close()
-  }
+  } */
 
   def run(cmd: Command): Unit = cmd match {
     case Falsify(search, sys, phi, cfg, seed, repeat, log) =>
@@ -98,18 +102,17 @@ object Main {
         case Some(seed) => Probability.seed = seed
       }
 
-      val table = search.repeat(sys, phi, cfg, seed, repeat)
-      val res @ Result(tr, rs) = table.best
+      val (best, rows) = search.repeat(sys, phi, cfg, seed, repeat)
 
       for (name <- log) {
         if (!(results contains name))
           results(name) = mutable.Buffer()
-        results(name) += table
+        results(name) ++= rows
       }
 
       if (options.graphics) {
-        val title = if (res.isFalsified) "falsified | " + sys.name + " | " + phi else "not falsified: " + phi
-        val scope = new Scope(title, sys, res)
+        val title = if (best.isFalsified) "falsified | " + sys.name + " | " + phi else "not falsified: " + phi
+        val scope = new Scope(title, sys, best)
       }
 
     case Simulate(sys, phi, ps, us, t) =>
@@ -144,7 +147,7 @@ object Main {
     run(commands)
   }
 
-  def writeall(results: Iterable[(String, mutable.Buffer[Table])]) {
+  def writeall(results: Iterable[(String, mutable.Buffer[Row])]) {
     for ((name, data) <- results) {
       safe { write(name, data) }
     }
