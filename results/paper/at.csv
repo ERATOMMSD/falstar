@@ -912,3 +912,305 @@ automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700
 automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",adaptive,0,45,8,-1.5044496074318587,yes,"2 2 3 3 3 4",0.25,300
 automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",adaptive,0,13,2,-1.5044496074318587,yes,"2 2 3 3 3 4",0.25,300
 
+model,property,algorithm,seed,simulations,time,robustness,falsified,control points,solver,budget
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,0,57,40,-8.58135854410341,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-4962768465676381896,34,24,-9.180001185878552,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,4804307197456638271,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-1034601897293430941,22,15,-2.0965700758659978,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,7848011421992302230,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-8929183248358367000,32,22,-1.1329299738906258,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,488730542833106255,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,5082315122564986995,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-4023469995120514721,87,61,-1.6070769774217268,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-652523483647487500,33,23,-1.8012584038671662,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,733208966369662072,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-2859003968966358305,38,26,-2.82787298349497,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,2391129358218448901,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,462804890636782426,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,4152650890530247911,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-7824937040248809533,32,22,-1.605109739414047,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-7423161351415864473,50,35,-1.3304528012344292,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-1712070416600608528,32,22,-5.077506963116733,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-7558503418509576542,35,24,-1.574173408694321,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-1602231814014388968,52,36,-2.064161699220577,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-8398198349610176347,43,30,-7.002240053888954,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,8543763135442756639,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-6771948130860443991,33,23,-10.218771098403266,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-6872183637580745469,55,39,-5.997270993487604,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-4362937514027401353,27,19,-1.0582702694071315,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-645818057311197652,54,38,-2.380260657586547,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-2589363629201395742,46,33,-0.551834856731503,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-1292473327617944349,44,31,-0.42239784639762945,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,7708962365626450022,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-1985167797452687559,60,42,-0.8618341352665482,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-9181452172432867415,118,84,-7.890495373782599,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,5136175437742153992,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,2461321076443974826,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,5393678625457699973,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-5223836593555421482,91,64,-2.9226907681734247,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,4231336260356479292,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,80026624404206994,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,5629798281369249587,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-7970476187495257102,79,56,-0.5051432889985392,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,8328412070939253235,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,8613213585075034408,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,7839281802022211816,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,605170570079111320,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-8912674914493871025,76,53,-13.148713101463784,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-5429469239583332266,74,52,-0.2937932826650069,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,7697740277460248409,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,6823898353758749145,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-765888408110226152,99,70,-1.6973863806463072,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,1824341877410284492,23,16,-3.206664539023123,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",Breach,-9095715445349070663,51,36,-3.372099270970537,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,0,6,4,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-4962768465676381896,30,21,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,4804307197456638271,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-1034601897293430941,14,10,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,7848011421992302230,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-8929183248358367000,9,6,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,488730542833106255,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,5082315122564986995,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-4023469995120514721,5,3,-0.4752550565940048,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-652523483647487500,6,4,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,733208966369662072,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-2859003968966358305,2,1,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,2391129358218448901,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,462804890636782426,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,4152650890530247911,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-7824937040248809533,38,26,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-7423161351415864473,17,12,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-1712070416600608528,28,19,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-7558503418509576542,41,29,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-1602231814014388968,5,3,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-8398198349610176347,25,18,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,8543763135442756639,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-6771948130860443991,10,7,-0.22713048701512406,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-6872183637580745469,4,2,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-4362937514027401353,3,2,-0.2568827821193409,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-645818057311197652,4,3,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-2589363629201395742,11,8,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-1292473327617944349,3,2,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,7708962365626450022,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-1985167797452687559,3,2,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-9181452172432867415,2,1,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,5136175437742153992,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,2461321076443974826,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,5393678625457699973,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-5223836593555421482,20,14,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,4231336260356479292,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,80026624404206994,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,5629798281369249587,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-7970476187495257102,32,23,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,8328412070939253235,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,8613213585075034408,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,7839281802022211816,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,605170570079111320,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-8912674914493871025,6,4,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-5429469239583332266,31,22,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,7697740277460248409,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,6823898353758749145,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-765888408110226152,4,3,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,1824341877410284492,13,9,-0.05781048828360014,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 3.0) ==> (30.0 < speed))",Breach,-9095715445349070663,2,1,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,0,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-4962768465676381896,8,5,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,4804307197456638271,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-1034601897293430941,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,7848011421992302230,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-8929183248358367000,8,5,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,488730542833106255,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,5082315122564986995,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-4023469995120514721,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-652523483647487500,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,733208966369662072,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-2859003968966358305,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,2391129358218448901,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,462804890636782426,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,4152650890530247911,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-7824937040248809533,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-7423161351415864473,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-1712070416600608528,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-7558503418509576542,82,59,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-1602231814014388968,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-8398198349610176347,20,14,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,8543763135442756639,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-6771948130860443991,11,8,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-6872183637580745469,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-4362937514027401353,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-645818057311197652,11,8,-1.0,yes,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-2589363629201395742,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-1292473327617944349,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,7708962365626450022,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-1985167797452687559,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-9181452172432867415,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,5136175437742153992,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,2461321076443974826,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,5393678625457699973,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-5223836593555421482,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,4231336260356479292,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,80026624404206994,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,5629798281369249587,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-7970476187495257102,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,8328412070939253235,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,8613213585075034408,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,7839281802022211816,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,605170570079111320,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-8912674914493871025,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-5429469239583332266,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,7697740277460248409,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,6823898353758749145,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-765888408110226152,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,1824341877410284492,12,8,1.0,no,4,cmaes,300
+automatic_transmission,"□_[0.0, 30.0] ((gear == 4.0) ==> (40.0 < speed))",Breach,-9095715445349070663,49,35,-0.3542317660544043,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,0,110,79,-0.46735170313714797,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-4962768465676381896,65,46,-0.38436594247058103,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,4804307197456638271,191,140,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-1034601897293430941,138,101,-0.008573466737211346,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,7848011421992302230,191,141,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-8929183248358367000,142,104,-0.20770923194699317,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,488730542833106255,191,140,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,5082315122564986995,191,141,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-4023469995120514721,33,23,-0.7110605215243387,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-652523483647487500,43,31,-1.8604606643929888,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,733208966369662072,191,141,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-2859003968966358305,218,162,-0.3157076773432484,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,2391129358218448901,191,141,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,462804890636782426,191,141,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,4152650890530247911,191,141,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-7824937040248809533,166,122,-0.6533660433662482,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-7423161351415864473,34,24,-2.5973996803338015,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-1712070416600608528,53,38,-0.28208405278116594,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-7558503418509576542,109,79,-0.6425690165336354,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-1602231814014388968,76,55,-3.3534564751578064,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-8398198349610176347,54,39,-2.0333109675712255,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,8543763135442756639,191,141,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-6771948130860443991,78,56,-0.9321917666561609,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-6872183637580745469,222,165,-1.3144914974549455,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-4362937514027401353,222,165,-1.1871054726734944,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-645818057311197652,41,29,-1.0575173740549961,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-2589363629201395742,41,29,-1.0084836357789517,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-1292473327617944349,126,92,-0.9671300188617812,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,7708962365626450022,191,141,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-1985167797452687559,114,83,-1.7068457910556494,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-9181452172432867415,177,131,-1.1698197059439512,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,5136175437742153992,191,142,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,2461321076443974826,191,142,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,5393678625457699973,191,142,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-5223836593555421482,192,143,-0.1473954024083147,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,4231336260356479292,191,142,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,80026624404206994,191,142,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,5629798281369249587,191,142,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-7970476187495257102,153,113,-0.8810426735522588,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,8328412070939253235,191,142,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,8613213585075034408,191,143,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,7839281802022211816,191,143,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,605170570079111320,191,142,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-8912674914493871025,69,50,-0.9377108944907852,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-5429469239583332266,114,83,-0.9578393020219528,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,7697740277460248409,191,142,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,6823898353758749145,191,142,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-765888408110226152,2,1,-1.1292017524599562,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,1824341877410284492,191,142,-0.0025255154224984276,yes,4,cmaes,300
+automatic_transmission,"!□_[10.0, 30.0] ((50.0 <= speed) && (speed <= 60.0))",Breach,-9095715445349070663,77,55,-0.43374170669078943,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,0,96,70,-0.18713611701569732,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-4962768465676381896,83,60,-1.3756772792362142,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,4804307197456638271,90,65,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-1034601897293430941,31,22,-1.339320084610577,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,7848011421992302230,90,65,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-8929183248358367000,53,38,-1.6090818471990787,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,488730542833106255,90,65,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,5082315122564986995,90,65,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-4023469995120514721,83,60,-2.557256927459477,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-652523483647487500,108,79,-1.7104300596680844,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,733208966369662072,90,65,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-2859003968966358305,232,175,-0.49783259090527565,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,2391129358218448901,90,65,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,462804890636782426,90,66,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,4152650890530247911,90,65,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-7824937040248809533,159,117,-0.07679216294383195,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-7423161351415864473,105,77,-1.8980618255290267,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-1712070416600608528,175,131,-1.2117544485096516,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-7558503418509576542,118,86,-0.31685454060523455,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-1602231814014388968,64,46,-3.756812561472614,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-8398198349610176347,74,54,-2.411274725360201,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,8543763135442756639,90,65,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-6771948130860443991,213,160,-0.44889985612201144,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-6872183637580745469,30,21,-2.1138242881148983,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-4362937514027401353,14,10,-0.9475564475967673,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-645818057311197652,163,122,-0.4699451621525128,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-2589363629201395742,35,25,-1.1477310513914034,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-1292473327617944349,155,115,-0.3950074116904432,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,7708962365626450022,90,65,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-1985167797452687559,177,132,-0.7277838879532226,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-9181452172432867415,77,56,-0.7347912885751811,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,5136175437742153992,90,65,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,2461321076443974826,90,66,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,5393678625457699973,90,65,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-5223836593555421482,87,63,-2.2985111922142494,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,4231336260356479292,90,66,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,80026624404206994,90,66,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,5629798281369249587,90,66,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-7970476187495257102,61,44,-0.7672110472156959,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,8328412070939253235,90,66,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,8613213585075034408,90,65,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,7839281802022211816,90,65,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,605170570079111320,90,66,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-8912674914493871025,51,37,-2.3755497357432347,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-5429469239583332266,69,50,-1.1657436144142252,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,7697740277460248409,90,65,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,6823898353758749145,90,66,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-765888408110226152,242,184,-2.769345295046932,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,1824341877410284492,90,66,-2.1533493009024625,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 80.0) || ◇_[0.0, 30.0] (4500.0 < RPM))",Breach,-9095715445349070663,27,19,-2.9883859752223145,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,0,109,80,-1.0637583179998487,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-4962768465676381896,12,8,-0.9747768025702257,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,4804307197456638271,12,9,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-1034601897293430941,101,74,-0.9968527042809185,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,7848011421992302230,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-8929183248358367000,64,47,-0.17975885127842872,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,488730542833106255,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,5082315122564986995,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-4023469995120514721,29,21,-1.2110586132164798,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-652523483647487500,300,228,0.5305122498507444,no,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,733208966369662072,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-2859003968966358305,130,96,-1.7304867279475857,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,2391129358218448901,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,462804890636782426,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,4152650890530247911,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-7824937040248809533,37,26,-1.7856618291002206,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-7423161351415864473,54,39,-0.935246831108465,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-1712070416600608528,15,11,-1.1737733388025617,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-7558503418509576542,36,26,-0.9402286655284939,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-1602231814014388968,129,95,-0.5580709925803831,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-8398198349610176347,22,16,-0.5113334923171351,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,8543763135442756639,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-6771948130860443991,82,60,-0.03218701376646749,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-6872183637580745469,130,96,-2.86815817632187,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-4362937514027401353,51,37,-2.8058193035935517,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-645818057311197652,147,110,-0.8809575713820479,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-2589363629201395742,41,30,-1.4146521241210124,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-1292473327617944349,35,25,-3.6611798724495017,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,7708962365626450022,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-1985167797452687559,10,7,-1.2067160526299574,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-9181452172432867415,57,41,-1.2840583481731116,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,5136175437742153992,12,9,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,2461321076443974826,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,5393678625457699973,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-5223836593555421482,256,194,-0.27452323568965653,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,4231336260356479292,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,80026624404206994,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,5629798281369249587,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-7970476187495257102,10,7,-0.4789917603498921,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,8328412070939253235,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,8613213585075034408,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,7839281802022211816,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,605170570079111320,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-8912674914493871025,186,140,-1.4367449873650244,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-5429469239583332266,64,47,-0.4408387318501994,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,7697740277460248409,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,6823898353758749145,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-765888408110226152,7,5,-1.1720450701937324,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,1824341877410284492,12,8,-4.392896410083445,yes,4,cmaes,300
+automatic_transmission,"(□_[0.0, 10.0] (speed < 50.0) || ◇_[0.0, 30.0] (2700.0 < RPM))",Breach,-9095715445349070663,200,150,-0.5254401112520597,yes,4,cmaes,300
+
