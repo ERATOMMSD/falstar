@@ -40,9 +40,9 @@ trait Falsification {
     val seed = Probability.seed
 
     println("property " + phi)
-    println("algorithm " + identification)
     println("seed " + seed)
-
+    
+    println("algorithm " + identification)
     for ((name, value) <- this.params) {
       println("  " + name + ": " + value)
     }

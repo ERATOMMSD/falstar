@@ -1,26 +1,19 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta charset="utf-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
   <meta name="generator" content="pandoc" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>README</title>
-  <style type="text/css">
-      code{white-space: pre-wrap;}
-      span.smallcaps{font-variant: small-caps;}
-      span.underline{text-decoration: underline;}
-      div.column{display: inline-block; vertical-align: top; width: 50%;}
-  </style>
-  <!--[if lt IE 9]>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
-  <![endif]-->
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
 </head>
 <body>
 <h1 id="fast-falsification-with-adaptive-inputs">Fast Falsification with Adaptive Inputs</h1>
+<p>FalStar is a tool for the falsification of hybrid systems. It takes as an input a model (currently: Simulink) and a configuration file and tries to come up with an input signal such that the output signal produced by the model falsifies given requirements.</p>
 <p>Requirements</p>
 <ul>
 <li>Java 1.8, Scala 2.12</li>
-<li>Matlab (tested with R2017)</li>
+<li>Matlab (tested with R2017b)</li>
 </ul>
 <p>Contact: gidonernst (*) gmail.com</p>
 <p>See also <a href="https://cps-vo.org/group/ARCH/FriendlyCompetition">ARCH 2018 friendly competition</a></p>
@@ -33,12 +26,12 @@
 <li>Mac OS X: <code>maci64</code></li>
 <li>Windows: <code>win64</code></li>
 </ul>
-<p>There is a pre-built jar <code>main.jar</code>. Re-create with:</p>
+<p>Compile <code>falstar.jar</code></p>
 <pre><code>make compile</code></pre>
-<p>Try it out</p>
-<pre><code>./run -g src/test/configuration/test.cfg</code></pre>
-<p>falsifies a Simulink model of an automatic transmission against specification <code>□_[0,30] speed &lt; 120</code> and displays various input and output signals.</p>
-<p>Here is an example output:</p>
+<p>Test whether everything worked</p>
+<pre><code>./falstar # prints usage instructions
+make test # run a simple test case</code></pre>
+<p>This falsifies a Simulink model of an automatic transmission against specification <code>□_[0,30] speed &lt; 120</code> and displays various input and output signals. Here's the output:</p>
 <pre><code>trial 1/1
 property □_[0.0, 30.0] speed &lt; 120.0
 algorithm adaptive
@@ -60,8 +53,8 @@ statistics
   peak memory 37111 kb
 
 bye</code></pre>
-<h2 id="overview">Overview</h2>
-<p>This is a tool for the falsification of hybrid systems. It takes as an input a model (currently: Simulink) and a configuration file and tries to come up with an input signal such that the output signal produced by the model falsifies given requirements.</p>
+<p>If you're tired of waiting for Matlab to initialize on every trial, you can keep an active instance running. Be aware that this caches initialized models as well, so if you change those, you need to restart the session. It's a simple command line interface to Matlab (currently without error handling, and it will terminate if you type in an invalid command).</p>
+<pre><code>./falstar-session</code></pre>
 <h3 id="simulink-model-set-up">Simulink model set up</h3>
 <p>Simulink models are accessed through their input and output ports and through the Matlab function <code>sim</code>. The model must be prepared for use as follows</p>
 <ul>

@@ -1,9 +1,14 @@
 # Fast Falsification with Adaptive Inputs
 
+FalStar is a tool for the falsification of hybrid systems.
+It takes as an input a model (currently: Simulink) and a configuration file
+and tries to come up with an input signal such that the output signal produced by
+the model falsifies given requirements.
+
 Requirements
 
 - Java 1.8, Scala 2.12
-- Matlab (tested with R2017)
+- Matlab (tested with R2017b)
 
 Contact: gidonernst (*) gmail.com
 
@@ -25,18 +30,17 @@ For 64 bit systems:
 - Mac OS X: `maci64`
 - Windows: `win64`
 
-There is a pre-built jar `main.jar`. Re-create with:
+Compile `falstar.jar`
 
     make compile
+    
+Test whether everything worked
 
-Try it out
+    ./falstar # prints usage instructions
+    make test # run a simple test case
 
-    ./run -g src/test/configuration/test.cfg
-
-falsifies a Simulink model of an automatic transmission against specification
-`□_[0,30] speed < 120` and displays various input and output signals.
-
-Here is an example output:
+This falsifies a Simulink model of an automatic transmission against specification
+`□_[0,30] speed < 120` and displays various input and output signals. Here's the output:
 
 	trial 1/1
 	property □_[0.0, 30.0] speed < 120.0
@@ -60,12 +64,11 @@ Here is an example output:
 	
 	bye
 
-## Overview
+If you're tired of waiting for Matlab to initialize on every trial, you can keep an active instance running.
+Be aware that this caches initialized models as well, so if you change those, you need to restart the session.
+It's a simple command line interface to Matlab (currently without error handling, and it will terminate if you type in an invalid command).
 
-This is a tool for the falsification of hybrid systems.
-It takes as an input a model (currently: Simulink) and a configuration file
-and tries to come up with an input signal such that the output signal produced by
-the model falsifies given requirements.
+    ./falstar-session
 
 ### Simulink model set up
 
