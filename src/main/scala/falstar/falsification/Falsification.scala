@@ -18,8 +18,6 @@ trait Falsification {
       case Some(seed) => Probability.seed = seed
     }
 
-    val seed = Probability.seed
-
     val data = (1 to n) map {
       i =>
         println("trial " + i + "/" + n)
@@ -81,6 +79,11 @@ trait Falsification {
       "falsified" -> { if (res.isFalsified) "yes" else "no" })
 
     val row = Row(data ++ params)
+
+    // expose another seed for the next trial
+    // required for external algorithms (Breach, S-Taliro)
+    // nice for internal algorithms because the new seed shows up in the report
+    Probability.setNextDeterministicSeed()
 
     (res, stats, row)
   }
