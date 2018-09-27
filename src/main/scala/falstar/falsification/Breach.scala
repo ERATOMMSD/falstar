@@ -180,10 +180,9 @@ object Breach {
       eval("problem = FalsificationProblem(sys, phi)")
       eval("problem.max_obj_eval = " + budget)
       eval("problem.max_time = 3600") // 1h (can't be 0)
-      eval("problem.setup_solver('cmaes')")
+      eval("problem.setup_solver('" + solver + "')")
       eval("problem.solver_options.Seed = " + Probability.seed)
       eval("problem.solve()")
-      Probability.setNextDeterministicSeed()
 
       eval("time = problem.time_spent")
       eval("sims = problem.nb_obj_eval")
