@@ -26,7 +26,9 @@ falstar.jar: bin $(SRC)
 bin:
 	mkdir -p bin
 
-test: src/test/configuration/test.cfg src/test/configuration/models/at.cfg
+test: results/test.csv
+
+results/%.csv: src/test/configuration/%.cfg
 	./falstar $< 
 
 clean:

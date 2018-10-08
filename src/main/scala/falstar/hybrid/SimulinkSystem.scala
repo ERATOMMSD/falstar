@@ -48,6 +48,11 @@ case class SimulinkSystem(
     true
   }
 
+  def _sim(model: String, result: String, params: (String, Any)*) = {
+    val args = params map { case (k, v) => ", '" + k + "', '" + v + "'" }
+    eval(result + " = sim('" + name + "'" + args.mkString + ")")
+  }
+
   def sim(ps: Input, us: Signal, T: Time) = {
 
     for ((x, a) <- (params, ps.data).zipped)
@@ -69,23 +74,24 @@ case class SimulinkSystem(
     // println("t__ = [" + t__.map(_.mkString(" ")).mkString("; ") + "; " + T + "]")
     // println("u__ = [" + u__.map(_.mkString(" ")).mkString("; ") + "; " + U.mkString(" ") + "]")
 
-    eval("result = sim('" + name + "', 'StopTime', '" + T + "'" + ")")
+    _sim(name, "result",
+      "StopTime" -> T,
+      "SaveFormat" -> "Array")
 
     eval("tout = result.tout")
-    eval("yout = result.yout.signals")
-    eval("nout = size(yout, 2)")
+    eval("yout = result.yout")
 
     val ts: Array[Time] = get("tout")
-    val nout: Double = get("nout")
 
-    val yout = for (i <- 1 to nout.toInt) yield {
-      val n = "y" + i
-      eval(n + " = yout(" + i + ").values")
-      val yi: Array[Double] = get(n)
-      yi
+    // MATLAB returns single-column matrices [1;2;3] as 1-dimensional arrays
+    // this causes type confusion when the model has a single output only
+    val ys: Array[Array[Double]] = {
+      val yout: Any = get("yout")
+      yout match {
+        case y: Array[Double] => y map (Array(_))
+        case ys: Array[Array[Double]] => ys
+      }
     }
-
-    val ys = yout.transpose
 
     val zs = Array.tabulate(ts.length) {
       i =>
@@ -121,11 +127,20 @@ object Simulink {
     while (run) {
       try {
         val line = StdIn.readLine("> ")
-        if (line.isEmpty) run = false
-        else engine.eval(line)
-      } catch {
-        case _: Throwable =>
+        if (line == null) {
           run = false
+        } else if (line == "quit") {
+          run = false
+        } else if (line(0) == '?') {
+          val x = line.drop(1).trim
+          println(x + " = " + engine.getVariable(x))
+        } else if (!line.isEmpty) {
+          engine.eval(line)
+        }
+      } catch {
+        case e: Throwable =>
+          println(e)
+        // run = false
       }
     }
     disconnect()

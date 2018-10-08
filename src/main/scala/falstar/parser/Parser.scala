@@ -236,7 +236,7 @@ class Parser {
       }
       Seq()
 
-    case Node(Keyword("set-solver"), Identifier("staliroprinter"), Literal(prefix: String)) =>
+    case Node(Keyword("set-solver"), Identifier("staliro-printer"), Literal(prefix: String)) =>
       state.search = STaliro.dummy(prefix)
       Seq()
 

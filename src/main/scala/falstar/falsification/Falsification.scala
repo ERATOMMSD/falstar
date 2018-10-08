@@ -55,7 +55,7 @@ trait Falsification {
     val t__ = us map { case (t, u) => Array(t) }
     val u__ = us map { case (t, u) => u.data }
     val U = u__.last
-    val T = res.T
+    val T = phi.T
     println("  t__ = [" + t__.map(_.mkString(" ")).mkString("; ") + "; " + T + "]")
     println("  u__ = [" + u__.map(_.mkString(" ")).mkString("; ") + "; " + U.mkString(" ") + "]")
 
