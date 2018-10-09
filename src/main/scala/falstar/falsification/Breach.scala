@@ -96,6 +96,7 @@ object Breach {
     def search(sys: System, cfg: Config, phi: Formula): (Result, Statistics) = {
       import falstar.hybrid.Simulink.eval
       import falstar.hybrid.Simulink.get
+      import falstar.hybrid.Simulink.signal
 
       // add directory
       // set params and variables
@@ -109,11 +110,7 @@ object Breach {
       val score: Double = get("score")
       val sims: Double = get("sims")
       val time: Double = get("time")
-
-      val ts: Array[Double] = get("t__")
-      val um: Array[Array[Double]] = get("u__")
-      val uv = um map (Vector(_: _*))
-      val us = ts zip uv
+      val us = signal("t__", "u__")
 
       // fake the result
       val tr = Trace(us.collapse, Signal.empty)

@@ -54,6 +54,7 @@ case class SimulinkSystem(
   }
 
   def sim(ps: Input, us: Signal, T: Time) = {
+    import Signal.SignalOps
 
     for ((x, a) <- (params, ps.data).zipped)
       eval(x + " = " + a)
@@ -80,27 +81,9 @@ case class SimulinkSystem(
 
     eval("tout = result.tout")
     eval("yout = result.yout")
+    val zs = signal("tout", "yout")
 
-    val ts: Array[Time] = get("tout")
-
-    // MATLAB returns single-column matrices [1;2;3] as 1-dimensional arrays
-    // this causes type confusion when the model has a single output only
-    val ys: Array[Array[Double]] = {
-      val yout: Any = get("yout")
-      yout match {
-        case y: Array[Double] => y map (Array(_))
-        case ys: Array[Array[Double]] => ys
-      }
-    }
-
-    val zs = Array.tabulate(ts.length) {
-      i =>
-        val t = ts(i)
-        val y = Vector(ys(i): _*)
-        (t, y)
-    }
-
-    assert(Math.abs(ts.last - T) < 0.1, "inconcistent simulink stopping time " + ts.last + " expected " + T)
+    assert(Math.abs(zs.T - T) < 0.1, "inconcistent simulink stopping time " + zs.T + " expected " + T)
 
     Trace(us, zs)
   }
@@ -155,6 +138,27 @@ object Simulink {
 
   def get[T](name: String): T = {
     engine.getVariable(name)
+  }
+
+  def row(name: String): Array[Double] = {
+    get[Array[Double]](name)
+  }
+
+  // MATLAB returns single-column matrices [1;2;3] as 1-dimensional arrays
+  // this causes type confusion when the model has a single output only
+  def rows(name: String): Array[Array[Double]] = {
+    get[Array[_]](name) match {
+      case y: Array[Double] => y map (Array(_))
+      case ys: Array[Array[Double]] => ys
+    }
+  }
+
+  def signal(time: String, values: String): Signal = {
+    val ts: Array[Double] = row(time)
+    val um: Array[Array[Double]] = rows(values)
+    val uv = um map (Vector(_: _*))
+    val us = ts zip uv
+    us
   }
 
   lazy val engine = {
