@@ -1,0 +1,16 @@
+(include "src/test/configuration/models/at.cfg")
+(select-system AT)
+
+(set-seed    0)
+(set-repeat 50)
+(set-log    "results/hscc2019/at1.csv")
+(set-report "results/hscc2019/summary.csv")
+
+(set-solver random 4 300)
+(falsify AT1)
+
+(set-solver breach 4 cmaes 300)
+(falsify AT1)
+
+(set-solver adaptive (2 2 3 3 3 4) 0.25 300)
+(falsify AT1)

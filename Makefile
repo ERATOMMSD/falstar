@@ -31,6 +31,9 @@ test: results/test.csv
 results/%.csv: src/test/configuration/%.cfg falstar.jar
 	./falstar $< 
 
+results/hscc2019/%.csv: src/test/configuration/hscc2019/%.cfg falstar.jar
+	./falstar $< 
+
 clean:
 	rm -fr bin
 	rm -fr slprj
