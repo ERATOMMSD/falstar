@@ -1,10 +1,11 @@
-.PHONY: all scanner compile doc test clean
+.PHONY: all scanner compile doc test clean hscc2019
 
 SCANNER=src/main/scala/falstar/parser/Scanner.java
+SRC=$(shell find src/main/scala -iname "*.scala") $(SCANNER)
 
 CP=lib/mvm.jar:lib/engine.jar:lib/util.jar
 
-SRC=$(shell find src/main/scala -iname "*.scala") $(SCANNER)
+HSCC2019=$(wildcard src/test/configuration/hscc2019/*.cfg)
 
 all: compile doc
 
@@ -29,10 +30,12 @@ bin:
 test: results/test.csv
 
 results/%.csv: src/test/configuration/%.cfg falstar.jar
-	./falstar $< 
+	./falstar $<
+
+hscc2019: $(HSCC2019:src/test/configuration/hscc2019/%.cfg=results/hscc2019/%.csv)
 
 results/hscc2019/%.csv: src/test/configuration/hscc2019/%.cfg falstar.jar
-	./falstar $< 
+	./falstar $<
 
 clean:
 	rm -fr bin
