@@ -5,13 +5,20 @@ SRC=$(shell find src/main/scala -iname "*.scala") $(SCANNER)
 
 CP=lib/mvm.jar:lib/engine.jar:lib/util.jar
 
+ARCH2018=$(wildcard src/test/configuration/arch2018/*.cfg)
 HSCC2019=$(wildcard src/test/configuration/hscc2019/*.cfg)
 
-all: compile doc
+all: compile
 
 compile: falstar.jar
 doc: README.html
 scanner: $(SCANNER)
+
+test: falstar.jar
+	./falstar src/test/configuration/test.cfg
+
+arch2018: $(ARCH2018:src/test/configuration/arch2018/%.cfg=results/arch2018/%.csv)
+hscc2019: $(HSCC2019:src/test/configuration/hscc2019/%.cfg=results/hscc2019/%.csv)
 
 falstar.jar: bin $(SRC)
 	scalac -d bin -cp lib/engine.jar $(SRC)
@@ -27,12 +34,8 @@ falstar.jar: bin $(SRC)
 bin:
 	mkdir -p bin
 
-test: results/test.csv
-
-results/%.csv: src/test/configuration/%.cfg falstar.jar
+results/arch2018/%.csv: src/test/configuration/arch2018/%.cfg falstar.jar
 	./falstar $<
-
-hscc2019: $(HSCC2019:src/test/configuration/hscc2019/%.cfg=results/hscc2019/%.csv)
 
 results/hscc2019/%.csv: src/test/configuration/hscc2019/%.cfg falstar.jar
 	./falstar $<

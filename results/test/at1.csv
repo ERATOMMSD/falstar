@@ -1,0 +1,11 @@
+model,property,algorithm,seed,simulations,time,robustness,falsified,control points,exploration ratio,budget
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",adaptive,0,29.0,33.0,-17.980199361426514,yes,"2 2 3 3 3 4",0.25,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",adaptive,-6046014611969325073,4.0,0.0,-17.980199361426514,yes,"2 2 3 3 3 4",0.25,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",adaptive,-9078758710300016934,9.0,1.0,-1.8555748756042192,yes,"2 2 3 3 3 4",0.25,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",adaptive,6026752103936063831,5.0,0.0,-11.220951438219288,yes,"2 2 3 3 3 4",0.25,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",adaptive,-7488286861000505729,2.0,0.0,-4.740537532593038,yes,"2 2 3 3 3 4",0.25,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",adaptive,4096412075366339464,6.0,0.0,-0.8783142956569066,yes,"2 2 3 3 3 4",0.25,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",adaptive,7672111965323154545,15.0,2.0,-4.809704969700675,yes,"2 2 3 3 3 4",0.25,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",adaptive,-7183876693434789442,4.0,0.0,-0.5511690346261702,yes,"2 2 3 3 3 4",0.25,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",adaptive,-5011953456019000971,8.0,1.0,-17.980199361426514,yes,"2 2 3 3 3 4",0.25,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",adaptive,9035443895564923029,7.0,1.0,-8.065993679063752,yes,"2 2 3 3 3 4",0.25,100
