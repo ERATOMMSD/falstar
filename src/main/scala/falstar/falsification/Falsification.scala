@@ -12,7 +12,7 @@ import falstar.util.Row
 import falstar.util.Timer
 
 trait Falsification {
-  def repeat(sys: System, cfg: Config, phi: Formula, _seed: Option[Long], n: Int): (Result, Seq[Row]) = {
+  def repeat(sys: System, cfg: Config, phi: Formula, _seed: Option[Long], n: Int): (Result, Seq[Row], Row) = {
     _seed match {
       case None => Probability.setUniqueSeed()
       case Some(seed) => Probability.seed = seed
@@ -33,7 +33,20 @@ trait Falsification {
     val (_, stats) = good.unzip
     // val table = Table(sys, phi, this, seed, good.size, n, Statistics.min(stats), Statistics.max(stats), Statistics.avg(stats), best)
 
-    (best, rows)
+    val stats_min = Statistics.min(stats)
+    val stats_avg = Statistics.avg(stats)
+    val stats_max = Statistics.max(stats)
+    val stats_stdev = Statistics.stdev(stats)
+
+    val aggregate = Seq(
+      "model" -> sys.name, "property" -> phi, "algorithm" -> this.identification,
+      "min simulations" -> stats_min.simulations, "avg simulations" -> stats_avg.simulations, "max simulations" -> stats_max.simulations, "stdev simulations" -> stats_stdev.simulations,
+      "min time" -> stats_min.time, "avg time" -> stats_avg.time, "max time" -> stats_max.time, "stdev time" -> stats_stdev.time,
+      "min robustness" -> stats_min.score, "avg robustness" -> stats_avg.score, "max robustness" -> stats_max.score, "stdev robustness" -> stats_stdev.score,
+      /// "time" -> stats.time, "robustness" -> res.score,
+      "success" -> good.size, "trials" -> all.size)
+
+    (best, rows, Row(aggregate))
   }
 
   def apply(sys: System, cfg: Config, phi: Formula): (Result, Statistics, Row) = {
@@ -41,7 +54,7 @@ trait Falsification {
 
     println("property " + phi)
     println("seed " + seed)
-    
+
     println("algorithm " + identification)
     for ((name, value) <- this.params) {
       println("  " + name + ": " + value)
@@ -119,7 +132,7 @@ trait WithStatistics {
       search(sys, cfg, phi, T, sim)
     }
 
-    val stats = Statistics(simulations, total.seconds, 0)
+    val stats = Statistics(simulations, total.seconds, 0, res.score)
 
     (res, stats)
   }

@@ -32,6 +32,12 @@ object Combinatorics {
   }
 
   def main(args: Array[String]) {
-    println(splits(List("a", "b"), 3))
+    for (i <- 0 until 6) {
+      val level = splits(List("x", "y"), i)
+      val x = level map (_("x"))
+      val y = level map (_("y"))
+      println(x.mkString("level" + i + "_x = c(", ",", ")"))
+      println(y.mkString("level" + i + "_y = c(", ",", ")"))
+    }
   }
 }

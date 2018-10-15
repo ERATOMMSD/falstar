@@ -117,7 +117,7 @@ object Breach {
       val rs = Robustness(Array((0.0, score)))
 
       val res = Result(tr, rs)
-      val stats = Statistics(sims.toInt, time.toLong, 0)
+      val stats = Statistics(sims.toInt, time.toLong, 0, res.score)
 
       (res, stats)
     }

@@ -37,25 +37,33 @@ package object falsification {
 
   // case class Table(sys: System, phi: Formula, search: Falsification, seed: Long, success: Int, tries: Int, min: Statistics, max: Statistics, avg: Statistics, best: Result)
 
-  case class Statistics(simulations: Long, time: Long, memory: Long)
+  case class Statistics(simulations: Double, time: Double, memory: Double, score: Double)
 
   object Statistics {
-    val empty = Statistics(0, 0, 0)
+    val empty = Statistics(0, 0, 0, 0)
 
-    def zip(stats: Seq[Statistics], f: Seq[Long] => Long) = {
+    def _stdev(xs: Seq[Double]) = {
+      val m = xs.sum / xs.length
+      val ds = xs.map(x => (x - m) * (x - m))
+      Math.sqrt(ds.sum / (xs.length - 1))
+    }
+
+    def zip(stats: Seq[Statistics], f: Seq[Double] => Double) = {
       if (stats.isEmpty) {
         Statistics.empty
       } else {
         val simulations = stats.map(_.simulations)
         val time = stats.map(_.time)
         val memory = stats.map(_.memory)
-        Statistics(f(simulations), f(time), f(memory))
+        val score = stats.map(_.score)
+        Statistics(f(simulations), f(time), f(memory), f(score))
       }
     }
 
     def avg(stats: Seq[Statistics]) = zip(stats, xs => xs.sum / xs.length)
     def min(stats: Seq[Statistics]) = zip(stats, _.min)
     def max(stats: Seq[Statistics]) = zip(stats, _.max)
+    def stdev(stats: Seq[Statistics]) = zip(stats, _stdev)
   }
 
   object Results {

@@ -22,6 +22,7 @@ import falstar.util.Scope
 import falstar.parser.Flush
 import falstar.util.Table
 import falstar.util.Row
+import falstar.falsification.Statistics
 
 object Main {
   object quit extends Breaks
@@ -41,73 +42,25 @@ object Main {
     table.write(name, options.sep)
   }
 
-  /* def write(name: String, data: Seq[Table]) {
-
-    /* val hostname = InetAddress.getLocalHost.getHostName
-    val os = System.getProperty("os.name") + " " + System.getProperty("os.version")
-
-    val date = new SimpleDateFormat("yyyyMMdd-HHmm").format(new Date)
-    val file = new File(path + File.separator + date + "-" + hostname + ".csv") */
-
-    // ensure parent directory exists
-    file.getParentFile.mkdirs()
-
-    val falsifications = data.map(_.search)
-    val writer = new FileWriter(file, true)
-
-    val pre_cols = List("model", "property", "algorithm")
-    val post_cols = List("seed", "success", "tries", "min simulations", "min time", "max simulations", "max time", "avg simulations", "avg time", "best robustness")
-    val params_all = falsifications.flatMap(_.params)
-    val (params_names, _) = params_all.unzip
-    val extra_cols = params_names.distinct
-
-    val cols = pre_cols ++ extra_cols ++ post_cols
-
-    writer.write(cols.mkString(sep))
-    writer.write("\n")
-
-    for (table <- data) {
-      val pmap = table.search.params.toMap
-
-      writer.write(table.sys.name + sep)
-      writer.write("\"" + table.phi + "\"" + sep)
-      writer.write(table.search.identification + sep)
-      for (col <- extra_cols) {
-        if (pmap contains col)
-          writer.write(pmap(col) + sep)
-        else
-          writer.write(sep)
-      }
-      writer.write(table.seed + sep)
-
-      writer.write(table.success + sep)
-      writer.write(table.tries + sep)
-      writer.write(table.min.simulations + sep)
-      writer.write(table.min.time + sep)
-      writer.write(table.max.simulations + sep)
-      writer.write(table.max.time + sep)
-      writer.write(table.avg.simulations + sep)
-      writer.write(table.avg.time + sep)
-      writer.write(table.best.score + "\n")
-    }
-
-    writer.write("\n")
-    writer.close()
-  } */
-
   def run(cmd: Command): Unit = cmd match {
-    case Falsify(search, sys, phi, cfg, seed, repeat, log) =>
+    case Falsify(search, sys, phi, cfg, seed, repeat, log, report) =>
       seed match {
         case None => Probability.setUniqueSeed()
         case Some(seed) => Probability.seed = seed
       }
 
-      val (best, rows) = search.repeat(sys, phi, cfg, seed, repeat)
+      val (best, rows, aggregate) = search.repeat(sys, phi, cfg, seed, repeat)
 
       for (name <- log) {
         if (!(results contains name))
           results(name) = mutable.Buffer()
         results(name) ++= rows
+      }
+
+      for (name <- report) {
+        if (!(results contains name))
+          results(name) = mutable.Buffer()
+        results(name) += aggregate
       }
 
       if (options.graphics) {

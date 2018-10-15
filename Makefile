@@ -28,7 +28,7 @@ bin:
 
 test: results/test.csv
 
-results/%.csv: src/test/configuration/%.cfg
+results/%.csv: src/test/configuration/%.cfg falstar.jar
 	./falstar $< 
 
 clean:
