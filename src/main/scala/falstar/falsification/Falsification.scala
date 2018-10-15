@@ -46,7 +46,7 @@ trait Falsification {
       /// "time" -> stats.time, "robustness" -> res.score,
       "success" -> good.size, "trials" -> all.size)
 
-    (best, rows, Row(aggregate))
+    (best, rows, Row(aggregate ++ params))
   }
 
   def apply(sys: System, cfg: Config, phi: Formula): (Result, Statistics, Row) = {
