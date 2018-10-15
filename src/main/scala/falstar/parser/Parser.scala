@@ -208,23 +208,23 @@ class Parser {
       state.config = configureSystem(sys, cfg, _cfg)
       Seq()
 
-    case Node(Keyword("set-solver"), Identifier("random"), Literal(controlpoints: Double), Literal(budget: Double)) =>
+    case Node(Keyword("set-solver"), Identifier("random"), Number(controlpoints), Number(budget)) =>
       state.search = UniformRandom.falsification(controlpoints.toInt, budget.toInt)
       Seq()
 
-    case Node(Keyword("set-solver"), Identifier("adaptive"), Node(controlpoints @ _*), Literal(exploration: Double), Literal(budget: Double)) =>
+    case Node(Keyword("set-solver"), Identifier("adaptive"), Node(controlpoints @ _*), Number(exploration), Number(budget)) =>
       val levels = controlpoints map {
-        case Literal(cp: Double) => cp.toInt
+        case Number(cp) => cp.toInt
       }
 
       state.search = Adaptive.falsification(levels, exploration, budget.toInt)
       Seq()
 
-    case Node(Keyword("set-solver"), Identifier("breach"), Literal(controlpoints: Double), Identifier(solver), Literal(budget: Double)) =>
+    case Node(Keyword("set-solver"), Identifier("breach"), Number(controlpoints), Identifier(solver), Number(budget)) =>
       state.search = Breach.falsification(controlpoints.toInt, solver, budget.toInt)
       Seq()
 
-    case Node(Keyword("set-solver"), Identifier("breach-generator"), Literal(controlpoints: Double), Identifier(solver), Literal(budget: Double)) =>
+    case Node(Keyword("set-solver"), Identifier("breach-generator"), Number(controlpoints), Identifier(solver), Number(budget)) =>
       state.search = Breach.generate(controlpoints.toInt, solver, budget.toInt)
       Seq()
 
@@ -250,11 +250,11 @@ class Parser {
     case Node(Keyword("robustness"), Number(time), phi, input @ _*) =>
       Seq(Robustness(formula(phi), Signal((0: Time, Vector())), signal(input), time))
 
-    case Node(Keyword("set-repeat"), Literal(n: Double)) =>
+    case Node(Keyword("set-repeat"), Number(n)) =>
       state.repeat = n.toInt
       Seq()
 
-    case Node(Keyword("set-seed"), Literal(n: Double)) =>
+    case Node(Keyword("set-seed"), Number(n)) =>
       state.seed = Some(n.toLong)
       Seq()
 
