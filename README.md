@@ -12,8 +12,6 @@ Requirements
 
 Contact: gidonernst (*) gmail.com
 
-See also [ARCH 2018 friendly competition](https://cps-vo.org/group/ARCH/FriendlyCompetition)
-
 
 ## Quickstart
 
@@ -69,6 +67,19 @@ Be aware that this caches initialized models as well, so if you change those, yo
 It's a simple command line interface to Matlab (currently without error handling, and it will terminate if you type in an invalid command).
 
     ./falstar-session
+
+## Repeatability
+
+See respective output in `results/*/summary.csv`
+
+[ARCH 2018 friendly competition](https://easychair.org/publications/paper/HjJ8)
+
+    make arch2018
+    
+HSCC 2019
+
+    make hscc2019
+    
 
 ## Simulink model set up
 
