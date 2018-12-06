@@ -10,8 +10,6 @@ import falstar.hybrid.Input
 import scala.collection.mutable.ArrayBuffer
 
 case class Robustness(rs: Array[(Time, Score)]) {
-  import Robustness.RobustnessOps
-
   def score = {
     if (rs.isEmpty) Score.MaxValue
     else rs.head._2
@@ -32,7 +30,7 @@ case class Robustness(rs: Array[(Time, Score)]) {
   }
 
   def until(T: Time) = {
-    Robustness(rs until T)
+    Robustness(rs takeWhile (_._1 <= T))
   }
 
   def prefix(min: Double, max: Double): Time = {
@@ -88,22 +86,6 @@ object Value {
 
 object Robustness {
   val empty = Robustness(Array.empty[(Time, Score)])
-
-  implicit class RobustnessOps(rs: Array[(Time, Score)]) {
-    def t0: Time = {
-      if (rs.isEmpty) 0
-      else rs.head._1
-    }
-
-    def T: Time = {
-      if (rs.isEmpty) 0
-      else rs.last._1
-    }
-
-    def until(T: Time) = {
-      rs takeWhile (_._1 <= T)
-    }
-  }
 
   def not(s: Score) = -s
   def and(s1: Score, s2: Score) = Math.min(s1, s2)

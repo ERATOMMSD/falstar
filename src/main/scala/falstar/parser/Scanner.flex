@@ -32,7 +32,7 @@ Alpha = [a-zA-Z_]
 AlphaNum = {Alpha}|{Num}|"-"
 
 Operators = "<" | ">" | "<=" | ">=" | "+" | "-" | "*" | "/" | abs
-Connectives = "!" | "=>" | "||" | "&&" | "==" | "!=" | true | false | not | implies | and | or | always | eventually | in
+Connectives = "!" | "=>" | "||" | "&&" | "==" | "!=" | true | false | not | implies | and | or | always | eventually | next | in
 Toplevel = include | define-system | define | push | pop | load | latex | set-solver | select-system | set-repeat | set-seed | clear-seed | set-log | flush-log | clear-log | set-report | clear-report | falsify | estimate | simulate | robustness | quit
 Simulink = simulink | parameters | inputs | outputs | option | constant | piecewise-constant
 Keyword = "(" | ")" | {Operators} | {Connectives} | {Toplevel} | {Simulink}

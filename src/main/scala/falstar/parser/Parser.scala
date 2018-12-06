@@ -16,6 +16,7 @@ import falstar.mtl.Port
 import falstar.mtl.Term
 import falstar.mtl.□
 import falstar.mtl.◇
+import falstar.mtl.○
 import falstar.mtl.Transform
 import falstar.falsification.STaliro
 import falstar.falsification.LaTeX
@@ -162,6 +163,7 @@ class Parser {
     case Node(Keyword("or"), phis @ _*) => formulas(ports, phis).fold(falstar.mtl.False: Formula)(_ || _)
     case Node(Keyword("implies"), phi, psi) => formula(ports, phi) ==> formula(ports, psi)
 
+    case Node(Keyword("next"), phi) => ○(formula(phi))
     case Node(Keyword("always"), Node(Number(from), Number(to)), psi) => □(from, to, formula(ports, psi))
     case Node(Keyword("eventually"), Node(Number(from), Number(to)), psi) => ◇(from, to, formula(ports, psi))
 
