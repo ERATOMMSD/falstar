@@ -1,0 +1,192 @@
+model,property,algorithm,seed,simulations,time,robustness,falsified,control points,budget
+automatic_transmission,"□_[0.0, 5.0] (speed < 200.0)","uniform random",0,100.0,15.0,142.52693833779517,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (speed < 200.0)","uniform random",8930961420536443956,100.0,14.0,142.64692872712519,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (speed < 200.0)","uniform random",5027564224191174885,100.0,14.0,142.62461846521583,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (speed < 200.0)","uniform random",-1702726027617546570,100.0,15.0,144.5527824267075,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (speed < 200.0)","uniform random",5704118054995460492,100.0,16.0,144.5563586931351,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (speed < 200.0)","uniform random",7938329089922726318,100.0,18.0,143.3843922870883,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (speed < 200.0)","uniform random",2597640955835708158,100.0,15.0,141.1863877362626,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (speed < 200.0)","uniform random",-3373523279198630529,100.0,14.0,147.83379507832862,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (speed < 200.0)","uniform random",-945874369173475924,100.0,14.0,144.13108692780375,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (speed < 200.0)","uniform random",-2027068886085455778,100.0,14.0,142.25231592202113,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (speed < 200.0)","uniform random",0,100.0,14.0,117.99413152233647,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (speed < 200.0)","uniform random",8930961420536443956,100.0,14.0,118.12153670938943,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (speed < 200.0)","uniform random",5027564224191174885,100.0,14.0,117.97127569723,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (speed < 200.0)","uniform random",-1702726027617546570,100.0,14.0,122.14949562389859,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (speed < 200.0)","uniform random",5704118054995460492,100.0,14.0,121.5565366907074,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (speed < 200.0)","uniform random",7938329089922726318,100.0,15.0,119.67258134806367,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (speed < 200.0)","uniform random",2597640955835708158,100.0,14.0,116.34476550334396,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (speed < 200.0)","uniform random",-3373523279198630529,100.0,15.0,125.40820221184615,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (speed < 200.0)","uniform random",-945874369173475924,100.0,16.0,122.40222154766931,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (speed < 200.0)","uniform random",-2027068886085455778,100.0,15.0,118.3268726920353,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (speed < 200.0)","uniform random",0,100.0,15.0,93.38156989096538,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (speed < 200.0)","uniform random",8930961420536443956,100.0,15.0,92.82692802802276,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (speed < 200.0)","uniform random",5027564224191174885,100.0,16.0,92.21249330499887,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (speed < 200.0)","uniform random",-1702726027617546570,100.0,16.0,99.26211503404679,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (speed < 200.0)","uniform random",5704118054995460492,100.0,16.0,97.265176305136,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (speed < 200.0)","uniform random",7938329089922726318,100.0,16.0,95.33939866596913,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (speed < 200.0)","uniform random",2597640955835708158,100.0,16.0,88.90441409799993,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (speed < 200.0)","uniform random",-3373523279198630529,100.0,16.0,96.26923759922447,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (speed < 200.0)","uniform random",-945874369173475924,100.0,15.0,99.23117715452264,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (speed < 200.0)","uniform random",-2027068886085455778,100.0,15.0,92.80476900085078,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 200.0)","uniform random",0,100.0,16.0,80.96091141296284,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 200.0)","uniform random",8930961420536443956,100.0,16.0,81.69310292347014,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 200.0)","uniform random",5027564224191174885,100.0,16.0,80.18952163661356,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 200.0)","uniform random",-1702726027617546570,100.0,16.0,82.85304251063705,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 200.0)","uniform random",5704118054995460492,100.0,16.0,84.3902655659284,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 200.0)","uniform random",7938329089922726318,100.0,16.0,83.78654778490129,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 200.0)","uniform random",2597640955835708158,100.0,16.0,76.09712756991007,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 200.0)","uniform random",-3373523279198630529,100.0,16.0,85.83210475172356,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 200.0)","uniform random",-945874369173475924,100.0,16.0,83.36633621120805,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 200.0)","uniform random",-2027068886085455778,100.0,16.0,79.48257346526998,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (speed < 200.0)","uniform random",0,100.0,19.0,68.35320964994065,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (speed < 200.0)","uniform random",8930961420536443956,100.0,18.0,67.60353031615671,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (speed < 200.0)","uniform random",5027564224191174885,100.0,18.0,65.11419254033393,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (speed < 200.0)","uniform random",-1702726027617546570,100.0,17.0,65.82850579341843,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (speed < 200.0)","uniform random",5704118054995460492,100.0,15.0,64.51625815285854,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (speed < 200.0)","uniform random",7938329089922726318,100.0,15.0,65.52628737507564,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (speed < 200.0)","uniform random",2597640955835708158,100.0,15.0,59.34771274212193,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (speed < 200.0)","uniform random",-3373523279198630529,100.0,15.0,68.87930703362528,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (speed < 200.0)","uniform random",-945874369173475924,100.0,15.0,65.53307510997078,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (speed < 200.0)","uniform random",-2027068886085455778,100.0,15.0,60.97327138785181,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (RPM < 10000.0)","uniform random",0,100.0,11.0,5393.203704166128,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (RPM < 10000.0)","uniform random",8930961420536443956,100.0,11.0,5390.829556173086,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (RPM < 10000.0)","uniform random",5027564224191174885,100.0,12.0,5407.7325875803535,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (RPM < 10000.0)","uniform random",-1702726027617546570,100.0,11.0,5404.604004029732,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (RPM < 10000.0)","uniform random",5704118054995460492,100.0,11.0,5389.026794025842,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (RPM < 10000.0)","uniform random",7938329089922726318,100.0,11.0,5398.598115203025,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (RPM < 10000.0)","uniform random",2597640955835708158,100.0,12.0,5385.605018297963,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (RPM < 10000.0)","uniform random",-3373523279198630529,100.0,12.0,5385.635846233837,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (RPM < 10000.0)","uniform random",-945874369173475924,100.0,11.0,5377.296089172557,no,4,100
+automatic_transmission,"□_[0.0, 5.0] (RPM < 10000.0)","uniform random",-2027068886085455778,100.0,12.0,5378.264937519231,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (RPM < 10000.0)","uniform random",0,100.0,12.0,5237.732273824548,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (RPM < 10000.0)","uniform random",8930961420536443956,100.0,12.0,5245.883671514663,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (RPM < 10000.0)","uniform random",5027564224191174885,100.0,12.0,5242.94450199562,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (RPM < 10000.0)","uniform random",-1702726027617546570,100.0,12.0,5271.89894929496,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (RPM < 10000.0)","uniform random",5704118054995460492,100.0,12.0,5240.705582694545,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (RPM < 10000.0)","uniform random",7938329089922726318,100.0,12.0,5230.874665367322,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (RPM < 10000.0)","uniform random",2597640955835708158,100.0,12.0,5238.978263100668,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (RPM < 10000.0)","uniform random",-3373523279198630529,100.0,12.0,5241.451653271468,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (RPM < 10000.0)","uniform random",-945874369173475924,100.0,12.0,5255.4939825925385,no,4,100
+automatic_transmission,"□_[0.0, 10.0] (RPM < 10000.0)","uniform random",-2027068886085455778,100.0,12.0,5226.7041853984965,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (RPM < 10000.0)","uniform random",0,100.0,13.0,5233.073499928536,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (RPM < 10000.0)","uniform random",8930961420536443956,100.0,12.0,5229.593525850208,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (RPM < 10000.0)","uniform random",5027564224191174885,100.0,13.0,5237.72580815009,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (RPM < 10000.0)","uniform random",-1702726027617546570,100.0,12.0,5228.7408613112275,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (RPM < 10000.0)","uniform random",5704118054995460492,100.0,12.0,5234.66341280637,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (RPM < 10000.0)","uniform random",7938329089922726318,100.0,12.0,5231.790530069434,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (RPM < 10000.0)","uniform random",2597640955835708158,100.0,12.0,5230.731692131438,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (RPM < 10000.0)","uniform random",-3373523279198630529,100.0,13.0,5226.371640567036,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (RPM < 10000.0)","uniform random",-945874369173475924,100.0,13.0,5234.930638177649,no,4,100
+automatic_transmission,"□_[0.0, 20.0] (RPM < 10000.0)","uniform random",-2027068886085455778,100.0,13.0,5236.013735699186,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (RPM < 10000.0)","uniform random",0,100.0,13.0,5229.4711508688115,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (RPM < 10000.0)","uniform random",8930961420536443956,100.0,13.0,5231.7714661565315,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (RPM < 10000.0)","uniform random",5027564224191174885,100.0,13.0,5239.961966058542,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (RPM < 10000.0)","uniform random",-1702726027617546570,100.0,13.0,5229.962014765157,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (RPM < 10000.0)","uniform random",5704118054995460492,100.0,13.0,5234.989093116021,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (RPM < 10000.0)","uniform random",7938329089922726318,100.0,13.0,5228.744692296341,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (RPM < 10000.0)","uniform random",2597640955835708158,100.0,13.0,5230.358492405141,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (RPM < 10000.0)","uniform random",-3373523279198630529,100.0,13.0,5230.243931824517,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (RPM < 10000.0)","uniform random",-945874369173475924,100.0,13.0,5230.02892444639,no,4,100
+automatic_transmission,"□_[0.0, 30.0] (RPM < 10000.0)","uniform random",-2027068886085455778,100.0,13.0,5230.170230812136,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (RPM < 10000.0)","uniform random",0,100.0,15.0,5229.4711508688115,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (RPM < 10000.0)","uniform random",8930961420536443956,100.0,14.0,5231.7714661565315,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (RPM < 10000.0)","uniform random",5027564224191174885,100.0,15.0,5238.738680330287,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (RPM < 10000.0)","uniform random",-1702726027617546570,100.0,14.0,5229.517844361567,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (RPM < 10000.0)","uniform random",5704118054995460492,100.0,14.0,5235.192709124724,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (RPM < 10000.0)","uniform random",7938329089922726318,100.0,15.0,5228.744692296341,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (RPM < 10000.0)","uniform random",2597640955835708158,100.0,15.0,5230.358492405141,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (RPM < 10000.0)","uniform random",-3373523279198630529,100.0,15.0,5228.737544057969,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (RPM < 10000.0)","uniform random",-945874369173475924,100.0,14.0,5230.02892444639,no,4,100
+automatic_transmission,"□_[0.0, 50.0] (RPM < 10000.0)","uniform random",-2027068886085455778,100.0,14.0,5230.170230812136,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",0,100.0,13.0,50.98508565873603,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",8930961420536443956,100.0,13.0,48.241312501423224,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",5027564224191174885,100.0,13.0,47.79487688822372,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",-1702726027617546570,100.0,13.0,48.38475861355369,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",5704118054995460492,100.0,13.0,49.801478910955964,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",7938329089922726318,100.0,13.0,48.30046975827215,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",2597640955835708158,100.0,15.0,49.36845366602118,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",-3373523279198630529,100.0,13.0,49.38349023735729,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",-945874369173475924,100.0,13.0,48.93346625278589,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",-2027068886085455778,100.0,13.0,47.81198082137776,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",0,100.0,13.0,29.796234570850146,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",8930961420536443956,100.0,13.0,23.901228755569576,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",5027564224191174885,100.0,13.0,25.228251097282325,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",-1702726027617546570,100.0,13.0,24.469498626625025,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",5704118054995460492,100.0,13.0,27.077408136183223,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",7938329089922726318,100.0,13.0,24.783569575295417,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",2597640955835708158,100.0,13.0,27.087549632939854,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",-3373523279198630529,100.0,13.0,27.35982172711462,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",-945874369173475924,100.0,13.0,26.609437827773803,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",-2027068886085455778,100.0,13.0,25.23641565752152,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",0,100.0,13.0,51.9920423531518,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",8930961420536443956,100.0,13.0,43.48997641829655,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",5027564224191174885,100.0,13.0,48.82347447587219,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",-1702726027617546570,100.0,13.0,52.19924644999192,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",5704118054995460492,100.0,13.0,45.30936916759589,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",7938329089922726318,100.0,13.0,45.18424293000341,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",2597640955835708158,100.0,13.0,47.9217067154747,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",-3373523279198630529,100.0,13.0,47.19910368786013,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",-945874369173475924,100.0,13.0,44.81705389859694,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 4500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",-2027068886085455778,100.0,13.0,48.81627744666817,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",0,100.0,13.0,67.54617286595519,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",8930961420536443956,100.0,13.0,62.173365601250346,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",5027564224191174885,100.0,13.0,63.080508924398565,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",-1702726027617546570,100.0,13.0,62.716872284794356,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",5704118054995460492,100.0,13.0,67.23140641689508,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",7938329089922726318,100.0,13.0,61.42345300022458,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",2597640955835708158,100.0,13.0,64.57764670840832,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",-3373523279198630529,100.0,13.0,60.21207149716699,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",-945874369173475924,100.0,13.0,63.43831239212827,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",-2027068886085455778,100.0,13.0,63.912555441852014,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",0,100.0,13.0,55.007733606690906,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",8930961420536443956,100.0,13.0,51.485695976369925,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",5027564224191174885,100.0,13.0,48.72277341730928,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",-1702726027617546570,100.0,13.0,49.51350966732343,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",5704118054995460492,100.0,13.0,55.30039204055472,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",7938329089922726318,100.0,14.0,46.516648109384626,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",2597640955835708158,100.0,14.0,51.006736195044446,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",-3373523279198630529,100.0,13.0,48.62124275868785,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",-945874369173475924,100.0,13.0,49.99423326367407,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",-2027068886085455778,100.0,13.0,50.68628102269655,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",0,100.0,13.0,84.11671302320494,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",8930961420536443956,100.0,13.0,79.16977041643628,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",5027564224191174885,100.0,13.0,84.13907214674276,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",-1702726027617546570,100.0,13.0,86.92817322111169,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",5704118054995460492,100.0,13.0,88.04232834326288,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",7938329089922726318,100.0,13.0,84.1013852605321,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",2597640955835708158,100.0,13.0,92.38241622519834,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",-3373523279198630529,100.0,13.0,79.80366409221969,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",-945874369173475924,100.0,13.0,79.54580022517015,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 3000.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",-2027068886085455778,100.0,13.0,85.75090637504984,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",0,100.0,13.0,67.54617286595519,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",8930961420536443956,100.0,13.0,76.04595264824263,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",5027564224191174885,100.0,13.0,70.54846574683116,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",-1702726027617546570,100.0,13.0,79.95996966111251,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",5704118054995460492,100.0,13.0,69.54925902393472,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",7938329089922726318,100.0,13.0,69.38971789010284,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",2597640955835708158,100.0,13.0,87.4641954993968,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",-3373523279198630529,100.0,13.0,87.06460006098439,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",-945874369173475924,100.0,13.0,72.00301247578105,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 4.0] (speed < 100.0))","uniform random",-2027068886085455778,100.0,13.0,71.20444761240861,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",0,100.0,13.0,57.049287479093316,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",8930961420536443956,100.0,14.0,65.84022557766025,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",5027564224191174885,100.0,14.0,58.83217339916521,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",-1702726027617546570,100.0,13.0,72.0906751624527,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",5704118054995460492,100.0,13.0,59.14061252740954,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",7938329089922726318,100.0,13.0,58.1339778650479,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",2597640955835708158,100.0,13.0,81.52506004998148,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",-3373523279198630529,100.0,13.0,81.21045911353588,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",-945874369173475924,100.0,13.0,61.08900519936911,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 8.0] (speed < 100.0))","uniform random",-2027068886085455778,100.0,13.0,60.0218582028895,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",0,100.0,13.0,88.54637645590518,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",8930961420536443956,100.0,13.0,98.06479890830542,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",5027564224191174885,100.0,13.0,99.1812094839219,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",-1702726027617546570,100.0,13.0,99.12532577822388,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",5704118054995460492,100.0,13.0,105.0641993085195,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",7938329089922726318,100.0,13.0,102.808309909591,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",2597640955835708158,100.0,13.0,101.56597270811505,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",-3373523279198630529,100.0,13.0,117.03155961252841,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",-945874369173475924,100.0,13.0,84.93387436778217,no,4,100
+automatic_transmission,"(□_[0.0, 30.0] (RPM < 2500.0) ==> □_[0.0, 20.0] (speed < 150.0))","uniform random",-2027068886085455778,100.0,14.0,100.22787750018912,no,4,100
+
