@@ -41,6 +41,7 @@ class Parser {
     var config: Config,
     var defines: Map[String, Syntax],
     var systems: Map[String, (System, Config)],
+    var requirements: Map[String, Seq[Formula]],
 
     // for experiments
     var seed: Option[Long],
@@ -49,7 +50,7 @@ class Parser {
     var report: Option[String])
 
   object State {
-    def empty = State(null, null, null, Map(), Map(), None, 1, None, None)
+    def empty = State(null, null, null, Map(), Map(), Map(), None, 1, None, None)
   }
 
   var stack = List(State.empty)
@@ -242,6 +243,15 @@ class Parser {
     case Node(Keyword("set-solver"), Identifier("staliro-printer"), Literal(prefix: String)) =>
       state.search = STaliro.dummy(prefix)
       Seq()
+
+    case Node(Keyword("set-requirements"), phis @ _*) =>
+      val name = state.system.name
+      state.requirements += name -> (phis map formula)
+      Seq()
+
+    case Node(Keyword("falsify")) =>
+      val name = state.system.name
+      state.requirements(name) map { phi => Falsify(state.search, state.system, state.config, phi, state.seed, state.repeat, state.log, state.report) }
 
     case Node(Keyword("falsify"), phis @ _*) =>
       phis map { phi => Falsify(state.search, state.system, state.config, formula(phi), state.seed, state.repeat, state.log, state.report) }
