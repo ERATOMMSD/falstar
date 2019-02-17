@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# This script sets up the environment for FalStar
+# 
+# See also:
+#     ./falstar
+#     ./falstar-session
+
+# The file ./MATLABROOT exports environment variable
+# $MATLABROOT pointing to Matlab's base directory.
+# It is generated on-demand as follows:
+if [ ! -f ./MATLABROOT ]
+then
+    matlab -nojvm -nodesktop <<EOF
+matlabconfig
+quit
+EOF
+fi
+
+if [ -f ./MATLABROOT ]
+then
+# Bring $MATLABROOT into the environment
+    source ./MATLABROOT
+    echo "Matlab at: $MATLABROOT"
+else
+    echo "Could not determine Matlab installation."
+fi
+
