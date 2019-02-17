@@ -1,6 +1,10 @@
 function matlabconfig(path)
-    disp(path);
-    f=fopen(path,'wt');
-    fprintf(f,['MATLABROOT="' matlabroot '"\n']);
-    fclose(f);
+    try
+        f=fopen(path,'wt');
+        fprintf(f,['MATLABROOT="' matlabroot '"\n']);
+        fclose(f);
+    catch e
+        disp('writing matlab path failed')
+    end
+    quit;
 end

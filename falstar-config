@@ -13,10 +13,7 @@ mkdir -p ~/.falstar
 # It is generated on-demand as follows:
 if [ ! -f ~/.falstar/matlab ]
 then
-    matlab -nojvm -nodesktop <<EOF
-matlabconfig '$HOME/.falstar/matlab'
-quit
-EOF
+    matlab -nodesktop -nojvm -r "matlabconfig('$HOME/.falstar/matlab')"
 fi
 
 if [ -f ~/.falstar/matlab ]
