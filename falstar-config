@@ -6,21 +6,23 @@
 #     ./falstar
 #     ./falstar-session
 
-# The file ./MATLABROOT exports environment variable
+mkdir -p ~/.falstar
+
+# The file ~/.falstar/matlab exports environment variable
 # $MATLABROOT pointing to Matlab's base directory.
 # It is generated on-demand as follows:
-if [ ! -f ./MATLABROOT ]
+if [ ! -f ~/.falstar/matlab ]
 then
     matlab -nojvm -nodesktop <<EOF
-matlabconfig
+matlabconfig '$HOME/.falstar/matlab'
 quit
 EOF
 fi
 
-if [ -f ./MATLABROOT ]
+if [ -f ~/.falstar/matlab ]
 then
 # Bring $MATLABROOT into the environment
-    source ./MATLABROOT
+    source ~/.falstar/matlab
     echo "Matlab at: $MATLABROOT"
 else
     echo "Could not determine Matlab installation."
