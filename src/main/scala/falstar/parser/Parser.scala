@@ -170,6 +170,9 @@ class Parser {
 
     case Identifier(name) if state.defines contains name =>
       formula(ports, state.defines(name))
+      
+    case Identifier(name) =>
+      sys.error("undeclared identifier in formula: " + name)
   }
 
   def formula(phi: Syntax): Formula = {

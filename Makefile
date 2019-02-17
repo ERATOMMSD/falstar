@@ -1,3 +1,5 @@
+include ~/.falstar/matlab
+
 .PHONY: all scanner install uninstall compile doc test clean hscc2019
 
 PREFIX=/usr/local
@@ -29,7 +31,7 @@ arch2018: $(ARCH2018:src/test/configuration/arch2018/%.cfg=results/arch2018/%.cs
 hscc2019: $(HSCC2019:src/test/configuration/hscc2019/%.cfg=results/hscc2019/%.csv)
 
 falstar.jar: bin $(SRC)
-	scalac -d bin -cp lib/engine.jar $(SRC)
+	scalac -d bin -cp $(MATLABROOT)/java/jar/engine.jar $(SRC)
 	javac  -d bin -cp bin $(SCANNER)
 	jar cf $@ -C bin .
 
