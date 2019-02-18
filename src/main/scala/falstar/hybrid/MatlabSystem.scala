@@ -21,7 +21,6 @@ case class MatlabSystem(
     print("initializing '" + name + "' ...")
 
     eval("addpath('" + path + "')")
-    eval("load_system('" + name + "')")
     eval(init)
 
     setup.stop()
