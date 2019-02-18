@@ -1,7 +1,6 @@
 package falstar
 
 import java.io.File
-import java.io.FileWriter
 
 import scala.annotation.tailrec
 import scala.collection.mutable
@@ -9,20 +8,18 @@ import scala.collection.mutable.Buffer
 import scala.io.StdIn
 import scala.util.control.Breaks
 
-import falstar.falsification.Result
-import falstar.hybrid.Simulink
 import falstar.parser.Command
 import falstar.parser.Falsify
+import falstar.parser.Flush
 import falstar.parser.Quit
 import falstar.parser.Robustness
 import falstar.parser.Simulate
 import falstar.parser.parse
 import falstar.util.Probability
-import falstar.util.Scope
-import falstar.parser.Flush
-import falstar.util.Table
 import falstar.util.Row
-import falstar.falsification.Statistics
+import falstar.util.Scope
+import falstar.util.Simulink
+import falstar.util.Table
 
 object Main {
   object quit extends Breaks
@@ -141,9 +138,8 @@ object Main {
   }
 
   def robustness(_in: Array[String], _out: Array[String], _ts: Array[Double], _us: Array[Array[Double]], _ys: Array[Array[Double]], _phi: String): Double = {
-    import linear.Vector
-    import hybrid.Signal
-    import hybrid.Signal.SignalOps
+    import falstar.hybrid.Signal
+    import falstar.linear.Vector
 
     if (_ts.length != _us.length || _ts.length != _ys.length) {
       // println(_ts.mkString("ts = [", " ", "]"))

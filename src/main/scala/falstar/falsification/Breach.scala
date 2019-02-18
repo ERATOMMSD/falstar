@@ -94,9 +94,9 @@ object Breach {
       "budget" -> budget)
 
     def search(sys: System, cfg: Config, phi: Formula): (Result, Statistics) = {
-      import falstar.hybrid.Simulink.eval
-      import falstar.hybrid.Simulink.get
-      import falstar.hybrid.Simulink.signal
+      import falstar.util.Simulink.eval
+      import falstar.util.Simulink.get
+      import falstar.util.Simulink.signal
 
       // add directory
       // set params and variables

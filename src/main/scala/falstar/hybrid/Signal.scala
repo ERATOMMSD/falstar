@@ -72,5 +72,31 @@ object Signal {
       }
       ys.toArray
     }
+
+    def toMatlab(T: Time) = {
+      val rs = new StringBuilder()
+
+      rs append "["
+
+      for ((t, u) <- xs) {
+        rs append t
+        for (x <- u) {
+          rs append " "
+          rs append x
+        }
+        rs append "; "
+      }
+
+      val (_, un) = xs.last
+      rs append T
+      for (x <- un) {
+        rs append " "
+        rs append x
+      }
+
+      rs append "]"
+
+      rs.toString
+    }
   }
 }
