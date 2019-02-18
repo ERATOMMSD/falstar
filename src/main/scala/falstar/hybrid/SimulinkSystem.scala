@@ -30,7 +30,7 @@ case class SimulinkSystem(
     eval("addpath('" + path + "')")
     eval("load_system('" + name + "')")
 
-    println("WARNING: set_param not implemented")
+    // println("WARNING: set_param not implemented")
     // eval("set_param('" + name + "'," + params.map { case (k, v) => k + "," + v }.mkString(", ") + ")")
 
     for (file <- load) {

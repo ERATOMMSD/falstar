@@ -1,9 +1,12 @@
-.PHONY: all scanner compile doc test clean hscc2019
+include ~/.falstar/matlab
+
+.PHONY: all scanner install uninstall compile doc test clean hscc2019
+
+PREFIX=/usr/local
 
 SCANNER=src/main/scala/falstar/parser/Scanner.java
 SRC=$(shell find src/main/scala -iname "*.scala") $(SCANNER)
-
-CP=lib/mvm.jar:lib/engine.jar:lib/util.jar
+BIN=falstar.jar falstar falstar-session
 
 ARCH2018=$(wildcard src/test/configuration/arch2018/*.cfg)
 HSCC2019=$(wildcard src/test/configuration/hscc2019/*.cfg)
@@ -17,11 +20,18 @@ scanner: $(SCANNER)
 test: falstar.jar
 	./falstar src/test/configuration/test.cfg
 
+install: $(BIN)
+	install -m 755 falstar falstar-session $(PREFIX)
+	install -m 644 falstar.jar $(PREFIX)
+
+uninstall:
+	rm -f $(addprefix $(PREFIX)/,$(BIN))
+
 arch2018: $(ARCH2018:src/test/configuration/arch2018/%.cfg=results/arch2018/%.csv)
 hscc2019: $(HSCC2019:src/test/configuration/hscc2019/%.cfg=results/hscc2019/%.csv)
 
 falstar.jar: bin $(SRC)
-	scalac -d bin -cp lib/engine.jar $(SRC)
+	scalac -d bin -cp $(MATLABROOT)/java/jar/engine.jar $(SRC)
 	javac  -d bin -cp bin $(SCANNER)
 	jar cf $@ -C bin .
 
