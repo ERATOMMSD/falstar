@@ -39,7 +39,7 @@ falstar.jar: bin $(SRC)
 	pandoc -s $^ -o $@
 
 %.java: %.flex
-	./jflex -nobak $^
+	jflex -nobak $^
 
 bin:
 	mkdir -p bin
