@@ -149,8 +149,8 @@ class Parser {
 
     case Node(Keyword("<"), left, right) => term(ports, left) < term(ports, right)
     case Node(Keyword(">"), left, right) => term(ports, left) > term(ports, right)
-    case Node(Keyword("<="), left, right) => term(ports, left) >= term(ports, right)
-    case Node(Keyword(">="), left, right) => term(ports, left) <= term(ports, right)
+    case Node(Keyword("<="), left, right) => term(ports, left) <= term(ports, right)
+    case Node(Keyword(">="), left, right) => term(ports, left) >= term(ports, right)
     case Node(Keyword("=="), left, right) => term(ports, left) === term(ports, right)
     case Node(Keyword("!="), left, right) => term(ports, left) !== term(ports, right)
 
