@@ -33,8 +33,12 @@ case class SimulinkSystem(
     println("WARNING: set_param not implemented")
     // eval("set_param('" + name + "'," + params.map { case (k, v) => k + "," + v }.mkString(", ") + ")")
 
-    for (file <- load)
-      eval("load('" + file + "')")
+    for (file <- load) {
+      if (file.endsWith(".m"))
+        eval(file.drop(2))
+      else if (file.endsWith(".mat"))
+        eval("load('" + file + "')")
+    }
 
     if (accelerated) {
       println(" compiling ")
