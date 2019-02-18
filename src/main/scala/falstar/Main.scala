@@ -140,6 +140,30 @@ object Main {
     }
   }
 
+  def robustness(_in: Array[String], _out: Array[String], _ts: Array[Double], _us: Array[Array[Double]], _ys: Array[Array[Double]], _phi: String): Double = {
+    import linear.Vector
+    import hybrid.Signal
+    import hybrid.Signal.SignalOps
+
+    if (_ts.length != _us.length || _ts.length != _ys.length) {
+      // println(_ts.mkString("ts = [", " ", "]"))
+      // println(_us.mkString("us = [", " ", "]"))
+      // println(_ys.mkString("ys = [", " ", "]"))
+      throw new IllegalArgumentException("input signal length mismatch")
+    }
+
+    val in = for ((name, index) <- _in.zipWithIndex)
+      yield (name, mtl.InPort(name, index))
+    val out = for ((name, index) <- _out.zipWithIndex)
+      yield (name, mtl.OutPort(name, index))
+
+    val phi = parser.formula((in ++ out).toMap, _phi)
+    val us: Signal = _ts zip (_us map (Vector(_: _*)))
+    val ys: Signal = _ts zip (_ys map (Vector(_: _*)))
+    val rs = mtl.Robustness(phi, us, ys)
+    rs.score
+  }
+
   def main(args: Array[String]) {
     if (args.isEmpty) {
       println("usage: falstar [-agv] file_1 ... file_n")

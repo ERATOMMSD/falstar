@@ -81,6 +81,9 @@ case class SimulinkSystem(
 
     _sim(name, "result",
       "StopTime" -> T,
+      "LoadExternalInput" -> "on", "ExternalInput" -> "[t__,u__]",
+      "SaveTime" -> "on", "TimeSaveName" -> "tout",
+      "SaveOutput" -> "on", "OutputSaveName" -> "yout",
       "SaveFormat" -> "Array")
 
     eval("tout = result.tout")
