@@ -6,6 +6,7 @@ PREFIX=/usr/local
 
 SCANNER=src/main/scala/falstar/parser/Scanner.java
 SRC=$(shell find src/main/scala -iname "*.scala") $(SCANNER)
+BINDIR=bin
 BIN=falstar.jar falstar falstar-session
 
 ARCH2018=$(wildcard src/test/configuration/arch2018/*.cfg)
@@ -30,10 +31,10 @@ uninstall:
 arch2018: $(ARCH2018:src/test/configuration/arch2018/%.cfg=results/arch2018/%.csv)
 hscc2019: $(HSCC2019:src/test/configuration/hscc2019/%.cfg=results/hscc2019/%.csv)
 
-falstar.jar: bin $(SRC)
-	scalac -d bin -cp $(MATLABROOT)/java/jar/engine.jar $(SRC)
-	javac  -d bin -cp bin $(SCANNER)
-	jar cf $@ -C bin .
+falstar.jar: $(BINDIR) $(SRC)
+	scalac -d $(BINDIR) -cp $(MATLABROOT)/java/jar/engine.jar $(SRC)
+	javac  -d $(BINDIR) -cp $(BINDIR) $(SCANNER)
+	jar cf $@ -C $(BINDIR) .
 
 %.html: %.md
 	pandoc -s $^ -o $@
@@ -41,8 +42,8 @@ falstar.jar: bin $(SRC)
 %.java: %.flex
 	jflex -nobak $^
 
-bin:
-	mkdir -p bin
+$(BINDIR):
+	mkdir -p $(BINDIR)
 
 results/arch2018/%.csv: src/test/configuration/arch2018/%.cfg falstar.jar
 	./falstar $<
@@ -51,7 +52,7 @@ results/hscc2019/%.csv: src/test/configuration/hscc2019/%.cfg falstar.jar
 	./falstar $<
 
 clean:
-	rm -fr bin
+	rm -fr $(BINDIR)
 	rm -fr slprj
 	rm -f outcmaes*.dat
 	rm -f variablescmaes*.mat

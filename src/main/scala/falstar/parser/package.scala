@@ -23,7 +23,7 @@ package object parser {
     val args = readAll(tokens)
     val node = Node(args: _*)
     val parser = new Parser
-    parser.formula(ports: Map[String, Port], node: Syntax)
+    parser.formula(ports: Map[String, Port], node: Syntax, Map())
   }
 
   def read(file: File) = {
