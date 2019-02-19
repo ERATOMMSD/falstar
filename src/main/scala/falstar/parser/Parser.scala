@@ -26,6 +26,7 @@ import falstar.hybrid.Value
 import falstar.hybrid.PiecewiseConstant
 import falstar.hybrid.Constant
 import falstar.hybrid.Input
+import falstar.hybrid.MatlabSystem
 
 sealed trait Command
 case object Flush extends Command
@@ -117,6 +118,9 @@ class Parser {
         val path = file.getParent
         val model = splitFilename(file.getName)
         SimulinkSystem(path, model, params, inputs, outputs, Seq(load))
+
+      case Node(Keyword("matlab"), Literal(name: String), Literal(path: String), Literal(init: String), Literal(run: String)) =>
+        MatlabSystem(path, name, init, run, params, inputs, outputs)
     }
 
     val cfg = configureSystem(sys, Config.empty, _config)
@@ -170,7 +174,7 @@ class Parser {
 
     case Identifier(name) if state.defines contains name =>
       formula(ports, state.defines(name))
-      
+
     case Identifier(name) =>
       sys.error("undeclared identifier in formula: " + name)
   }
