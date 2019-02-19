@@ -58,12 +58,30 @@ class Parser {
   var stack = List(State.empty)
   def state = stack.head
 
+  def expand(node: Syntax, env: Map[String, Syntax]): Syntax = node match {
+    case Identifier(name) if env contains name =>
+      env(name)
+
+    case Node(Identifier(name), args @ _*) if state.macros contains name =>
+      val (formals, body) = state.macros(name)
+      val lex = (formals zip expand(args, env))
+      expand(body, env ++ lex)
+
+    case Node(args @ _*) =>
+      Node(expand(args, env): _*)
+
+    case _ =>
+      node
+  }
+
+  def expand(nodes: Seq[Syntax], env: Map[String, Syntax]): Seq[Syntax] = {
+    nodes map (expand(_, env))
+  }
+
   object Number {
     def unapply(node: Syntax): Option[Double] = node match {
       case Literal(value: Double) =>
         Some(value)
-      case Identifier(name) if state.defines contains name =>
-        unapply(state.defines(name))
       case _ =>
         None
     }
@@ -135,72 +153,57 @@ class Parser {
     state.systems += name -> (sys, cfg)
   }
 
-  def term(ports: Map[String, Port], tm: Syntax, env: Map[String, Syntax]): Term = tm match {
+  def term(ports: Map[String, Port], tm: Syntax): Term = tm match {
     case Literal(value: Double) => Const(value)
-    case Node(Keyword("abs"), arg) => Transform(term(ports, arg, env), Math.abs, "abs")
-    case Node(Keyword("+"), left, right) => term(ports, left, env) + term(ports, right, env)
-    case Node(Keyword("-"), left, right) => term(ports, left, env) - term(ports, right, env)
-    case Node(Keyword("*"), left, right) => term(ports, left, env) * term(ports, right, env)
-    case Node(Keyword("/"), left, right) => term(ports, left, env) / term(ports, right, env)
+    case Node(Keyword("abs"), arg) => Transform(term(ports, arg), Math.abs, "abs")
+    case Node(Keyword("+"), left, right) => term(ports, left) + term(ports, right)
+    case Node(Keyword("-"), left, right) => term(ports, left) - term(ports, right)
+    case Node(Keyword("*"), left, right) => term(ports, left) * term(ports, right)
+    case Node(Keyword("/"), left, right) => term(ports, left) / term(ports, right)
 
-    case Identifier(name) if env contains name =>
-      term(ports, env(name), env)
     case Identifier(name) if ports contains name =>
       ports(name)
 
-    case Node(Identifier(name), args @ _*) if state.macros contains name =>
-      val (formals, body) = state.macros(name)
-      val lex = (formals zip args)
-      term(ports, env(name), env ++ lex)
-
     case Identifier(name) =>
-      sys.error("unknown identifier: " + name + " in " + ports.keys.mkString(", ") + " and " + env.keys.mkString(", "))
+      sys.error("unknown identifier: " + name + " in " + ports.keys.mkString(", "))
 
     case _ =>
       sys.error("not a term: " + tm)
   }
 
-  def formulas(ports: Map[String, Port], phis: Seq[Syntax], env: Map[String, Syntax]): Seq[Formula] = {
-    phis map (formula(ports, _, env))
+  def formulas(ports: Map[String, Port], phis: Seq[Syntax]): Seq[Formula] = {
+    phis map (formula(ports, _))
   }
 
-  def formula(ports: Map[String, Port], phi: Syntax, env: Map[String, Syntax]): Formula = phi match {
+  def formula(ports: Map[String, Port], phi: Syntax): Formula = phi match {
     case Keyword("true") => falstar.mtl.True
     case Keyword("false") => falstar.mtl.False
 
-    case Node(Keyword("in"), tm, min, max) => term(ports, tm, env) in (term(ports, min, env), term(ports, max, env))
+    case Node(Keyword("in"), tm, min, max) => term(ports, tm) in (term(ports, min), term(ports, max))
 
-    case Node(Keyword("<"), left, right) => term(ports, left, env) < term(ports, right, env)
-    case Node(Keyword(">"), left, right) => term(ports, left, env) > term(ports, right, env)
-    case Node(Keyword("<="), left, right) => term(ports, left, env) <= term(ports, right, env)
-    case Node(Keyword(">="), left, right) => term(ports, left, env) >= term(ports, right, env)
-    case Node(Keyword("=="), left, right) => term(ports, left, env) === term(ports, right, env)
-    case Node(Keyword("!="), left, right) => term(ports, left, env) !== term(ports, right, env)
+    case Node(Keyword("<"), left, right) => term(ports, left) < term(ports, right)
+    case Node(Keyword(">"), left, right) => term(ports, left) > term(ports, right)
+    case Node(Keyword("<="), left, right) => term(ports, left) <= term(ports, right)
+    case Node(Keyword(">="), left, right) => term(ports, left) >= term(ports, right)
+    case Node(Keyword("=="), left, right) => term(ports, left) === term(ports, right)
+    case Node(Keyword("!="), left, right) => term(ports, left) !== term(ports, right)
 
-    case Node(Keyword("!"), phi) => !formula(ports, phi, env)
-    case Node(Keyword("&&"), phis @ _*) => formulas(ports, phis, env).fold(falstar.mtl.True: Formula)(_ && _)
-    case Node(Keyword("||"), phis @ _*) => formulas(ports, phis, env).fold(falstar.mtl.False: Formula)(_ || _)
-    case Node(Keyword("=>"), phi, psi) => formula(ports, phi, env) ==> formula(ports, psi, env)
+    case Node(Keyword("!"), phi) => !formula(ports, phi)
+    case Node(Keyword("&&"), phis @ _*) => formulas(ports, phis).fold(falstar.mtl.True: Formula)(_ && _)
+    case Node(Keyword("||"), phis @ _*) => formulas(ports, phis).fold(falstar.mtl.False: Formula)(_ || _)
+    case Node(Keyword("=>"), phi, psi) => formula(ports, phi) ==> formula(ports, psi)
 
-    case Node(Keyword("not"), phi) => !formula(ports, phi, env)
-    case Node(Keyword("and"), phis @ _*) => formulas(ports, phis, env).fold(falstar.mtl.True: Formula)(_ && _)
-    case Node(Keyword("or"), phis @ _*) => formulas(ports, phis, env).fold(falstar.mtl.False: Formula)(_ || _)
-    case Node(Keyword("implies"), phi, psi) => formula(ports, phi, env) ==> formula(ports, psi, env)
+    case Node(Keyword("not"), phi) => !formula(ports, phi)
+    case Node(Keyword("and"), phis @ _*) => formulas(ports, phis).fold(falstar.mtl.True: Formula)(_ && _)
+    case Node(Keyword("or"), phis @ _*) => formulas(ports, phis).fold(falstar.mtl.False: Formula)(_ || _)
+    case Node(Keyword("implies"), phi, psi) => formula(ports, phi) ==> formula(ports, psi)
 
     case Node(Keyword("next"), phi) => ○(formula(phi))
-    case Node(Keyword("always"), Node(Number(from), Number(to)), psi) => □(from, to, formula(ports, psi, env))
-    case Node(Keyword("eventually"), Node(Number(from), Number(to)), psi) => ◇(from, to, formula(ports, psi, env))
-
-    case Identifier(name) if env contains name =>
-      formula(ports, env(name), env)
-
-    case Node(Identifier(name), args @ _*) if state.macros contains name =>
-      val (formals, body) = state.macros(name)
-      val lex = (formals zip args)
-      formula(ports, body, env ++ lex)
+    case Node(Keyword("always"), Node(Number(from), Number(to)), psi) => □(from, to, formula(ports, psi))
+    case Node(Keyword("eventually"), Node(Number(from), Number(to)), psi) => ◇(from, to, formula(ports, psi))
 
     case Identifier(name) =>
-      sys.error("unknown identifier: " + name + " in " + ports.keys.mkString(", ") + " and " + env.keys.mkString(", "))
+      sys.error("unknown identifier: " + name + " in " + ports.keys.mkString(", "))
 
     case _ =>
       sys.error("not a formula: " + phi)
@@ -209,7 +212,7 @@ class Parser {
   def formula(phi: Syntax): Formula = {
     val inports = Map(state.system.inports.map { port => (port.name, port) }: _*)
     val outports = Map(state.system.outports.map { port => (port.name, port) }: _*)
-    formula(inports ++ outports, phi, state.defines)
+    formula(inports ++ outports, expand(phi, state.defines))
   }
 
   def vector(syntax: Syntax) = syntax match {
@@ -231,7 +234,7 @@ class Parser {
     Signal((input map controlpoint): _*)
   }
 
-  def top(syntax: Syntax): Seq[Command] = syntax match {
+  def top(syntax: Syntax): Seq[Command] = expand(syntax, state.defines) match {
     case Node(Keyword("include"), Literal(file: String)) =>
       val node = read(new File(file))
       parse(node)
