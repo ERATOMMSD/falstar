@@ -12,7 +12,7 @@ package object util {
     println(m + ": " + (end - start) + "ms")
     r
   }
-
+  
   def peakMemBytes = {
     val pools = ManagementFactory.getMemoryPoolMXBeans
 

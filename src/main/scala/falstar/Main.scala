@@ -29,7 +29,7 @@ object Main {
     var verbose = false
     var graphics = false
     var dummy = false
-    val sep = ","
+    val sep = ','
   }
 
   val results = mutable.Map[String, mutable.Buffer[Row]]()
@@ -46,7 +46,7 @@ object Main {
         case Some(seed) => Probability.seed = seed
       }
 
-      val (best, rows, aggregate) = search.repeat(sys, phi, cfg, seed, repeat)
+      val (best, good, rows, aggregate) = search.repeat(sys, phi, cfg, seed, repeat)
 
       for (name <- log) {
         if (!(results contains name))

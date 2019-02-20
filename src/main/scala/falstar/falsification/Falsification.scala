@@ -12,7 +12,7 @@ import falstar.util.Row
 import falstar.util.Timer
 
 trait Falsification {
-  def repeat(sys: System, cfg: Config, phi: Formula, _seed: Option[Long], n: Int): (Result, Seq[Row], Row) = {
+  def repeat(sys: System, cfg: Config, phi: Formula, _seed: Option[Long], n: Int): (Result, Seq[Signal], Seq[Row], Row) = {
     _seed match {
       case None => Probability.setUniqueSeed()
       case Some(seed) => Probability.seed = seed
@@ -46,7 +46,7 @@ trait Falsification {
       /// "time" -> stats.time, "robustness" -> res.score,
       "success" -> good.size, "trials" -> all.size)
 
-    (best, rows, Row(aggregate ++ params))
+    (best, good map (_._1.tr.us), rows, Row(aggregate ++ params))
   }
 
   def apply(sys: System, cfg: Config, phi: Formula): (Result, Statistics, Row) = {
@@ -65,12 +65,10 @@ trait Falsification {
 
     println("inputs")
     val us = res.tr.us
-    val t__ = us map { case (t, u) => Array(t) }
-    val u__ = us map { case (t, u) => u.data }
-    val U = u__.last
     val T = phi.T
-    println("  t__ = [" + t__.map(_.mkString(" ")).mkString("; ") + "; " + T + "]")
-    println("  u__ = [" + u__.map(_.mkString(" ")).mkString("; ") + "; " + U.mkString(" ") + "]")
+
+    import Signal.SignalOps
+    println("  u = " + (us toMatlab T))
 
     if (res.isFalsified) {
       print("falsified")
