@@ -48,6 +48,16 @@ package object falsification {
       Math.sqrt(ds.sum / (xs.length - 1))
     }
 
+    def _median(xs: Seq[Double]) = {
+      val ys = xs.sorted
+      val n = xs.length / 2
+      if (n % 2 == 0) {
+        (ys(n - 1) + ys(n)) / 2
+      } else {
+        ys(n)
+      }
+    }
+
     def zip(stats: Seq[Statistics], f: Seq[Double] => Double) = {
       if (stats.isEmpty) {
         Statistics.empty
@@ -64,6 +74,7 @@ package object falsification {
     def min(stats: Seq[Statistics]) = zip(stats, _.min)
     def max(stats: Seq[Statistics]) = zip(stats, _.max)
     def stdev(stats: Seq[Statistics]) = zip(stats, _stdev)
+    def median(stats: Seq[Statistics]) = zip(stats, _median)
   }
 
   object Results {
