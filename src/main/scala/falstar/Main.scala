@@ -137,25 +137,24 @@ object Main {
     }
   }
 
-  def robustness(_in: Array[String], _out: Array[String], _ts: Array[Double], _us: Array[Array[Double]], _ys: Array[Array[Double]], _phi: String): Double = {
+  def robustness(_in: Array[String], _out: Array[String], _us: Array[Array[Double]], _ys: Array[Array[Double]], _phi: String): Double = {
     import falstar.hybrid.Signal
     import falstar.linear.Vector
-
-    if (_ts.length != _us.length || _ts.length != _ys.length) {
-      // println(_ts.mkString("ts = [", " ", "]"))
-      // println(_us.mkString("us = [", " ", "]"))
-      // println(_ys.mkString("ys = [", " ", "]"))
-      throw new IllegalArgumentException("input signal length mismatch")
-    }
 
     val in = for ((name, index) <- _in.zipWithIndex)
       yield (name, mtl.InPort(name, index))
     val out = for ((name, index) <- _out.zipWithIndex)
       yield (name, mtl.OutPort(name, index))
 
+    def cp(vs: Array[Double]) = {
+      val t = vs.head
+      val x = Vector(vs drop 1: _*)
+      (t, x)
+    }
+
     val phi = parser.formula((in ++ out).toMap, _phi)
-    val us: Signal = _ts zip (_us map (Vector(_: _*)))
-    val ys: Signal = _ts zip (_ys map (Vector(_: _*)))
+    val us: Signal = _us map cp
+    val ys: Signal = _ys map cp
     val rs = mtl.Robustness(phi, us, ys)
     rs.score
   }
