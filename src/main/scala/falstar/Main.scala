@@ -29,6 +29,7 @@ object Main {
     var verbose = false
     var graphics = false
     var dummy = false
+    var append = true
     val sep = ','
   }
 
@@ -36,7 +37,7 @@ object Main {
 
   def write(name: String, data: Seq[Row]) {
     val table = Table(data)
-    table.write(name, options.sep)
+    table.write(name, options.sep, !options.append)
   }
 
   def run(cmd: Command): Unit = cmd match {
@@ -124,6 +125,9 @@ object Main {
     case "-d" :: rest =>
       options.dummy = true
       setup(rest)
+    case "+" :: rest =>
+      options.append = true
+      setup(rest)
     case _ =>
       args
   }
@@ -161,13 +165,14 @@ object Main {
 
   def main(args: Array[String]) {
     if (args.isEmpty) {
-      println("usage: falstar [-agv] file_1 ... file_n")
+      println("usage: falstar [-agv] [+] file_1 ... file_n")
       println("  -a    ask for additional input files:")
       println("          enter one filename per line followed by a blank line")
       println("          a blank line acknowledges, EOF (CTRL+d) aborts")
       println("  -d    dummy run, parse and validate configuration only")
       println("  -g    show a graphical diagram for each trial")
       println("  -v    be verbose")
+      println("   +    no header in csv for next file (data should match previous header)")
     }
 
     val rest = setup(args.toList)

@@ -45,7 +45,7 @@ trait Falsification {
       "min simulations" -> stats_min.simulations, "avg simulations" -> stats_avg.simulations, "median simulations" -> stats_median.simulations, "max simulations" -> stats_max.simulations, "stdev simulations" -> stats_stdev.simulations,
       "min time" -> stats_min.time, "avg time" -> stats_avg.time, "max time" -> stats_max.time, "stdev time" -> stats_stdev.time,
       "min robustness" -> stats_min.score, "avg robustness" -> stats_avg.score, "max robustness" -> stats_max.score, "stdev robustness" -> stats_stdev.score)
-      /// "time" -> stats.time, "robustness" -> res.score
+    /// "time" -> stats.time, "robustness" -> res.score
 
     (best, good map (_._1.tr.us), rows, Row(aggregate ++ params))
   }
@@ -93,7 +93,7 @@ trait Falsification {
       "model" -> sys.name, "property" -> phi, "algorithm" -> this.identification,
       "seed" -> seed, "simulations" -> stats.simulations, "time" -> stats.time, "robustness" -> res.score,
       "falsified" -> { if (res.isFalsified) "yes" else "no" },
-      "input" -> (us toMatlab T))
+      "input" -> { if (!us.isEmpty) (us toMatlab T) else "[]" })
 
     val row = Row(data ++ params)
 

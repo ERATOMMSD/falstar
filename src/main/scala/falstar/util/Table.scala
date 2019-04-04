@@ -15,19 +15,22 @@ case class Row(data: Seq[(String, Any)]) {
 case class Table(rows: Seq[Row]) {
   val columns = rows.flatMap(_.keys).distinct
 
-  def write(name: String, sep: Char) {
+  def write(name: String, sep: Char, header: Boolean = true) {
     val file = new File(name)
     file.getParentFile.mkdirs()
 
     val writer = new FileWriter(file, true)
 
     var first: Boolean = true
-    for (column <- columns) {
-      if (!first) writer.write(sep)
-      writer.write(column)
-      first = false
+
+    if (header) {
+      for (column <- columns) {
+        if (!first) writer.write(sep)
+        writer.write(column)
+        first = false
+      }
+      writer.write("\n")
     }
-    writer.write("\n")
 
     for (row <- rows) {
       val map = row.data.toMap
@@ -47,7 +50,7 @@ case class Table(rows: Seq[Row]) {
       writer.write("\n")
     }
 
-    writer.write("\n")
+    // writer.write("\n")
     writer.flush()
     writer.close()
   }
@@ -67,11 +70,11 @@ class Bytes(reader: Reader) {
   def test(x: Char) = {
     next == x
   }
-  
+
   def expect(x: Char) = {
     assert(read == x)
   }
-  
+
   override def toString = {
     next.asInstanceOf[Char].toString
   }
