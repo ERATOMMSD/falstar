@@ -1,2 +1,2 @@
-model,property,algorithm,min simulations,avg simulations,max simulations,stdev simulations,min time,avg time,max time,stdev time,min robustness,avg robustness,max robustness,stdev robustness,success,trials,control points,exploration ratio,budget
-automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",adaptive,2.0,8.9,29.0,7.922541679705236,0.0,3.8,33.0,10.282671507606056,-17.980199361426514,-8.60628439097436,-0.5511690346261702,7.228613987906031,10,10,"2 2 3 3 3 4",0.25,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 100.0)",adaptive,10,10,1.0,2.0,2.0,4.0,1.0540925533894598,0.0,3.4,30.0,9.35948716543807,-20.745581197413415,-10.295435161700706,-1.6203130486160973,5.623598554975138,"2 2 3 3 3 4",0.25,100
+automatic_transmission,"□_[0.0, 30.0] (speed < 120.0)",adaptive,10,10,3.0,8.0,6.0,25.0,6.749485577105529,0.0,1.1,5.0,1.5238839267549948,-17.980199361426514,-9.472794375116303,-0.745581197413415,5.421488110759656,"2 2 3 3 3 4",0.25,100
