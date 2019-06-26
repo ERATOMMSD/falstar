@@ -12,6 +12,11 @@ Requirements
 
 Contact: gidonernst (*) gmail.com
 
+Gidon Ernst, Sean Sedwards, Zhenya Zhang, Ichiro Hasuo:
+*Fast Falsification of Hybrid Systems using Probabilistically Adaptive Input*,
+QEST 2019.
+
+Preprint available at: <https://arxiv.org/abs/1812.04159>
 
 ## Quickstart
 
