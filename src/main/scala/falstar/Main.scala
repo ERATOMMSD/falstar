@@ -29,7 +29,7 @@ object Main {
     var verbose = false
     var graphics = false
     var dummy = false
-    var append = true
+    var append = false
     val sep = ','
   }
 

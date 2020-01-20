@@ -9,6 +9,9 @@ SRC=$(shell find src/main/scala -iname "*.scala") $(SCANNER)
 BINDIR=bin
 BIN=falstar.jar falstar falstar-session
 
+SCALAC=scalac
+JAVAC=javac
+
 ARCH2018=$(wildcard src/test/configuration/arch2018/*.cfg)
 HSCC2019=$(wildcard src/test/configuration/hscc2019/*.cfg)
 
@@ -32,8 +35,8 @@ arch2018: $(ARCH2018:src/test/configuration/arch2018/%.cfg=results/arch2018/%.cs
 hscc2019: $(HSCC2019:src/test/configuration/hscc2019/%.cfg=results/hscc2019/%.csv)
 
 falstar.jar: $(BINDIR) $(SRC)
-	scalac -d $(BINDIR) -cp $(MATLABROOT)/java/jar/engine.jar $(SRC)
-	javac  -d $(BINDIR) -cp $(BINDIR) $(SCANNER)
+	$(SCALAC) -d $(BINDIR) -cp $(MATLABROOT)/java/jar/engine.jar $(SRC)
+	$(JAVAC)  -d $(BINDIR) -cp $(BINDIR) $(SCANNER)
 	jar cf $@ -C $(BINDIR) .
 
 %.html: %.md

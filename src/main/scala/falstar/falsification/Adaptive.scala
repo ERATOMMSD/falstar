@@ -21,6 +21,37 @@ import falstar.hybrid.Constant
 import falstar.hybrid.PiecewiseConstant
 import falstar.hybrid.Value
 
+sealed trait Strategy[+A]
+
+sealed trait Selection
+object Selection {
+  case object uniform extends Selection
+  case object prefix extends Selection
+  case object suffix extends Selection
+}
+
+case class Explore[A](a: A) extends Strategy[A]
+case class Exploit(un: (Input, Node), s: Selection) extends Strategy[Nothing]
+
+case class Trace(
+  iteration: Int,
+  score: Score,
+  exploration: Double,
+  points: Seq[Info])
+
+case class Info(
+  levels: List[List[(Int, Int, Int)]], // each level: todo.size, done.size, actions.size of the bins
+  level: Int, // which level was chosen
+  bin: Int, // which bin was chosen
+  strategy: Int, // which strategy was chosen for that bin
+  local: List[Double], // local scores of nodes in that bin
+  global: List[Double], // global scores
+  node: Int // which node was chosen
+) {
+  // are we on a greedy path wrt local/global score?
+  // was this attempt futile (wrt. final result)?
+}
+
 class Bin[A](val level: Int, actions: Seq[A]) {
   val todo = ArrayBuffer[A](actions: _*)
   val done = ArrayBuffer[(Input, Node)]()
@@ -38,7 +69,7 @@ class Bin[A](val level: Int, actions: Seq[A]) {
     Math.pow(2, -level) * size / actions.size
   }
 
-  def sample(e: Double): Either[A, (Input, Node)] = {
+  def sample(e: Double): Strategy[A] = {
     val k = 3 * e / (1 - e)
 
     val p1 = if (todo.isEmpty) 0 else k
@@ -49,10 +80,14 @@ class Bin[A](val level: Int, actions: Seq[A]) {
     val choice = Proportional.sample(p1, p2, p3, p4)
 
     choice match {
-      case 0 => Left(Uniform.pick(todo))
-      case 1 => Right(Uniform.from(done))
-      case 2 => Right(Uniform.minBy(done)(_._2.local_score))
-      case 3 => Right(Uniform.minBy(done)(_._2.global_score))
+      case 0 =>
+        Explore(Uniform.pick(todo))
+      case 1 =>
+        Exploit(Uniform.from(done), Selection.uniform)
+      case 2 =>
+        Exploit(Uniform.minBy(done)(_._2.local_score), Selection.prefix)
+      case 3 =>
+        Exploit(Uniform.minBy(done)(_._2.global_score), Selection.suffix)
     }
   }
 }
@@ -146,18 +181,46 @@ object Adaptive {
 
     def identification = "adaptive"
 
-    var explore = 0
-    var exploit = 0
+    object statistics {
+      var explore = 0
+      var uniform = 0
+      var prefix = 0
+      var suffix = 0
+
+      def reset() {
+        explore = 0
+        uniform = 0
+        prefix = 0
+        suffix = 0
+      }
+
+      def +=(s: Unit) {
+        explore += 1
+      }
+
+      def +=(s: Selection) = s match {
+        case Selection.uniform => uniform += 1
+        case Selection.prefix => prefix += 1
+        case Selection.suffix => suffix += 1
+      }
+    }
+
     val c = Math.sqrt(2)
 
-    val params = Seq(
+    def params = Seq(
       "control points" -> controlpoints.mkString(" "),
       "exploration ratio" -> exploration,
-      "budget" -> budget)
+      "budget" -> budget,
+      "explore" -> statistics.explore,
+      "uniform" -> statistics.uniform,
+      "prefix" -> statistics.prefix,
+      "suffix" -> statistics.suffix)
 
     def search(sys: System, cfg: Config, phi: Formula, T: Time, sim: (Input, Signal, Time) => Result): Result = {
       Falsification.observer.reset(phi)
       Adaptive.observer.reset()
+
+      statistics.reset()
 
       val pn = cfg.pn(sys.params)
       val in = cfg.in(sys.inputs)
@@ -181,8 +244,8 @@ object Adaptive {
         if (node.isEmpty) {
           Result.empty
         } else node.sample(exploration) match {
-          case (bin, Left((u, dt))) if T <= t + dt =>
-            explore += 1
+          case (bin, Explore((u, dt))) if T <= t + dt =>
+            statistics += ()
 
             val result = playout(ps, us ++ Signal.point(t, u))
             // Falsification.observer.update(result)
@@ -191,8 +254,8 @@ object Adaptive {
             bin.leaf += ((u, dummy))
             result
 
-          case (bin, Left((u, dt))) =>
-            explore += 1
+          case (bin, Explore((u, dt))) =>
+            statistics += ()
             //            print(bin.level + "@" + t + " ")
             // create new child node and a trace
             val new_inputs = fix_constants(u, inputs)
@@ -223,8 +286,8 @@ object Adaptive {
             node update result
             result
 
-          case (bin, Right((u, child))) =>
-            exploit += 1
+          case (bin, Exploit((u, child), s)) =>
+            statistics += s
             val result = sample(child, us ++ Signal.point(t, u), inputs)
             node update result
             result
