@@ -8,6 +8,7 @@ import scala.collection.mutable.Buffer
 import scala.io.StdIn
 import scala.util.control.Breaks
 
+import falstar.hybrid.Signal
 import falstar.parser.Command
 import falstar.parser.Falsify
 import falstar.parser.Flush
@@ -142,7 +143,6 @@ object Main {
   }
 
   def robustness(_in: Array[String], _out: Array[String], _us: Array[Array[Double]], _ys: Array[Array[Double]], _phi: String): Double = {
-    import falstar.hybrid.Signal
     import falstar.linear.Vector
 
     val in = for ((name, index) <- _in.zipWithIndex)

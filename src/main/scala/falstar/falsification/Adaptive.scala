@@ -20,6 +20,7 @@ import falstar.hybrid.InputType
 import falstar.hybrid.Constant
 import falstar.hybrid.PiecewiseConstant
 import falstar.hybrid.Value
+import falstar.hybrid.Trace
 
 sealed trait Strategy[+A]
 
@@ -30,10 +31,11 @@ object Selection {
   case object suffix extends Selection
 }
 
-case class Explore[A](a: A) extends Strategy[A]
+case class Explore[A](a: A, forced: Boolean) extends Strategy[A]
 case class Exploit(un: (Input, Node), s: Selection) extends Strategy[Nothing]
 
-case class Trace(
+/*
+case class Trace0(
   iteration: Int,
   score: Score,
   exploration: Double,
@@ -50,7 +52,7 @@ case class Info(
 ) {
   // are we on a greedy path wrt local/global score?
   // was this attempt futile (wrt. final result)?
-}
+} */
 
 class Bin[A](val level: Int, actions: Seq[A]) {
   val todo = ArrayBuffer[A](actions: _*)
@@ -81,7 +83,7 @@ class Bin[A](val level: Int, actions: Seq[A]) {
 
     choice match {
       case 0 =>
-        Explore(Uniform.pick(todo))
+        Explore(Uniform.pick(todo), forced = done.isEmpty)
       case 1 =>
         Exploit(Uniform.from(done), Selection.uniform)
       case 2 =>
@@ -181,21 +183,24 @@ object Adaptive {
 
     def identification = "adaptive"
 
-    object statistics {
+    class Statistics {
+      var expand = 0
       var explore = 0
       var uniform = 0
       var prefix = 0
       var suffix = 0
 
       def reset() {
+        expand = 0
         explore = 0
         uniform = 0
         prefix = 0
         suffix = 0
       }
 
-      def +=(s: Unit) {
-        explore += 1
+      def +=(s: Boolean) {
+        if (s) expand += 1
+        else explore += 1
       }
 
       def +=(s: Selection) = s match {
@@ -205,22 +210,32 @@ object Adaptive {
       }
     }
 
-    val c = Math.sqrt(2)
+    object statistics extends Statistics
+    object falsifying extends Statistics
 
     def params = Seq(
       "control points" -> controlpoints.mkString(" "),
       "exploration ratio" -> exploration,
       "budget" -> budget,
+
+      "expand (forced explore)" -> statistics.expand,
       "explore" -> statistics.explore,
       "uniform" -> statistics.uniform,
       "prefix" -> statistics.prefix,
-      "suffix" -> statistics.suffix)
+      "suffix" -> statistics.suffix,
+
+      "expand (falsifying)" -> falsifying.expand,
+      "explore (falsifying)" -> falsifying.explore,
+      "uniform (falsifying)" -> falsifying.uniform,
+      "prefix (falsifying)" -> falsifying.prefix,
+      "suffix (falsifying)" -> falsifying.suffix)
 
     def search(sys: System, cfg: Config, phi: Formula, T: Time, sim: (Input, Signal, Time) => Result): Result = {
       Falsification.observer.reset(phi)
       Adaptive.observer.reset()
 
       statistics.reset()
+      falsifying.reset()
 
       val pn = cfg.pn(sys.params)
       val in = cfg.in(sys.inputs)
@@ -231,6 +246,26 @@ object Adaptive {
       }
 
       val ps = pn.sample // Value or Constant, established by Parser.configureSystem
+
+      val root_levels = levels(controlpoints, T, inputs)
+      val root = new Node(0, root_levels)
+      var solved = false
+      var result = Result.empty
+
+      for (i <- 0 until budget if !solved) {
+        result = sample(root, Signal.empty, inputs)
+        solved |= result.isFalsified
+
+        print(".")
+        // Adaptive.observer.update(root)
+      }
+      println()
+
+      if (solved) {
+        if (verbose) println("solved :)")
+        Falsification.observer.reset(phi)
+        Falsification.observer.update(result)
+      }
 
       def playout(ps: Input, us: Signal): Result = {
         val res = sim(ps, us, T)
@@ -244,18 +279,19 @@ object Adaptive {
         if (node.isEmpty) {
           Result.empty
         } else node.sample(exploration) match {
-          case (bin, Explore((u, dt))) if T <= t + dt =>
-            statistics += ()
-
+          case (bin, Explore((u, dt), forced)) if T <= t + dt =>
             val result = playout(ps, us ++ Signal.point(t, u))
             // Falsification.observer.update(result)
             val dummy = new Node(-1, Seq())
             dummy.local_score = result.score
             bin.leaf += ((u, dummy))
+
+            if (result.isFalsified) falsifying += forced
+            else statistics += forced
+
             result
 
-          case (bin, Explore((u, dt))) =>
-            statistics += ()
+          case (bin, Explore((u, dt), forced)) =>
             //            print(bin.level + "@" + t + " ")
             // create new child node and a trace
             val new_inputs = fix_constants(u, inputs)
@@ -284,34 +320,21 @@ object Adaptive {
             }
 
             node update result
+
+            if (result.isFalsified) falsifying += forced
+            else statistics += forced
+
             result
 
           case (bin, Exploit((u, child), s)) =>
-            statistics += s
             val result = sample(child, us ++ Signal.point(t, u), inputs)
             node update result
+
+            if (result.isFalsified) falsifying += s
+            else statistics += s
+
             result
         }
-      }
-
-      val root_levels = levels(controlpoints, T, inputs)
-      val root = new Node(0, root_levels)
-      var solved = false
-      var result = Result.empty
-
-      for (i <- 0 until budget if !solved) {
-        result = sample(root, Signal.empty, inputs)
-        solved |= result.score < 0
-
-        print(".")
-        // Adaptive.observer.update(root)
-      }
-      println()
-
-      if (solved) {
-        if (verbose) println("solved :)")
-        Falsification.observer.reset(phi)
-        Falsification.observer.update(result)
       }
 
       result

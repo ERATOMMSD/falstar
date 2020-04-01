@@ -39,7 +39,7 @@ object Signal {
     val us = Seq.tabulate(controlpoints)(i => x)
     Signal(steps, i => (t0 + i * dt, us(i * controlpoints / steps)))
   }
-
+  
   implicit class SignalOps(xs: Signal) {
     def t0: Time = {
       if (xs.isEmpty) 0

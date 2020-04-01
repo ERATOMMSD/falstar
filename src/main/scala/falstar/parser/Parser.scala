@@ -308,7 +308,7 @@ class Parser {
 
     case Node(Keyword("robustness"), Number(time), phi, input @ _*) =>
       Seq(Robustness(formula(phi), Signal((0: Time, Vector())), signal(input), time))
-
+      
     case Node(Keyword("set-repeat"), Number(n)) =>
       state.repeat = n.toInt
       Seq()

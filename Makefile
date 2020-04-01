@@ -9,7 +9,7 @@ SRC=$(shell find src/main/scala -iname "*.scala") $(SCANNER)
 BINDIR=bin
 BIN=falstar.jar falstar falstar-session
 
-SCALAC=scalac
+SCALAC=./scala-2.12.8/bin/scalac
 JAVAC=javac
 
 ARCH2018=$(wildcard src/test/configuration/arch2018/*.cfg)
