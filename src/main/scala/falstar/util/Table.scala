@@ -17,7 +17,10 @@ case class Table(rows: Seq[Row]) {
 
   def write(name: String, sep: Char, header: Boolean = true) {
     val file = new File(name)
-    file.getParentFile.mkdirs()
+
+    val parent = file.getParentFile
+    if (parent != null)
+      parent.mkdirs()
 
     val writer = new FileWriter(file, true)
 
