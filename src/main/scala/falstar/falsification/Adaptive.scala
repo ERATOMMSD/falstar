@@ -51,13 +51,11 @@ class Bin[A](val level: Int, actions: Seq[A]) {
     Math.pow(2, -level) * size / actions.size
   }
 
-  def sample(e: Double): Strategy[A] = {
-    val k = 3 * e / (1 - e)
-
-    val p1 = if (todo.isEmpty) 0 else k
-    val p2 = if (done.isEmpty) 0 else 1
-    val p3 = if (done.isEmpty) 0 else 1
-    val p4 = if (done.isEmpty) 0 else 1
+  def sample(exploration: Double, uniform: Double, prefix: Double, suffix: Double): Strategy[A] = {
+    val p1 = if (todo.isEmpty) 0 else exploration
+    val p2 = if (done.isEmpty) 0 else uniform
+    val p3 = if (done.isEmpty) 0 else prefix
+    val p4 = if (done.isEmpty) 0 else suffix
 
     val choice = Proportional.sample(p1, p2, p3, p4)
 
@@ -97,10 +95,10 @@ class Node(val time: Time, val levels: Seq[Seq[(Input, Duration)]]) {
     }
   }
 
-  def sample(e: Double) = {
+  def sample(exploration: Double, uniform: Double, prefix: Double, suffix: Double) = {
     assert(!isEmpty)
     val bin = Proportional.sample(bins)(_.probability)
-    (bin, bin.sample(e))
+    (bin, bin.sample(exploration, uniform, prefix, suffix))
   }
 }
 
@@ -158,7 +156,7 @@ object Adaptive {
     }
   }
 
-  case class falsification(controlpoints: Seq[Int], exploration: Double, budget: Int) extends Falsification with WithStatistics {
+  case class falsification(controlpoints: Seq[Int], exploration: Double, uniform: Double, prefix: Double, suffix: Double, budget: Int) extends Falsification with WithStatistics {
     override def productPrefix = "Adaptive.falsification"
 
     def identification = "adaptive"
@@ -208,6 +206,9 @@ object Adaptive {
     def params = Seq(
       "control points" -> controlpoints.mkString(" "),
       "exploration ratio" -> exploration,
+      "uniform exploitation ratio" -> uniform,
+      "prefix-greedy exploitation ratio" -> prefix,
+      "suffix-greedy exploitation ratio" -> suffix,
       "budget" -> budget,
 
       "failed_explore_choice" -> statistics.failed_explore_choice,
@@ -275,7 +276,7 @@ object Adaptive {
 
         if (node.isEmpty) {
           Result.empty
-        } else node.sample(exploration) match {
+        } else node.sample(exploration, uniform, prefix, suffix) match {
           case (bin, Explore((u, dt), forced)) if T <= t + dt =>
             val result = playout(ps, us ++ Signal.point(t, u))
             // Falsification.observer.update(result)

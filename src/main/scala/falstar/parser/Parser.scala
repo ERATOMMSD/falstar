@@ -262,12 +262,12 @@ class Parser {
       state.search = UniformRandom.falsification(controlpoints.toInt, budget.toInt)
       Seq()
 
-    case Node(Keyword("set-solver"), Identifier("adaptive"), Node(controlpoints @ _*), Number(exploration), Number(budget)) =>
+    case Node(Keyword("set-solver"), Identifier("adaptive"), Node(controlpoints @ _*), Number(exploration), Number(uniform), Number(prefix), Number(suffix), Number(budget)) =>
       val levels = controlpoints map {
         case Number(cp) => cp.toInt
       }
 
-      state.search = Adaptive.falsification(levels, exploration, budget.toInt)
+      state.search = Adaptive.falsification(levels, exploration, uniform, prefix, suffix, budget.toInt)
       Seq()
 
     case Node(Keyword("set-solver"), Identifier("breach"), Number(controlpoints), Identifier(solver), Number(budget)) =>
