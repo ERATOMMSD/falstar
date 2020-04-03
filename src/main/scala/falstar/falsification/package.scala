@@ -51,7 +51,7 @@ package object falsification {
     def _median(xs: Seq[Double]) = {
       val ys = xs.sorted
       val n = xs.length / 2
-      if (n % 2 == 0) {
+      if (xs.length % 2 == 0) {
         (ys(n - 1) + ys(n)) / 2
       } else {
         ys(n)

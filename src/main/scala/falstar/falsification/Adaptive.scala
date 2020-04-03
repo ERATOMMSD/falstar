@@ -182,7 +182,7 @@ object Adaptive {
       var success_prefix_forced = 0
       var success_suffix_forced = 0
 
-      def +=(success: Boolean, sel: Option[Selection], forced: Boolean) = (success, sel, forced) match {
+      def +=(forced: Boolean, sel: Option[Selection], success: Boolean) = (success, sel, forced) match {
         case (false, None, false) => failed_explore_choice += 1
         case (false, Some(Selection.uniform), false) => failed_uniform_choice += 1
         case (false, Some(Selection.prefix), false) => failed_prefix_choice += 1
