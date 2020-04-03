@@ -32,27 +32,7 @@ object Selection {
 }
 
 case class Explore[A](a: A, forced: Boolean) extends Strategy[A]
-case class Exploit(un: (Input, Node), s: Selection) extends Strategy[Nothing]
-
-/*
-case class Trace0(
-  iteration: Int,
-  score: Score,
-  exploration: Double,
-  points: Seq[Info])
-
-case class Info(
-  levels: List[List[(Int, Int, Int)]], // each level: todo.size, done.size, actions.size of the bins
-  level: Int, // which level was chosen
-  bin: Int, // which bin was chosen
-  strategy: Int, // which strategy was chosen for that bin
-  local: List[Double], // local scores of nodes in that bin
-  global: List[Double], // global scores
-  node: Int // which node was chosen
-) {
-  // are we on a greedy path wrt local/global score?
-  // was this attempt futile (wrt. final result)?
-} */
+case class Exploit(un: (Input, Node), s: Selection, forced: Boolean) extends Strategy[Nothing]
 
 class Bin[A](val level: Int, actions: Seq[A]) {
   val todo = ArrayBuffer[A](actions: _*)
@@ -85,11 +65,11 @@ class Bin[A](val level: Int, actions: Seq[A]) {
       case 0 =>
         Explore(Uniform.pick(todo), forced = done.isEmpty)
       case 1 =>
-        Exploit(Uniform.from(done), Selection.uniform)
+        Exploit(Uniform.from(done), Selection.uniform, forced = todo.isEmpty)
       case 2 =>
-        Exploit(Uniform.minBy(done)(_._2.local_score), Selection.prefix)
+        Exploit(Uniform.minBy(done)(_._2.local_score), Selection.prefix, forced = todo.isEmpty)
       case 3 =>
-        Exploit(Uniform.minBy(done)(_._2.global_score), Selection.suffix)
+        Exploit(Uniform.minBy(done)(_._2.global_score), Selection.suffix, forced = todo.isEmpty)
     }
   }
 }
@@ -184,58 +164,75 @@ object Adaptive {
     def identification = "adaptive"
 
     class Statistics {
-      var expand = 0
-      var explore = 0
-      var uniform = 0
-      var prefix = 0
-      var suffix = 0
+      var failed_explore_choice = 0
+      var failed_uniform_choice = 0
+      var failed_prefix_choice = 0
+      var failed_suffix_choice = 0
+      var failed_explore_forced = 0
+      var failed_uniform_forced = 0
+      var failed_prefix_forced = 0
+      var failed_suffix_forced = 0
 
-      def reset() {
-        expand = 0
-        explore = 0
-        uniform = 0
-        prefix = 0
-        suffix = 0
-      }
+      var success_explore_choice = 0
+      var success_uniform_choice = 0
+      var success_prefix_choice = 0
+      var success_suffix_choice = 0
+      var success_explore_forced = 0
+      var success_uniform_forced = 0
+      var success_prefix_forced = 0
+      var success_suffix_forced = 0
 
-      def +=(s: Boolean) {
-        if (s) expand += 1
-        else explore += 1
-      }
+      def +=(success: Boolean, sel: Option[Selection], forced: Boolean) = (success, sel, forced) match {
+        case (false, None, false) => failed_explore_choice += 1
+        case (false, Some(Selection.uniform), false) => failed_uniform_choice += 1
+        case (false, Some(Selection.prefix), false) => failed_prefix_choice += 1
+        case (false, Some(Selection.suffix), false) => failed_suffix_choice += 1
+        case (false, None, true) => failed_explore_forced += 1
+        case (false, Some(Selection.uniform), true) => failed_uniform_forced += 1
+        case (false, Some(Selection.prefix), true) => failed_prefix_forced += 1
+        case (false, Some(Selection.suffix), true) => failed_suffix_forced += 1
 
-      def +=(s: Selection) = s match {
-        case Selection.uniform => uniform += 1
-        case Selection.prefix => prefix += 1
-        case Selection.suffix => suffix += 1
+        case (true, None, false) => success_explore_choice += 1
+        case (true, Some(Selection.uniform), false) => success_uniform_choice += 1
+        case (true, Some(Selection.prefix), false) => success_prefix_choice += 1
+        case (true, Some(Selection.suffix), false) => success_suffix_choice += 1
+        case (true, None, true) => success_explore_forced += 1
+        case (true, Some(Selection.uniform), true) => success_uniform_forced += 1
+        case (true, Some(Selection.prefix), true) => success_prefix_forced += 1
+        case (true, Some(Selection.suffix), true) => success_suffix_forced += 1
       }
     }
 
-    object statistics extends Statistics
-    object falsifying extends Statistics
+    var statistics = new Statistics
 
     def params = Seq(
       "control points" -> controlpoints.mkString(" "),
       "exploration ratio" -> exploration,
       "budget" -> budget,
 
-      "expand (forced explore)" -> statistics.expand,
-      "explore" -> statistics.explore,
-      "uniform" -> statistics.uniform,
-      "prefix" -> statistics.prefix,
-      "suffix" -> statistics.suffix,
+      "failed_explore_choice" -> statistics.failed_explore_choice,
+      "failed_uniform_choice" -> statistics.failed_uniform_choice,
+      "failed_prefix_choice" -> statistics.failed_prefix_choice,
+      "failed_suffix_choice" -> statistics.failed_suffix_choice,
+      "failed_explore_forced" -> statistics.failed_explore_forced,
+      "failed_uniform_forced" -> statistics.failed_uniform_forced,
+      "failed_prefix_forced" -> statistics.failed_prefix_forced,
+      "failed_suffix_forced" -> statistics.failed_suffix_forced,
 
-      "expand (falsifying)" -> falsifying.expand,
-      "explore (falsifying)" -> falsifying.explore,
-      "uniform (falsifying)" -> falsifying.uniform,
-      "prefix (falsifying)" -> falsifying.prefix,
-      "suffix (falsifying)" -> falsifying.suffix)
+      "success_explore_choice" -> statistics.success_explore_choice,
+      "success_uniform_choice" -> statistics.success_uniform_choice,
+      "success_prefix_choice" -> statistics.success_prefix_choice,
+      "success_suffix_choice" -> statistics.success_suffix_choice,
+      "success_explore_forced" -> statistics.success_explore_forced,
+      "success_uniform_forced" -> statistics.success_uniform_forced,
+      "success_prefix_forced" -> statistics.success_prefix_forced,
+      "success_suffix_forced" -> statistics.success_suffix_forced)
 
     def search(sys: System, cfg: Config, phi: Formula, T: Time, sim: (Input, Signal, Time) => Result): Result = {
       Falsification.observer.reset(phi)
       Adaptive.observer.reset()
 
-      statistics.reset()
-      falsifying.reset()
+      statistics = new Statistics
 
       val pn = cfg.pn(sys.params)
       val in = cfg.in(sys.inputs)
@@ -286,8 +283,7 @@ object Adaptive {
             dummy.local_score = result.score
             bin.leaf += ((u, dummy))
 
-            if (result.isFalsified) falsifying += forced
-            else statistics += forced
+            statistics += (forced, None, result.isFalsified)
 
             result
 
@@ -321,17 +317,15 @@ object Adaptive {
 
             node update result
 
-            if (result.isFalsified) falsifying += forced
-            else statistics += forced
+            statistics += (forced, None, result.isFalsified)
 
             result
 
-          case (bin, Exploit((u, child), s)) =>
+          case (bin, Exploit((u, child), sel, forced)) =>
             val result = sample(child, us ++ Signal.point(t, u), inputs)
             node update result
 
-            if (result.isFalsified) falsifying += s
-            else statistics += s
+            statistics += (forced, Some(sel), result.isFalsified)
 
             result
         }
