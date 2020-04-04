@@ -159,6 +159,7 @@ object Adaptive {
   case class falsification(controlpoints: Seq[Int], exploration: Double, uniform: Double, prefix: Double, suffix: Double, budget: Int) extends Falsification with WithStatistics {
     override def productPrefix = "Adaptive.falsification"
 
+    def nlevels = controlpoints.length
     def identification = "adaptive"
 
     class Statistics {
@@ -180,7 +181,10 @@ object Adaptive {
       var success_prefix_forced = 0
       var success_suffix_forced = 0
 
-      def +=(forced: Boolean, sel: Option[Selection], success: Boolean) = (success, sel, forced) match {
+      var failed_level = Array.fill(nlevels)(0)
+      var success_level = Array.fill(nlevels)(0)
+
+      def record(forced: Boolean, sel: Option[Selection], success: Boolean) = (success, sel, forced) match {
         case (false, None, false) => failed_explore_choice += 1
         case (false, Some(Selection.uniform), false) => failed_uniform_choice += 1
         case (false, Some(Selection.prefix), false) => failed_prefix_choice += 1
@@ -199,18 +203,32 @@ object Adaptive {
         case (true, Some(Selection.prefix), true) => success_prefix_forced += 1
         case (true, Some(Selection.suffix), true) => success_suffix_forced += 1
       }
+
+      def record(bin: Bin[_], forced: Boolean, success: Boolean) = (success, forced) match {
+        /* forced is ignored for now */
+        case (false, _) =>
+          failed_level(bin.level) += 1
+        case (true, _) =>
+          success_level(bin.level) += 1
+      }
+
+      def +=(bin: Bin[_], forced: Boolean, sel: Option[Selection], success: Boolean) = {
+        record(bin, forced, success)
+        record(forced, sel, success)
+      }
     }
 
     var statistics = new Statistics
 
-    def params = Seq(
+    val _params = Seq(
       "control points" -> controlpoints.mkString(" "),
       "exploration ratio" -> exploration,
       "uniform exploitation ratio" -> uniform,
       "prefix-greedy exploitation ratio" -> prefix,
       "suffix-greedy exploitation ratio" -> suffix,
-      "budget" -> budget,
+      "budget" -> budget)
 
+    def _stat_strategy = Seq(
       "failed_explore_choice" -> statistics.failed_explore_choice,
       "failed_uniform_choice" -> statistics.failed_uniform_choice,
       "failed_prefix_choice" -> statistics.failed_prefix_choice,
@@ -228,6 +246,21 @@ object Adaptive {
       "success_uniform_forced" -> statistics.success_uniform_forced,
       "success_prefix_forced" -> statistics.success_prefix_forced,
       "success_suffix_forced" -> statistics.success_suffix_forced)
+
+    def __stat_levels(prefix: String, data: Array[Int]) = {
+      for ((c, i) <- data.zipWithIndex) yield {
+        val descr = prefix + "_level_" + i
+        descr -> c
+      }
+    }
+
+    def _stat_levels = {
+      val failed = __stat_levels("failed", statistics.failed_level)
+      val success = __stat_levels("success", statistics.success_level)
+      failed ++ success
+    }
+
+    def params = _params ++ _stat_strategy ++ _stat_levels
 
     def search(sys: System, cfg: Config, phi: Formula, T: Time, sim: (Input, Signal, Time) => Result): Result = {
       Falsification.observer.reset(phi)
@@ -284,7 +317,7 @@ object Adaptive {
             dummy.local_score = result.score
             bin.leaf += ((u, dummy))
 
-            statistics += (forced, None, result.isFalsified)
+            statistics += (bin, forced, None, result.isFalsified)
 
             result
 
@@ -318,7 +351,7 @@ object Adaptive {
 
             node update result
 
-            statistics += (forced, None, result.isFalsified)
+            statistics += (bin, forced, None, result.isFalsified)
 
             result
 
@@ -326,7 +359,7 @@ object Adaptive {
             val result = sample(child, us ++ Signal.point(t, u), inputs)
             node update result
 
-            statistics += (forced, Some(sel), result.isFalsified)
+            statistics += (bin, forced, Some(sel), result.isFalsified)
 
             result
         }
