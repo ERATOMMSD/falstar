@@ -1,12 +1,10 @@
-include ~/.falstar/matlab
-
 .PHONY: all scanner install uninstall compile doc test clean hscc2019
 
 PREFIX=/usr/local
 
 SCANNER=src/main/scala/falstar/parser/Scanner.java
 SRC=$(shell find src/main/scala -iname "*.scala") $(SCANNER)
-BINDIR=bin
+BINDIR=out
 BIN=falstar.jar falstar falstar-session
 
 SCALAC=./scala-2.12.8/bin/scalac
@@ -34,10 +32,14 @@ uninstall:
 arch2018: $(ARCH2018:src/test/configuration/arch2018/%.cfg=results/arch2018/%.csv)
 hscc2019: $(HSCC2019:src/test/configuration/hscc2019/%.cfg=results/hscc2019/%.csv)
 
-falstar.jar: $(BINDIR) $(SRC)
-	$(SCALAC) -d $(BINDIR) -cp $(MATLABROOT)/java/jar/engine.jar $(SRC)
-	$(JAVAC)  -d $(BINDIR) -cp $(BINDIR) $(SCANNER)
-	jar cf $@ -C $(BINDIR) .
+engine.jar: $(BINDIR)/contrib src/contrib/java/com/mathworks/engine/MatlabEngine.java
+	$(JAVAC)  -d $(BINDIR)/contrib src/contrib/java/com/mathworks/engine/MatlabEngine.java
+	jar cf $@ -C $(BINDIR)/contrib .
+
+falstar.jar: $(BINDIR)/main $(SRC) engine.jar
+	$(SCALAC) -d $(BINDIR)/main -cp engine.jar $(SRC)
+	$(JAVAC)  -d $(BINDIR)/main -cp $(BINDIR)/main $(SCANNER)
+	jar cf $@ -C $(BINDIR)/main .
 
 %.html: %.md
 	pandoc -s $^ -o $@
@@ -45,8 +47,11 @@ falstar.jar: $(BINDIR) $(SRC)
 %.java: %.flex
 	jflex -nobak $^
 
-$(BINDIR):
-	mkdir -p $(BINDIR)
+$(BINDIR)/main:
+	mkdir -p $@
+
+$(BINDIR)/contrib:
+	mkdir -p $@
 
 results/arch2018/%.csv: src/test/configuration/arch2018/%.cfg falstar.jar
 	./falstar $<
