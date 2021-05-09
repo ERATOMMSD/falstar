@@ -7,7 +7,7 @@ SRC=$(shell find src/main/scala -iname "*.scala") $(SCANNER)
 BINDIR=out
 BIN=falstar.jar falstar falstar-session
 
-SCALAC=./scala-2.12.8/bin/scalac
+SCALAC=./scala-2.12.13/bin/scalac
 JAVAC=javac
 
 ARCH2018=$(wildcard src/test/configuration/arch2018/*.cfg)
@@ -36,7 +36,7 @@ engine.jar: $(BINDIR)/contrib src/contrib/java/com/mathworks/engine/MatlabEngine
 	$(JAVAC)  -d $(BINDIR)/contrib src/contrib/java/com/mathworks/engine/MatlabEngine.java
 	jar cf $@ -C $(BINDIR)/contrib .
 
-falstar.jar: $(BINDIR)/main $(SRC) engine.jar
+falstar.jar: $(BINDIR)/main $(SRC) # engine.jar
 	$(SCALAC) -d $(BINDIR)/main -cp engine.jar $(SRC)
 	$(JAVAC)  -d $(BINDIR)/main -cp $(BINDIR)/main $(SCANNER)
 	jar cf $@ -C $(BINDIR)/main .

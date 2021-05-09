@@ -42,13 +42,13 @@ object Main {
   }
 
   def run(cmd: Command): Unit = cmd match {
-    case Falsify(search, sys, phi, cfg, seed, repeat, log, report) =>
+    case Falsify(search, sys, cfg, phi, seed, repeat, notes, log, report) =>
       seed match {
         case None => Probability.setUniqueSeed()
         case Some(seed) => Probability.seed = seed
       }
 
-      val (best, good, rows, aggregate) = search.repeat(sys, phi, cfg, seed, repeat)
+      val (best, good, rows, aggregate) = search.repeat(sys, cfg, phi, seed, repeat, notes)
 
       for (name <- log) {
         if (!(results contains name))

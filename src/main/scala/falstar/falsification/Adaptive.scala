@@ -260,7 +260,7 @@ object Adaptive {
       failed ++ success
     }
 
-    def params = _params ++ _stat_strategy ++ _stat_levels
+    def params = _params // ++ _stat_strategy ++ _stat_levels
 
     def search(sys: System, cfg: Config, phi: Formula, T: Time, sim: (Input, Signal, Time) => Result): Result = {
       Falsification.observer.reset(phi)

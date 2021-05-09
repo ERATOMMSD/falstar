@@ -9,9 +9,9 @@ package falstar.parser;
 %line
 %column
 %{
-    public int line()   { return yyline; }
-    public int column() { return yycolumn; }
-    public int pos()    { return yychar; }
+    public int  line()   { return yyline; }
+    public int  column() { return yycolumn; }
+    public long pos()    { return yychar; }
     
     public String text() {
         return yytext();
@@ -33,7 +33,7 @@ AlphaNum = {Alpha}|{Num}|"-"
 
 Operators = "<" | ">" | "<=" | ">=" | "+" | "-" | "*" | "/" | abs
 Connectives = "!" | "=>" | "||" | "&&" | "==" | "!=" | true | false | not | implies | and | or | always | eventually | next | in
-Toplevel = include | define-system | define | push | pop | load | latex | set-solver | select-system | set-requirements | set-repeat | set-seed | clear-seed | set-log | flush-log | clear-log | set-report | clear-report | falsify | estimate | simulate | robustness | quit
+Toplevel = include | define-system | define | push | pop | load | latex | set-solver | select-system | set-requirements | set-repeat | set-seed | clear-seed | set-log | flush-log | clear-log | set-report | clear-report | falsify | estimate | simulate | robustness | quit | notes
 Simulink = matlab | simulink | parameters | inputs | outputs | option | constant | piecewise-constant
 Keyword = "(" | ")" | {Operators} | {Connectives} | {Toplevel} | {Simulink}
 

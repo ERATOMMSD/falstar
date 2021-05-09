@@ -31,7 +31,7 @@ import falstar.hybrid.MatlabSystem
 sealed trait Command
 case object Flush extends Command
 case object Quit extends Command
-case class Falsify(search: Falsification, sys: System, cfg: Config, phi: Formula, seed: Option[Long], repeat: Int, log: Option[String], report: Option[String]) extends Command
+case class Falsify(search: Falsification, sys: System, cfg: Config, phi: Formula, seed: Option[Long], repeat: Int, notes: Seq[(String, Any)], log: Option[String], report: Option[String]) extends Command
 case class Simulate(sys: System, phi: Formula, ps: Input, us: Signal, T: Time) extends Command
 case class Robustness(phi: Formula, us: Signal, ys: Signal, T: Time) extends Command
 
@@ -49,10 +49,11 @@ class Parser {
     var seed: Option[Long],
     var repeat: Int,
     var log: Option[String],
-    var report: Option[String])
+    var report: Option[String],
+    var notes: Seq[(String, Any)])
 
   object State {
-    def empty = State(null, null, null, Map(), Map(), Map(), Map(), None, 1, None, None)
+    def empty = State(null, null, null, Map(), Map(), Map(), Map(), None, 1, None, None, Seq())
   }
 
   var stack = List(State.empty)
@@ -234,6 +235,13 @@ class Parser {
     Signal((input map controlpoint): _*)
   }
 
+  def note(syntax: Syntax) = syntax match {
+    case Node(Literal(key: String), Literal(value: Integer)) =>
+      (key, value)
+    case Node(Literal(key: String), Literal(value: String)) =>
+      (key, value)
+  }
+
   def top(syntax: Syntax): Seq[Command] = expand(syntax, state.defines) match {
     case Node(Keyword("include"), Literal(file: String)) =>
       val node = read(new File(file))
@@ -248,6 +256,10 @@ class Parser {
       state.macros += name -> (formals, body)
       Seq()
 
+    case Node(Keyword("notes"), what @ _*) =>
+      state.notes = what map note
+      Seq()
+
     case Node(Keyword("define-system"), Identifier(name), system, Node(Keyword("parameters"), params @ _*), Node(Keyword("inputs"), inputs @ _*), Node(Keyword("outputs"), outputs @ _*), config @ _*) =>
       defineSystem(name, system, params, inputs, outputs, config)
       Seq()
@@ -260,6 +272,19 @@ class Parser {
 
     case Node(Keyword("set-solver"), Identifier("random"), Number(controlpoints), Number(budget)) =>
       state.search = UniformRandom.falsification(controlpoints.toInt, budget.toInt)
+      Seq()
+
+    case Node(Keyword("set-solver"), Identifier("adaptive"), Node(controlpoints @ _*), Number(exploration), Number(budget)) =>
+      val levels = controlpoints map {
+        case Number(cp) => cp.toInt
+      }
+
+      val rest = 1.0 - exploration
+      val uniform = rest / 3
+      val prefix = rest / 3
+      val suffix = rest / 3
+
+      state.search = Adaptive.falsification(levels, exploration, uniform, prefix, suffix, budget.toInt)
       Seq()
 
     case Node(Keyword("set-solver"), Identifier("adaptive"), Node(controlpoints @ _*), Number(exploration), Number(uniform), Number(prefix), Number(suffix), Number(budget)) =>
@@ -298,10 +323,10 @@ class Parser {
 
     case Node(Keyword("falsify")) =>
       val name = state.system.name
-      state.requirements(name) map { phi => Falsify(state.search, state.system, state.config, phi, state.seed, state.repeat, state.log, state.report) }
+      state.requirements(name) map { phi => Falsify(state.search, state.system, state.config, phi, state.seed, state.repeat, state.notes, state.log, state.report) }
 
     case Node(Keyword("falsify"), phis @ _*) =>
-      phis map { phi => Falsify(state.search, state.system, state.config, formula(phi), state.seed, state.repeat, state.log, state.report) }
+      phis map { phi => Falsify(state.search, state.system, state.config, formula(phi), state.seed, state.repeat, state.notes, state.log, state.report) }
 
     case Node(Keyword("simulate"), Number(time), phi, params, input @ _*) =>
       Seq(Simulate(state.system, formula(phi), vector(params), signal(input), time))

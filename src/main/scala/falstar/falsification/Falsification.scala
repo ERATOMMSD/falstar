@@ -12,7 +12,7 @@ import falstar.util.Row
 import falstar.util.Timer
 
 trait Falsification {
-  def repeat(sys: System, cfg: Config, phi: Formula, _seed: Option[Long], n: Int): (Result, Seq[Signal], Seq[Row], Row) = {
+  def repeat(sys: System, cfg: Config, phi: Formula, _seed: Option[Long], n: Int, notes: Seq[(String, Any)]): (Result, Seq[Signal], Seq[Row], Row) = {
     _seed match {
       case None => Probability.setUniqueSeed()
       case Some(seed) => Probability.seed = seed
@@ -39,15 +39,22 @@ trait Falsification {
     val stats_stdev = Statistics.stdev(stats)
     val stats_median = Statistics.median(stats)
 
+    val what = Seq(
+      "model" -> sys.name, "formula" -> phi,
+    )
+
+    val how = Seq(
+       "algorithm" -> this.identification,
+    )
+
     val aggregate = Seq(
-      "model" -> sys.name, "property" -> phi, "algorithm" -> this.identification,
       "success" -> good.size, "trials" -> all.size,
       "min simulations" -> stats_min.simulations, "avg simulations" -> stats_avg.simulations, "median simulations" -> stats_median.simulations, "max simulations" -> stats_max.simulations, "stdev simulations" -> stats_stdev.simulations,
       "min time" -> stats_min.time, "avg time" -> stats_avg.time, "max time" -> stats_max.time, "stdev time" -> stats_stdev.time,
       "min robustness" -> stats_min.score, "avg robustness" -> stats_avg.score, "max robustness" -> stats_max.score, "stdev robustness" -> stats_stdev.score)
     /// "time" -> stats.time, "robustness" -> res.score
 
-    (best, good map (_._1.tr.us), rows, Row(aggregate ++ params))
+    (best, good map (_._1.tr.us), rows, Row(what ++ notes ++ how ++ params ++ aggregate))
   }
 
   def apply(sys: System, cfg: Config, phi: Formula): (Result, Statistics, Row) = {
