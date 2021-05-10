@@ -73,6 +73,7 @@ trait Falsification {
 
     println("inputs")
     val us = res.tr.us
+    val ys = res.tr.ys
     val T = phi.T
 
     import Signal.SignalOps
@@ -100,7 +101,8 @@ trait Falsification {
       "model" -> sys.name, "property" -> phi, "algorithm" -> this.identification,
       "seed" -> seed, "simulations" -> stats.simulations, "time" -> stats.time, "robustness" -> res.score,
       "falsified" -> { if (res.isFalsified) "yes" else "no" },
-      "input" -> { if (!us.isEmpty) (us toMatlab T) else "[]" })
+      "input" -> { if (!us.isEmpty) (us toMatlab T) else "[]" },
+      "output" -> { if (!ys.isEmpty) (ys toMatlab T) else "[]" })
 
     val row = Row(data ++ params)
 
