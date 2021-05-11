@@ -7,6 +7,10 @@ import java.io.Reader
 import scala.collection.mutable.ArrayBuffer
 import java.io.BufferedReader
 
+import org.apache.commons.csv.CSVPrinter
+import org.apache.commons.csv.CSVParser
+import org.apache.commons.csv.CSVFormat
+
 case class Row(data: Seq[(String, Any)]) {
   val (keys, values) = data.unzip
   assert(keys == keys.distinct)
@@ -14,134 +18,78 @@ case class Row(data: Seq[(String, Any)]) {
 
 case class Table(rows: Seq[Row]) {
   val columns = rows.flatMap(_.keys).distinct
+  def ++(that: Table) = Table(this.rows ++ that.rows)
+}
 
-  def write(name: String, sep: Char, header: Boolean = true) {
+object Table {
+  val empty = Table(Seq())
+
+  def overwrite(table: Table, name: String) {
+    import table.columns
+    import table.rows
+
     val file = new File(name)
 
     val parent = file.getParentFile
     if (parent != null)
       parent.mkdirs()
 
-    val writer = new FileWriter(file, true)
+    val writer = new FileWriter(file, false)
+    val printer = new CSVPrinter(writer, CSVFormat.RFC4180)
 
     var first: Boolean = true
-
-    if (header) {
-      for (column <- columns) {
-        if (!first) writer.write(sep)
-        writer.write(column)
-        first = false
-      }
-      writer.write("\n")
-    }
+    printer.printRecord(columns: _*)
 
     for (row <- rows) {
-      val map = row.data.toMap
-      first = true
-      for (column <- columns) {
-        if (!first) writer.write(sep)
-        if (map contains column) {
-          val entry = map(column).toString
-          val escape = (entry contains ' ') || (entry contains sep)
-          if (escape) assert(!(entry contains Table.quote))
-          if (escape) writer.write(Table.quote)
-          writer.write(entry)
-          if (escape) writer.write(Table.quote)
-        }
-        first = false
-      }
-      writer.write("\n")
+      // a bit hacky
+      val data = row.data.toMap.asInstanceOf[Map[String,AnyRef]]
+      val entries = columns map { data.getOrElse(_, null) }
+      printer.printRecord(entries: _*)
     }
 
-    // writer.write("\n")
-    writer.flush()
-    writer.close()
-  }
-}
-
-class Bytes(reader: Reader) {
-  var next = reader.read
-  def atEof = next < 0
-  def atNewline = next == '\n'
-
-  def read: Int = {
-    val x = next
-    next = reader.read
-    x
+    printer.flush()
+    printer.close()
   }
 
-  def test(x: Char) = {
-    next == x
-  }
-
-  def expect(x: Char) = {
-    assert(read == x)
-  }
-
-  override def toString = {
-    next.asInstanceOf[Char].toString
-  }
-}
-
-object Row {
-  def escaped(reader: Bytes, sep: Char) = {
-    val bytes = new ArrayBuffer[Byte]()
-    while (!reader.atEof && !(reader test Table.quote)) {
-      bytes append reader.read.asInstanceOf[Byte]
-    }
-    reader expect Table.quote
-    new String(bytes.toArray)
-  }
-
-  def entry(reader: Bytes, sep: Char) = {
-    val bytes = new ArrayBuffer[Byte]()
-    while (!reader.atEof && !reader.atNewline && !reader.test(sep)) {
-      bytes append reader.read.asInstanceOf[Byte]
-    }
-    new String(bytes.toArray)
-  }
-
-  def line(reader: Bytes, sep: Char): Seq[String] = {
-    val entries = new ArrayBuffer[String]()
-    while (!reader.atNewline) {
-      if (reader test Table.quote)
-        entries append escaped(reader, sep)
-      else
-        entries append entry(reader, sep)
-    }
-    entries
-  }
-
-  def read(reader: Bytes, columns: Seq[String], sep: Char): Row = {
-    val data = line(reader, sep)
-    Row(columns zip data)
-  }
-
-  def header(reader: Bytes, sep: Char): Seq[String] = {
-    line(reader, sep)
-  }
-}
-
-object Table {
-  val quote = '"'
-
-  def read(reader: Bytes, sep: Char): Table = {
-    val rows = new ArrayBuffer[Row]()
-    val columns = Row.header(reader, sep)
-
-    while (!reader.atEof)
-      rows append Row.read(reader, columns, sep)
-
-    Table(rows)
-  }
-
-  def read(name: String, sep: Char): Table = {
+  def write(table: Table, name: String, append: Boolean) {
     val file = new File(name)
-    val reader = new Bytes(new FileReader(file))
-    read(reader, sep)
+    
+    if(append && file.exists()) {
+      val known = read(name)
+      overwrite(known ++ table, name)
+    } else {
+      overwrite(table, name)
+    }
+  }
+
+  def read(name: String): Table = {
+    import scala.collection.JavaConverters._
+
+    val reader = new FileReader(name)
+    val parser = new CSVParser(reader, CSVFormat.RFC4180)
+
+    val records = parser.iterator.asScala
+    if(records.isEmpty) {
+        Table.empty
+    } else {
+      val header = records.next()
+      val columns = header.iterator.asScala.toList
+      println(columns)
+      val rows = for(record <- records) yield {
+        val entries = record.iterator.asScala.toSeq
+        Row(columns zip entries)
+      }
+      Table(rows.toSeq)
+    }
   }
 
   def main(args: Array[String]) {
-    println(Table.read("results/arch2018/summary.csv", ','))
+    val r1 = Row(Seq("x" -> 1, "y" -> 2))
+    val r2 = Row(Seq("z" -> 3, "y" -> 2))
+    val r3 = Row(Seq("z" -> 3, "x" -> 2))
+    val t1 = Table(Seq(r1))
+    val t2 = Table(Seq(r2))
+    val t3 = Table(Seq(r3))
+    Table.write(t1, "t.csv", true)
   }
 }

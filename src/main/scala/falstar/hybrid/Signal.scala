@@ -73,6 +73,10 @@ object Signal {
       ys.toArray
     }
 
+    def sample(dt: Duration) = {
+
+    }
+
     def toMatlab(T: Time) = {
       val rs = new StringBuilder()
 

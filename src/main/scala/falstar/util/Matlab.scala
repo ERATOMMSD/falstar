@@ -5,41 +5,55 @@ import java.io.OutputStreamWriter
 
 import scala.io.StdIn
 
-import com.mathworks.engine.MatlabEngine
-
 import falstar.hybrid.Signal
 import falstar.linear.Vector
+import java.io.Writer
 
-object Simulink {
+object NullWriter extends Writer {
+  def write(buf: Array[Char], off: Int, len: Int) {}
+  def flush() {}
+  def close() {}
+}
+
+object Matlab {
   var accelerated = false
   var verbose = false
-  var connected = false
 
+  val klass = Class.forName("com.mathworks.engine.MatlabEngine")
+  val connectMatlab0 = klass.getMethod("connectMatlab")
+  val startMatlab0 = klass.getMethod("startMatlab")
+  val disconnect0 = klass.getMethod("disconnect")
+  val eval1 = klass.getMethod("eval", classOf[String])
+  val eval3 = klass.getMethod("eval", classOf[String], classOf[Writer], classOf[Writer])
+  val getVariable1 = klass.getMethod("getVariable", classOf[String])
+
+  private var engine: Object = null
+  
   val stream = if (verbose)
     new BufferedWriter(new OutputStreamWriter(System.out))
   else
-    MatlabEngine.NULL_WRITER
+    NullWriter
 
   val threshold = 0.0
   val separator = "-" * 20
   val nextResult = falstar.util.numbers(0)
 
   def main(args: Array[String]) {
-    engine
-
+    connect()
     var run = true
+
     while (run) {
       try {
-        val line = StdIn.readLine("> ")
+        val line = StdIn.readLine("matlab> ")
         if (line == null) {
           run = false
         } else if (line == "quit") {
           run = false
         } else if (line(0) == '?') {
           val x = line.drop(1).trim
-          println(x + " = " + engine.getVariable(x))
+          println(x + " = " + getVariable1.invoke(engine, x))
         } else if (!line.isEmpty) {
-          engine.eval(line)
+          eval1.invoke(engine, line)
         }
       } catch {
         case e: Throwable =>
@@ -47,6 +61,7 @@ object Simulink {
         // run = false
       }
     }
+    
     disconnect()
   }
 
@@ -54,11 +69,11 @@ object Simulink {
     val out = stream
     val err = stream
     if (verbose) println("matlab> " + line)
-    engine.eval(line + ";", out, err)
+    eval3.invoke(engine, line + ";", out, err)
   }
 
   def get[T](name: String): T = {
-    engine.getVariable(name)
+    getVariable1.invoke(engine, name).asInstanceOf[T]
   }
 
   def row(name: String): Array[Double] = {
@@ -82,30 +97,25 @@ object Simulink {
     us
   }
 
-  lazy val engine = {
+  def connect() {
     object timer extends Timer
+    if(engine == null) {
+      timer.start()
+      print("starting matlab ...")
 
-    timer.start()
-    print("starting matlab ...")
-
-    val res = try {
-      val res = MatlabEngine.connectMatlab()
-      println(" connected (" + timer.seconds + "s)")
-      res
-    } catch {
-      case _: Throwable =>
-        val res = MatlabEngine.startMatlab()
-        println(" done (" + timer.seconds + "s)")
-        res
+      try {
+        engine = connectMatlab0.invoke(null)
+        println(" connected (" + timer.seconds + "s)")
+      } catch {
+        case _: Throwable =>
+          engine = startMatlab0.invoke(null)
+          println(" done (" + timer.seconds + "s)")
+      }
     }
-
-    connected = true
-    res
   }
 
   def disconnect() {
-    if (connected)
-      try { engine.disconnect() }
-      finally {}
+    disconnect0.invoke(engine)
+    engine = null
   }
 }

@@ -10,13 +10,13 @@ case class MatlabSystem(
   outputs: Seq[String])
   extends System {
 
-  import falstar.util.Simulink._
+  import falstar.util.Matlab._
 
   lazy val initialized = {
     object setup extends Timer
 
     setup.start()
-    assert(engine != null)
+    connect()
 
     print("initializing '" + name + "' ...")
 

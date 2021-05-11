@@ -19,7 +19,7 @@ import falstar.parser.parse
 import falstar.util.Probability
 import falstar.util.Row
 import falstar.util.Scope
-import falstar.util.Simulink
+import falstar.util.Matlab
 import falstar.util.Table
 
 object Main {
@@ -30,15 +30,14 @@ object Main {
     var verbose = false
     var graphics = false
     var dummy = false
-    var append = false
-    val sep = ','
+    var append = true
   }
 
   val results = mutable.Map[String, mutable.Buffer[Row]]()
 
   def write(name: String, data: Seq[Row]) {
     val table = Table(data)
-    table.write(name, options.sep, !options.append)
+    Table.write(table, name, options.append)
   }
 
   def run(cmd: Command): Unit = cmd match {
@@ -117,7 +116,7 @@ object Main {
       options.ask = true
       setup(rest)
     case "-v" :: rest =>
-      Simulink.verbose = true
+      Matlab.verbose = true
       options.verbose = true
       setup(rest)
     case "-g" :: rest =>
@@ -125,9 +124,6 @@ object Main {
       setup(rest)
     case "-d" :: rest =>
       options.dummy = true
-      setup(rest)
-    case "+" :: rest =>
-      options.append = true
       setup(rest)
     case _ =>
       args
@@ -198,6 +194,6 @@ object Main {
 
     println("bye")
 
-    Simulink.disconnect
+    Matlab.disconnect
   }
 }
