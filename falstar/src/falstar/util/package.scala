@@ -8,7 +8,7 @@ package object util {
   def now() = {
     import java.text.SimpleDateFormat
     import java.util.Date
-    val df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
+    val df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     df.format(new Date());
   }
 

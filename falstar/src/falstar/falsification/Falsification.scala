@@ -19,14 +19,16 @@ trait Falsification {
       case Some(seed) => Probability.seed = seed
     }
 
-    val time = now()
+    val start = now()
 
     val data = (1 to n) map {
       i =>
         println("trial " + i + "/" + n)
-        val (res, stat, row) = apply(sys, cfg, phi)
+        val (res, stat, row) = apply(sys, cfg, phi, notes)
         ((res, stat), row)
     }
+
+    val end = now()
 
     val (all, rows) = data.unzip
 
@@ -44,7 +46,8 @@ trait Falsification {
 
     val what = Seq(
       "model" -> sys.name, "formula" -> phi,
-      "start date" -> time
+      "start date" -> start,
+      "end date" -> end
     )
 
     val how = Seq(
@@ -61,7 +64,7 @@ trait Falsification {
     (best, good map (_._1.tr.us), rows, Row(what ++ notes ++ how ++ params ++ aggregate))
   }
 
-  def apply(sys: System, cfg: Config, phi: Formula): (Result, Statistics, Row) = {
+  def apply(sys: System, cfg: Config, phi: Formula, notes: Seq[(String, Any)]): (Result, Statistics, Row) = {
     val seed = Probability.seed
 
     println("property " + phi)
@@ -72,7 +75,10 @@ trait Falsification {
       println("  " + name + ": " + value)
     }
 
+    val start = now()
     val (res, stats) = search(sys, cfg, phi)
+    val end = now()
+    
     println()
 
     println("inputs")
@@ -101,14 +107,23 @@ trait Falsification {
     println("  peak memory " + falstar.util.peakMemBytes / 1000 + " kb")
     println()
 
+    val what = Seq(
+      "model" -> sys.name, "formula" -> phi,
+      "start date" -> start,
+      "end date" -> end
+    )
+
+    val how = Seq(
+       "algorithm" -> this.identification,
+    )
+
     val data = Seq(
-      "model" -> sys.name, "property" -> phi, "algorithm" -> this.identification,
       "seed" -> seed, "simulations" -> stats.simulations, "time" -> stats.time, "robustness" -> res.score,
       "falsified" -> { if (res.isFalsified) "yes" else "no" },
       "input" -> { if (!us.isEmpty) (us toMatlab T) else "[]" },
       "output" -> { if (!ys.isEmpty) (ys toMatlab T) else "[]" })
 
-    val row = Row(data ++ params)
+    val row = Row(what ++ notes ++ how ++ params ++ data)
 
     // expose another seed for the next trial
     // required for external algorithms (Breach, S-Taliro)

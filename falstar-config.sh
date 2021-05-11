@@ -22,6 +22,8 @@ then
 # Bring $MATLABROOT into the environment
     source ~/.falstar/matlab
     echo "Matlab at: $MATLABROOT"
+    export LD_LIBRARY_PATH="$MATLABROOT/bin/glnxa64:$MATLABROOT/sys/os/glnxa64"
+    MATLABJARS="$MATLABROOT/java/jar/mvm.jar:$MATLABROOT/java/jar/javaenginecore.jar:$MATLABROOT/java/jar/matlab.jar:$MATLABROOT/java/jar/engine.jar:$MATLABROOT/java/jar/util.jar:$MATLABROOT/java/jar/capabilities.jar"
 else
     echo "Could not determine Matlab installation."
 fi

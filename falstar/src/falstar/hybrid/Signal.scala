@@ -5,6 +5,25 @@ import scala.collection.mutable.ArrayBuffer
 import falstar.linear.Vector
 
 object Signal {
+  def parse(str: String): Signal = {
+    assert(str startsWith "[")
+    assert(str endsWith "]")
+    val inner = str.substring(1, str.length - 1)
+
+    if(inner.isEmpty) {
+      Signal.empty
+    } else {
+      val points = inner.split(";")
+      
+      for(point <- points) yield {
+        val x = point.trim.split("\\s+")
+        val t = x(0).toDouble
+        val y = Vector(x.length - 1, i => x(i + 1).toDouble)
+        (t, y)
+      }
+    }
+  }
+
   def length(t0: Time, dt: Duration, T: Time): Int = {
     Math.ceil((T - t0) / dt).toInt
   }
@@ -39,7 +58,7 @@ object Signal {
     val us = Seq.tabulate(controlpoints)(i => x)
     Signal(steps, i => (t0 + i * dt, us(i * controlpoints / steps)))
   }
-  
+
   implicit class SignalOps(xs: Signal) {
     def t0: Time = {
       if (xs.isEmpty) 0

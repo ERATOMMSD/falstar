@@ -14,15 +14,11 @@ package object parser {
     val parent = file.getParent()
     val syntax = read(file)
     val parser = new Parser(parent)
-    val problems = parser.parse(syntax)
-
-    problems
+    parser.parse(syntax)
   }
   
   def formula(ports: Map[String, Port], phi: String) = {
-    val tokens = scan(new StringReader(phi))
-    val args = readAll(tokens)
-    val node = Node(args: _*)
+    val node = read(phi)
     val parser = new Parser("")
     parser.formula(ports: Map[String, Port], node: Syntax)
   }
@@ -33,6 +29,11 @@ package object parser {
     Node(args: _*)
   }
 
+  def read(string: String) = {
+    val tokens = scan(new StringReader(string))
+    val args = readAll(tokens)
+    Node(args: _*)
+  }
   
   def scan(reader: Reader) = {
     val scanner = new Scanner(reader)

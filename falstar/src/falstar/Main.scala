@@ -15,12 +15,14 @@ import falstar.parser.Flush
 import falstar.parser.Quit
 import falstar.parser.Robustness
 import falstar.parser.Simulate
+import falstar.parser.Validate
 import falstar.parser.parse
 import falstar.util.Probability
 import falstar.util.Row
 import falstar.util.Scope
 import falstar.util.Matlab
 import falstar.util.Table
+import falstar.falsification.Validation
 
 object Main {
   object quit extends Breaks
@@ -31,6 +33,7 @@ object Main {
     var graphics = false
     var dummy = false
     var append = true
+    var args: List[String] = Nil
   }
 
   val results = mutable.Map[String, mutable.Buffer[Row]]()
@@ -64,6 +67,16 @@ object Main {
       if (options.graphics) {
         val title = if (best.isFalsified) "falsified | " + sys.name + " | " + phi else "not falsified: " + phi
         val scope = new Scope(title, sys, best)
+      }
+
+    case Validate(log, report, parser) =>
+      val table = Table.read(log.get)
+      val rows = Validation.apply(table, parser)
+
+      for (name <- report) {
+        if (!(results contains name))
+          results(name) = mutable.Buffer()
+        results(name) ++= rows
       }
 
     case Simulate(sys, phi, ps, us, t) =>
@@ -110,7 +123,6 @@ object Main {
     }
   }
 
-  @tailrec
   def setup(args: List[String]): List[String] = args match {
     case "-a" :: rest =>
       options.ask = true
@@ -125,8 +137,13 @@ object Main {
     case "-d" :: rest =>
       options.dummy = true
       setup(rest)
-    case _ =>
-      args
+    case "--" :: rest =>
+      options.args = rest
+      Nil
+    case Nil =>
+      Nil
+    case file :: rest =>
+      file :: setup(rest)
   }
 
   def safe(f: => Any) = {
@@ -161,36 +178,14 @@ object Main {
 
   def main(args: Array[String]) {
     if (args.isEmpty) {
-      println("usage: falstar [-agv] [+] file_1 ... file_n")
-      println("  -a    ask for additional input files:")
-      println("          enter one filename per line followed by a blank line")
-      println("          a blank line acknowledges, EOF (CTRL+d) aborts")
-      println("  -d    dummy run, parse and validate configuration only")
-      println("  -g    show a graphical diagram for each trial")
-      println("  -v    be verbose")
-      println("   +    no header in csv for next file (data should match previous header)")
+      println("usage: falstar [-dv] file_1 ... file_n")
+      println("  -d    parse configuration only")
+      println("  -v    be more verbose")
     }
 
-    val rest = setup(args.toList)
-
-    var files = Buffer[String]()
-    files ++= rest
-
-    quit.breakable {
-      while (options.ask) {
-        val line = StdIn.readLine
-
-        if (line == null)
-          quit.break
-        else if (line.isEmpty)
-          options.ask = false
-        else
-          files += line
-      }
-
-      runall(files)
-      writeall(results)
-    }
+    val files = setup(args.toList)
+    runall(files)
+    writeall(results)
 
     println("bye")
 

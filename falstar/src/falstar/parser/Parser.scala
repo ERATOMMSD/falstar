@@ -1,6 +1,7 @@
 package falstar.parser
 
 import java.io.File
+import scala.util.DynamicVariable
 
 import falstar.falsification.Adaptive
 import falstar.falsification.Breach
@@ -31,11 +32,13 @@ import falstar.hybrid.MatlabSystem
 sealed trait Command
 case object Flush extends Command
 case object Quit extends Command
+
 case class Falsify(search: Falsification, sys: System, cfg: Config, phi: Formula, seed: Option[Long], repeat: Int, notes: Seq[(String, Any)], log: Option[String], report: Option[String]) extends Command
+case class Validate(log: Option[String], report: Option[String], parser: Parser) extends Command
 case class Simulate(sys: System, phi: Formula, ps: Input, us: Signal, T: Time) extends Command
 case class Robustness(phi: Formula, us: Signal, ys: Signal, T: Time) extends Command
 
-class Parser(directory: String) {
+object Parser {
   case class State(
     var search: Falsification,
     var system: System,
@@ -55,9 +58,17 @@ class Parser(directory: String) {
   object State {
     def empty = State(null, null, null, Map(), Map(), Map(), Map(), None, 1, None, None, Seq())
   }
+}
+
+class Parser(_directory: String) {
+  outer =>
+  import Parser._
+  object directory extends DynamicVariable(_directory)
 
   var stack = List(State.empty)
   def state = stack.head
+
+  def copy = new Parser(_directory) { stack = List(outer.state.copy()); }
 
   def expand(node: Syntax, env: Map[String, Syntax]): Syntax = node match {
     case Identifier(name) if env contains name =>
@@ -91,7 +102,7 @@ class Parser(directory: String) {
   object Path {
     def unapply(node: Syntax): Option[String] = node match {
       case Literal(value: String) =>
-        Some(directory + "/" + value)
+        Some(directory.value + "/" + value)
       case _ =>
         None
     }
@@ -252,9 +263,12 @@ class Parser(directory: String) {
   }
 
   def top(syntax: Syntax): Seq[Command] = expand(syntax, state.defines) match {
-    case Node(Keyword("include"), Path(file)) =>
-      val node = read(new File(file))
-      parse(node)
+    case Node(Keyword("include"), Path(name)) =>
+      val file = new File(name)
+      val node = read(file)
+      directory.withValue(file.getParent) {
+        parse(node)
+      }
 
     case Node(Keyword("define"), Identifier(name), body) =>
       state.defines += name -> body
@@ -336,6 +350,10 @@ class Parser(directory: String) {
 
     case Node(Keyword("falsify"), phis @ _*) =>
       phis map { phi => Falsify(state.search, state.system, state.config, formula(phi), state.seed, state.repeat, state.notes, state.log, state.report) }
+
+    case Node(Keyword("validate")) =>
+      val cmd = Validate(state.log, state.report, this.copy)
+      Seq(cmd)
 
     case Node(Keyword("simulate"), Number(time), phi, params, input @ _*) =>
       Seq(Simulate(state.system, formula(phi), vector(params), signal(input), time))

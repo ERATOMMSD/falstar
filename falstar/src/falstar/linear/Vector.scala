@@ -128,7 +128,19 @@ class Vector(val length: Int) extends Traversable[Double] {
 
 object Vector {
   val empty = {
-    Vector(0)
+    Vector()
+  }
+
+  def parse(str: String): Vector = {
+    assert(str startsWith "[")
+    assert(str endsWith "]")
+    val inner = str.substring(1, str.length - 1).trim
+    if(inner.isEmpty) {
+      empty
+    } else {
+      val data = inner.trim.split("\\s+")
+      Vector(data.length, i => data(i).toDouble)
+    }
   }
 
   def apply(length: Int, init: (Int) => Double): Vector = {

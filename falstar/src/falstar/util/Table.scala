@@ -10,6 +10,7 @@ import java.io.BufferedReader
 import org.apache.commons.csv.CSVPrinter
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVFormat
+import org.apache.commons.csv.QuoteMode
 
 case class Row(data: Seq[(String, Any)]) {
   val (keys, values) = data.unzip
@@ -34,8 +35,9 @@ object Table {
     if (parent != null)
       parent.mkdirs()
 
+    val format = CSVFormat.RFC4180.withQuoteMode(QuoteMode.NON_NUMERIC)
     val writer = new FileWriter(file, false)
-    val printer = new CSVPrinter(writer, CSVFormat.RFC4180)
+    val printer = new CSVPrinter(writer, format)
 
     var first: Boolean = true
     printer.printRecord(columns: _*)
@@ -65,8 +67,9 @@ object Table {
   def read(name: String): Table = {
     import scala.collection.JavaConverters._
 
+    val format = CSVFormat.DEFAULT
     val reader = new FileReader(name)
-    val parser = new CSVParser(reader, CSVFormat.RFC4180)
+    val parser = new CSVParser(reader, format)
 
     val records = parser.iterator.asScala
     if(records.isEmpty) {
@@ -74,7 +77,7 @@ object Table {
     } else {
       val header = records.next()
       val columns = header.iterator.asScala.toList
-      println(columns)
+      
       val rows = for(record <- records) yield {
         val entries = record.iterator.asScala.toSeq
         Row(columns zip entries)
