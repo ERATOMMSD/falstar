@@ -132,15 +132,8 @@ object Vector {
   }
 
   def parse(str: String): Vector = {
-    assert(str startsWith "[")
-    assert(str endsWith "]")
-    val inner = str.substring(1, str.length - 1).trim
-    if(inner.isEmpty) {
-      empty
-    } else {
-      val data = inner.trim.split("\\s+")
-      Vector(data.length, i => data(i).toDouble)
-    }
+    val data = falstar.util.splitMatlab1(str)
+    Vector(data.length, i => data(i).toDouble)
   }
 
   def apply(length: Int, init: (Int) => Double): Vector = {

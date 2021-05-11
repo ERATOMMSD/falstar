@@ -17,6 +17,8 @@ object Validation {
     if(ok) "yes" else "no"
   }
 
+  val isTrue = Set("1", "true", "yes")
+
   def apply(table: Table, parser: Parser): Seq[Row] = {
     for(row <- table.rows) yield {
       val res = apply(row, parser)
@@ -37,7 +39,6 @@ object Validation {
     val falstar.parser.Node(node) = falstar.parser.read(property)
     state.system = sys // such that ports and stuff work
     val phi = parser.formula(node)
-    val T = phi.T
 
     val res = mutable.Buffer[(String, Any)]()
 
@@ -47,7 +48,12 @@ object Validation {
 
     if(data contains "input") {
         val ps = Vector.parse(data.getOrElse("parameters", "[]"))
-        val us = Signal.parse(data("input"))
+        
+        val us = if(data contains "times") {
+          Signal.parse(data("times"), data("input"))
+        } else {
+          Signal.parse(data("input"))
+        }
         // res += "input" -> input
 
         val pr = cfg.pn(sys.params)
@@ -56,12 +62,18 @@ object Validation {
         val ur = cfg.in(sys.inputs)
         res += "inputs valid" -> check(us forall { case (t, x) => ur contains x })
 
+        val T = if(data contains "time horizon") {
+            data("time horizon").toDouble
+        } else {
+            phi.T
+        }
+
         val tr = sys.sim(ps, us, T)
         val rs = Robustness(phi, tr.us, tr.ys)
 
         if(data contains "falsified") {
             val expected = data("falsified")
-            res += "falsified correct" -> check(expected == check(rs.score < 0))
+            res += "falsified correct" -> check(isTrue(expected) == (rs.score < 0))
         }
 
         if(data contains "robustness") {

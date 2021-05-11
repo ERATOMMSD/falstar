@@ -12,6 +12,35 @@ package object util {
     df.format(new Date());
   }
 
+  def splitMatlab1(str: String): Array[String] = {
+    assert(str startsWith "[")
+    assert(str endsWith "]")
+    val inner = str.substring(1, str.length - 1).trim
+    if(inner.isEmpty) {
+      Array()
+    } else {
+      inner.split("\\s+")
+    }
+  }
+
+  def splitMatlab2(str: String): Array[Array[String]] = {
+    assert(str startsWith "[")
+    assert(str endsWith "]")
+    val inner = str.substring(1, str.length - 1).trim
+    if(inner.isEmpty) {
+      Array()
+    } else {
+      val parts = inner.split(";")
+      for(part <- parts) yield {
+        val part_ = part.trim
+        if(part_.isEmpty)
+          Array[String]()
+        else
+          part_.split("\\s+")
+      }
+    }
+  }
+
   def time[A](m: String, f: => A) = {
     val start = java.lang.System.currentTimeMillis()
     val r = f

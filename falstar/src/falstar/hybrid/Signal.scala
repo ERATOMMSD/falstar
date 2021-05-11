@@ -6,22 +6,26 @@ import falstar.linear.Vector
 
 object Signal {
   def parse(str: String): Signal = {
-    assert(str startsWith "[")
-    assert(str endsWith "]")
-    val inner = str.substring(1, str.length - 1)
-
-    if(inner.isEmpty) {
-      Signal.empty
-    } else {
-      val points = inner.split(";")
-      
-      for(point <- points) yield {
-        val x = point.trim.split("\\s+")
-        val t = x(0).toDouble
-        val y = Vector(x.length - 1, i => x(i + 1).toDouble)
-        (t, y)
-      }
+    for(x <- falstar.util.splitMatlab2(str)) yield {
+      val t = x(0).toDouble
+      val y = Vector(x.length - 1, i => x(i + 1).toDouble)
+      (t, y)
     }
+  }
+
+  def parse(times: String, points: String): Signal = {
+    val ts = falstar.util.splitMatlab1(times)
+    val xs = falstar.util.splitMatlab2(points)
+    assert(ts.length == xs.length)
+    for((t,x) <- (ts zip xs)) yield {
+      val y = Vector(x.length, i => x(i).toDouble)
+      (t.toDouble, y)
+    }
+  }
+
+  def zip(ts: Vector, xs: Seq[Vector]): Signal = {
+    assert(ts.length == xs.length)
+    ts.data zip xs
   }
 
   def length(t0: Time, dt: Duration, T: Time): Int = {
