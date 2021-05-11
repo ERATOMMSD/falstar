@@ -11,8 +11,9 @@ import falstar.mtl.Port
 
 package object parser {
   def parse(file: File) = {
+    val parent = file.getParent()
     val syntax = read(file)
-    val parser = new Parser
+    val parser = new Parser(parent)
     val problems = parser.parse(syntax)
 
     problems
@@ -22,7 +23,7 @@ package object parser {
     val tokens = scan(new StringReader(phi))
     val args = readAll(tokens)
     val node = Node(args: _*)
-    val parser = new Parser
+    val parser = new Parser("")
     parser.formula(ports: Map[String, Port], node: Syntax)
   }
 

@@ -115,7 +115,9 @@ object Matlab {
   }
 
   def disconnect() {
-    disconnect0.invoke(engine)
-    engine = null
+    if(engine != null) {
+      disconnect0.invoke(engine)
+      engine = null
+    }
   }
 }

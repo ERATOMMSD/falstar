@@ -35,7 +35,7 @@ case class Falsify(search: Falsification, sys: System, cfg: Config, phi: Formula
 case class Simulate(sys: System, phi: Formula, ps: Input, us: Signal, T: Time) extends Command
 case class Robustness(phi: Formula, us: Signal, ys: Signal, T: Time) extends Command
 
-class Parser {
+class Parser(directory: String) {
   case class State(
     var search: Falsification,
     var system: System,
@@ -88,6 +88,15 @@ class Parser {
     }
   }
 
+  object Path {
+    def unapply(node: Syntax): Option[String] = node match {
+      case Literal(value: String) =>
+        Some(directory + "/" + value)
+      case _ =>
+        None
+    }
+  }
+
   def identifiers(nodes: Seq[Syntax]) = {
     nodes map {
       case Identifier(name) =>
@@ -132,19 +141,19 @@ class Parser {
     val outputs = identifiers(_outputs)
 
     val sys = system match {
-      case Node(Keyword("simulink"), Literal(name: String)) =>
+      case Node(Keyword("simulink"), Path(name)) =>
         val file = new File(name)
         val path = file.getParent
         val model = splitFilename(file.getName)
         SimulinkSystem(path, model, params, inputs, outputs, Seq())
 
-      case Node(Keyword("simulink"), Literal(name: String), Literal(load: String)) =>
+      case Node(Keyword("simulink"), Path(name), Literal(load: String)) =>
         val file = new File(name)
         val path = file.getParent
         val model = splitFilename(file.getName)
         SimulinkSystem(path, model, params, inputs, outputs, Seq(load))
 
-      case Node(Keyword("matlab"), Literal(name: String), Literal(path: String), Literal(init: String), Literal(run: String)) =>
+      case Node(Keyword("matlab"), Literal(name: String), Path(path), Literal(init: String), Literal(run: String)) =>
         MatlabSystem(path, name, init, run, params, inputs, outputs)
     }
 
@@ -243,7 +252,7 @@ class Parser {
   }
 
   def top(syntax: Syntax): Seq[Command] = expand(syntax, state.defines) match {
-    case Node(Keyword("include"), Literal(file: String)) =>
+    case Node(Keyword("include"), Path(file)) =>
       val node = read(new File(file))
       parse(node)
 
@@ -346,22 +355,22 @@ class Parser {
       state.seed = None
       Seq()
 
-    case Node(Keyword("set-log"), Literal(name: String)) =>
+    case Node(Keyword("set-log"), Path(name)) =>
       state.log = Some(name)
       Seq()
 
-    case Node(Keyword("clear-log"), Literal(name: String)) =>
+    case Node(Keyword("clear-log")) =>
       state.log = None
       Seq()
 
     case Node(Keyword("flush-log")) =>
       Seq(Flush)
 
-    case Node(Keyword("set-report"), Literal(name: String)) =>
+    case Node(Keyword("set-report"), Path(name)) =>
       state.report = Some(name)
       Seq()
 
-    case Node(Keyword("clear-report"), Literal(name: String)) =>
+    case Node(Keyword("clear-report")) =>
       state.report = None
       Seq()
 
