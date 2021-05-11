@@ -10,6 +10,7 @@ import falstar.mtl.Robustness
 import falstar.util.Probability
 import falstar.util.Row
 import falstar.util.Timer
+import falstar.util.now
 
 trait Falsification {
   def repeat(sys: System, cfg: Config, phi: Formula, _seed: Option[Long], n: Int, notes: Seq[(String, Any)]): (Result, Seq[Signal], Seq[Row], Row) = {
@@ -17,6 +18,8 @@ trait Falsification {
       case None => Probability.setUniqueSeed()
       case Some(seed) => Probability.seed = seed
     }
+
+    val time = now()
 
     val data = (1 to n) map {
       i =>
@@ -41,6 +44,7 @@ trait Falsification {
 
     val what = Seq(
       "model" -> sys.name, "formula" -> phi,
+      "start date" -> time
     )
 
     val how = Seq(

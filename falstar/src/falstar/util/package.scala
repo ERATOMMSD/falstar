@@ -5,6 +5,13 @@ import java.lang.management.ManagementFactory
 import java.lang.management.MemoryType
 
 package object util {
+  def now() = {
+    import java.text.SimpleDateFormat
+    import java.util.Date
+    val df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
+    df.format(new Date());
+  }
+
   def time[A](m: String, f: => A) = {
     val start = java.lang.System.currentTimeMillis()
     val r = f

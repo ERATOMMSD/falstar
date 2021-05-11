@@ -5,7 +5,7 @@ PREFIX=/usr/local
 SCANNER=falstar/src/falstar/parser/Scanner.java
 
 SRC=$(shell find falstar/src -iname "*.scala")
-BIN=falstar.jar falstar.sh falstar-session.sh
+BIN=falstar.jar falstar.sh falstar-session.sh falstar-config.sh
 
 ARCH2018=$(wildcard falstar/resource/configuration/arch2018/*.cfg)
 HSCC2019=$(wildcard falstar/resource/configuration/hscc2019/*.cfg)
@@ -24,7 +24,7 @@ test: falstar.jar
 	./falstar.sh falstar/resource/configuration/test.cfg
 
 install: $(BIN)
-	install -m 755 falstar.sh falstar-session.sh $(PREFIX)
+	install -m 755 falstar.sh falstar-session.sh falstar-config.sh $(PREFIX)
 	install -m 644 falstar.jar $(PREFIX)
 
 uninstall:
