@@ -27,14 +27,22 @@ import falstar.falsification.Validation
 object Main {
   object quit extends Breaks
 
-  object options {
+  class Log {
+    var output = false
+    var robustness = 0.0
+  }
+
+  class Options {
     var ask = false
     var verbose = false
     var graphics = false
     var dummy = false
     var append = true
+    object log extends Log
     var args: List[String] = Nil
   }
+
+  object options extends Options
 
   val results = mutable.Map[String, mutable.Buffer[Row]]()
 
@@ -50,7 +58,7 @@ object Main {
         case Some(seed) => Probability.seed = seed
       }
 
-      val (best, good, rows, aggregate) = search.repeat(sys, cfg, phi, seed, repeat, notes)
+      val (best, good, rows, aggregate) = search.repeat(sys, cfg, phi, seed, repeat, options.log, notes)
 
       for (name <- log) {
         if (!(results contains name))
@@ -136,6 +144,12 @@ object Main {
       setup(rest)
     case "-d" :: rest =>
       options.dummy = true
+      setup(rest)
+    case "+r" :: sample :: rest =>
+      options.log.robustness = sample.toDouble
+      setup(rest)
+    case "+o" :: rest =>
+      options.log.output = true
       setup(rest)
     case "--" :: rest =>
       options.args = rest

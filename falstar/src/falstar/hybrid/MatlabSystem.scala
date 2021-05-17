@@ -37,10 +37,9 @@ case class MatlabSystem(
 
     assert(initialized)
 
+    eval("p = " + (ps.toMatlabRow))
     eval("u = " + (us toMatlab T))
-    eval("result = " + sim + "(u, " + T + ")")
-    eval("tout = result.tout")
-    eval("yout = result.yout")
+    eval("[tout, yout] = " + sim + "(p, u, " + T + ")")
     val zs = signal("tout", "yout")
 
     assert(Math.abs(zs.T - T) < 0.1, "inconcistent simulink stopping time " + zs.T + " expected " + T)

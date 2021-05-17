@@ -4,12 +4,23 @@ import falstar.hybrid.Score
 import falstar.hybrid.Signal
 import falstar.hybrid.State
 import falstar.hybrid.Time
+import falstar.hybrid.Duration
 import falstar.util.Lemire
 import falstar.hybrid.Signal.SignalOps
+import falstar.hybrid.Signal.TimeSeriesOps
 import falstar.hybrid.Input
 import scala.collection.mutable.ArrayBuffer
 
 case class Robustness(rs: Array[(Time, Score)]) {
+  def downsample(dt: Duration) = {
+    Robustness(rs downsample dt)
+  }
+
+  def toMatlab = {
+    val qs = rs map { case (t,r) => t + " " + r }
+    qs.mkString("[", ";", "]")
+  }
+
   def score = {
     if (rs.isEmpty) Score.MaxValue
     else rs.head._2
@@ -188,6 +199,39 @@ object Robustness {
 
     case Eventually(from, to, phi) =>
       apply(phi, us, xs) eventually (from, to)
+  }
+
+  def collect(phi: Formula, us: Signal, xs: Signal): (Robustness, List[(Formula, Robustness)]) = phi match {
+    case prop: Proposition =>
+      val rs = apply(prop, us, xs)
+      (rs, Nil)
+
+    case Not(phi) =>
+      val (rs, log) = collect(phi, us, xs)
+      (!rs, (phi -> rs) :: log)
+
+    case And(phi, psi) =>
+      val (rs1, log1) = collect(phi, us, xs)
+      val (rs2, log2) = collect(psi, us, xs)
+      (rs1 and rs2, List(phi -> rs1, psi -> rs2) ++ log1 ++ log2)
+
+    case Or(phi, psi) =>
+      val (rs1, log1) = collect(phi, us, xs)
+      val (rs2, log2) = collect(psi, us, xs)
+      (rs1 or rs2, List(phi -> rs1, psi -> rs2) ++ log1 ++ log2)
+
+    case Implies(phi, psi) =>
+      val (rs1, log1) = collect(phi, us, xs)
+      val (rs2, log2) = collect(psi, us, xs)
+      (rs1 implies rs2, List(phi -> rs1, psi -> rs2) ++ log1 ++ log2)
+
+    case Always(from, to, phi) =>
+      val (rs, log) = collect(phi, us, xs)
+      (rs always (from, to), (phi -> rs) :: log)
+
+    case Eventually(from, to, phi) =>
+      val (rs, log) = collect(phi, us, xs)
+      (rs eventually (from, to), (phi -> rs) :: log)
   }
 
   def bounds(phi: Formula, us: Signal, xs: Signal): Value = phi match {

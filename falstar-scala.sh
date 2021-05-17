@@ -2,4 +2,4 @@
 
 HERE=`dirname "$0"`
 source $HERE/falstar-config.sh
-scala -cp "$MATLABJARS:$HERE/falstar.jar" $@
+java -cp "$MATLABJARS:$HERE/falstar.jar" scala.tools.nsc.MainGenericRunner $@

@@ -5,6 +5,12 @@ import scala.collection.mutable.ArrayBuffer
 import falstar.linear.Vector
 
 object Signal {
+  def main(args: Array[String]) {
+    val xs = Array((0.0, 'a'), (1.0, 'b'), (2.0, 'c'))
+    val ys = xs.sample(1.0, 3)
+    ys foreach println
+  }
+
   def parse(str: String): Signal = {
     for(x <- falstar.util.splitMatlab2(str)) yield {
       val t = x(0).toDouble
@@ -63,6 +69,31 @@ object Signal {
     Signal(steps, i => (t0 + i * dt, us(i * controlpoints / steps)))
   }
 
+  implicit class TimeSeriesOps[A](xs: Array[(Time, A)]) {
+    def downsample(dt: Duration) = {
+      var ct: Time = 0
+      for((t, a) <- xs if t >= ct) yield {
+        ct += dt
+        (t, a)
+      }
+    }
+
+    def sample(dt: Duration, T: Time) = {
+      var ct: Time = 0
+      var i = 0
+      var a = xs(0)._2
+      val res = new ArrayBuffer[(Time, A)]()
+
+      while(ct <= T + 1e-4) {
+        while(i < xs.length && xs(i)._1 <= ct + 1e-4) { a = xs(i)._2; i += 1 }
+        res += (ct -> a)
+        ct += dt
+      }
+
+      res.toArray
+    }
+  }
+
   implicit class SignalOps(xs: Signal) {
     def t0: Time = {
       if (xs.isEmpty) 0
@@ -105,21 +136,24 @@ object Signal {
 
       rs append "["
 
+      var first = true
       for ((t, u) <- xs) {
+        if(!first)
+          rs append "; "
+        first = false
         rs append t
         for (x <- u) {
           rs append " "
           rs append x
         }
-        rs append "; "
       }
 
-      val (_, un) = xs.last
-      rs append T
-      for (x <- un) {
-        rs append " "
-        rs append x
-      }
+      // val (_, un) = xs.last
+      // rs append T
+      // for (x <- un) {
+      //   rs append " "
+      //   rs append x
+      // }
 
       rs append "]"
 

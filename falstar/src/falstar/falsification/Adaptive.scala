@@ -298,8 +298,48 @@ object Adaptive {
         Falsification.observer.update(result)
       }
 
+      def normalize(values: Seq[Double]) = {
+        val scale = Math.max(Math.abs(values.min), Math.abs(values.max))
+        if(scale == 0) {
+          values.toList
+        } else {
+          val mag = Math.log10(scale / 2)
+          val factor =  Math.pow(10, mag.toInt+1)
+          val res = values map (_ / factor)
+          res.toList
+        }
+      }
+
+      def detailledlog(res: Result, T: Time) {
+        import falstar.hybrid.Signal.TimeSeriesOps
+
+        val is = res.tr.us.sample(1, T)
+        val (_, ivs: Array[Vector]) = is.unzip
+        val inputs = for((x,i) <- ivs.toList.map(_.data.toList).transpose.zipWithIndex) yield {
+          sys.inputs(i) :: normalize(x)
+        }
+
+        val os = res.tr.ys.sample(1, T)
+        val (_, ovs: Array[Vector]) = os.unzip
+        val outputs = for((x,i) <- ovs.toList.map(_.data.toList).transpose.zipWithIndex) yield {
+          sys.outputs(i) :: normalize(x)
+        }
+
+        val formulas = for((phi, rs) <- res.log) yield {
+          val qs = rs.rs.sample(1, T)
+          val (_, vs) = qs.unzip
+          phi :: normalize(vs)
+        }
+
+        val data = inputs ++ outputs ++ formulas
+
+        val name = "signals/signal-" + System.currentTimeMillis + "-" + res.rs.score + ".csv"
+        falstar.util.Table.dump(data.transpose, name)
+      }
+
       def playout(ps: Input, us: Signal): Result = {
         val res = sim(ps, us, T)
+        detailledlog(res, T)
         res
       }
 
@@ -329,7 +369,7 @@ object Adaptive {
 
             val child = new Node(t + dt, new_levels)
             val result = sample(child, us ++ Signal.point(t, u), new_inputs)
-            val Result(tr, rs) = result
+            val Result(ps, tr, rs, log) = result
 
             // check feasibility
             val pr = tr until child.time

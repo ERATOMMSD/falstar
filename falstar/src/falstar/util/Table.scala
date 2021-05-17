@@ -11,10 +11,11 @@ import org.apache.commons.csv.CSVPrinter
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.QuoteMode
+import scala.util.Try
 
 case class Row(data: Seq[(String, Any)]) {
   val (keys, values) = data.unzip
-  assert(keys == keys.distinct)
+  assert(keys == keys.distinct, "duplicate keys: " + keys.mkString(" "))
 }
 
 case class Table(rows: Seq[Row]) {
@@ -24,6 +25,23 @@ case class Table(rows: Seq[Row]) {
 
 object Table {
   val empty = Table(Seq())
+
+  def dump(data: Seq[Seq[Any]], name: String) {
+    val file = new File(name)
+
+    val parent = file.getParentFile
+    if (parent != null)
+      parent.mkdirs()
+
+    val format = CSVFormat.RFC4180.withQuoteMode(QuoteMode.NON_NUMERIC)
+    val writer = new FileWriter(file, false)
+    val printer = new CSVPrinter(writer, format)
+
+    for(row <- data)
+      printer.printRecord(row.asInstanceOf[Seq[AnyRef]]: _*)
+
+    printer.close()
+  }
 
   def overwrite(table: Table, name: String) {
     import table.columns
@@ -39,7 +57,6 @@ object Table {
     val writer = new FileWriter(file, false)
     val printer = new CSVPrinter(writer, format)
 
-    var first: Boolean = true
     printer.printRecord(columns: _*)
 
     for (row <- rows) {
@@ -57,11 +74,16 @@ object Table {
     val file = new File(name)
     
     if(append && file.exists()) {
-      val known = read(name)
+      val known = tryread(name)
       overwrite(known ++ table, name)
     } else {
       overwrite(table, name)
     }
+  }
+
+  def tryread(name: String): Table = {
+    try { read(name) }
+    catch { case e: Exception => Table.empty }
   }
 
   def read(name: String): Table = {
@@ -79,10 +101,10 @@ object Table {
       val columns = header.iterator.asScala.toList
       
       val rows = for(record <- records) yield {
-        val entries = record.iterator.asScala.toSeq
+        val entries = record.iterator.asScala.toList
         Row(columns zip entries)
       }
-      Table(rows.toSeq)
+      Table(rows.toList)
     }
   }
 

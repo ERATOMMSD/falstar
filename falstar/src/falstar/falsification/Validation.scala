@@ -62,8 +62,8 @@ object Validation {
         val ur = cfg.in(sys.inputs)
         res += "inputs valid" -> check(us forall { case (t, x) => ur contains x })
 
-        val T = if(data contains "time horizon") {
-            data("time horizon").toDouble
+        val T = if(data contains "stop time") {
+            data("stop time").toDouble
         } else {
             phi.T
         }

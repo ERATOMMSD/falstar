@@ -58,7 +58,7 @@ class Scope(title: String, sys: System, _res: Result) extends JFrame(title) {
   val dim = if (_res.tr.ys.isEmpty) 0 else _res.tr.ys(0)._2.length
 
   val res = {
-    val Result(Trace(_us, ys), rs) = _res
+    val Result(ps, Trace(_us, ys), rs, log) = _res
     val us = new ArrayBuffer[(Time, Vector)]
     val (_, un) = _us.last
 
@@ -70,7 +70,7 @@ class Scope(title: String, sys: System, _res: Result) extends JFrame(title) {
       us += ((t1, u0))
     }
 
-    Result(Trace(us.toArray, ys), rs)
+    Result(ps, Trace(us.toArray, ys), rs, log)
   }
 
   val colors = Array(
@@ -158,7 +158,7 @@ class Scope(title: String, sys: System, _res: Result) extends JFrame(title) {
 
       g.setStroke(new BasicStroke(2));
 
-      val Result(Trace(us, ys), rs) = res
+      val Result(ps, Trace(us, ys), rs, log) = res
       val zs: Signal = rs.rs map { case (t, r) => (t, Vector(r)) }
 
       val width = getWidth - 4 * margin

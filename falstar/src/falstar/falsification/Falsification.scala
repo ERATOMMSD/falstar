@@ -5,15 +5,17 @@ import falstar.hybrid.Input
 import falstar.hybrid.Signal
 import falstar.hybrid.System
 import falstar.hybrid.Time
+import falstar.hybrid.Trace
 import falstar.mtl.Formula
 import falstar.mtl.Robustness
 import falstar.util.Probability
 import falstar.util.Row
 import falstar.util.Timer
 import falstar.util.now
+import falstar.Main.Log
 
 trait Falsification {
-  def repeat(sys: System, cfg: Config, phi: Formula, _seed: Option[Long], n: Int, notes: Seq[(String, Any)]): (Result, Seq[Signal], Seq[Row], Row) = {
+  def repeat(sys: System, cfg: Config, phi: Formula, _seed: Option[Long], n: Int, log: Log, notes: Seq[(String, Any)]): (Result, Seq[Signal], Seq[Row], Row) = {
     _seed match {
       case None => Probability.setUniqueSeed()
       case Some(seed) => Probability.seed = seed
@@ -24,7 +26,7 @@ trait Falsification {
     val data = (1 to n) map {
       i =>
         println("trial " + i + "/" + n)
-        val (res, stat, row) = apply(sys, cfg, phi, notes)
+        val (res, stat, row) = apply(sys, cfg, phi, log, notes)
         ((res, stat), row)
     }
 
@@ -64,7 +66,7 @@ trait Falsification {
     (best, good map (_._1.tr.us), rows, Row(what ++ notes ++ how ++ params ++ aggregate))
   }
 
-  def apply(sys: System, cfg: Config, phi: Formula, notes: Seq[(String, Any)]): (Result, Statistics, Row) = {
+  def apply(sys: System, cfg: Config, phi: Formula, log: Log, notes: Seq[(String, Any)]): (Result, Statistics, Row) = {
     val seed = Probability.seed
 
     println("property " + phi)
@@ -82,8 +84,7 @@ trait Falsification {
     println()
 
     println("inputs")
-    val us = res.tr.us
-    val ys = res.tr.ys
+    val Result(ps, Trace(us, ys), rs, ls) = res
     val T = phi.T
 
     import Signal.SignalOps
@@ -98,7 +99,7 @@ trait Falsification {
     } else {
       print("not falsified")
     }
-    println(" with robustness " + res.score)
+    println(" with robustness " + rs.score)
     println()
 
     println("statistics")
@@ -117,11 +118,27 @@ trait Falsification {
        "algorithm" -> this.identification,
     )
 
-    val data = Seq(
+    var data = Seq(
       "seed" -> seed, "simulations" -> stats.simulations, "time" -> stats.time, "robustness" -> res.score,
       "falsified" -> { if (res.isFalsified) "yes" else "no" },
-      "input" -> { if (!us.isEmpty) (us toMatlab T) else "[]" },
-      "output" -> { if (!ys.isEmpty) (ys toMatlab T) else "[]" })
+      "parameters" -> { ps.toMatlabRow },
+      "input" -> { if (!us.isEmpty) (us toMatlab T) else "[]" }
+      )
+
+    if(log.output)
+      data ++= Seq(
+        "output" -> { if (!ys.isEmpty) (ys toMatlab T) else "[]" }
+      )
+
+    if(log.robustness > 0) {
+      var t: Time = 0
+      
+      data ++= ls.zipWithIndex map {
+        case ((phi, rs), i) =>
+          val rs_ = rs.downsample(log.robustness)
+          ("robustness " + i + " of " + phi) -> (rs_.toMatlab)
+      }
+    }
 
     val row = Row(what ++ notes ++ how ++ params ++ data)
 
@@ -151,13 +168,20 @@ trait WithStatistics {
 
     def sim(ps: Input, us: Signal, T: Time): Result = {
       simulations += 1
+      import Signal.TimeSeriesOps
+
+      val us_ = cfg.options get "sample" match {
+        case None => us sample (1, T)
+        case Some(dt: Double) => us sample (dt, T)
+      }
+
       val tr = simulation.during {
-        sys.sim(ps, us, T)
+        sys.sim(ps, us_, T)
       }
-      val rs = formula.during {
-        Robustness(phi, tr.us, tr.ys)
+      val (rs, log) = formula.during {
+        Robustness.collect(phi, tr.us, tr.ys)
       }
-      Result(tr, rs)
+      Result(ps, tr, rs, (phi -> rs) :: log)
     }
 
     val res = total.during {

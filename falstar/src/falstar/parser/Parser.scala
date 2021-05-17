@@ -283,6 +283,10 @@ class Parser(_directory: String) {
       state.notes = what map note
       Seq()
 
+    case Node(Keyword("print"), Literal("formula"), what @ _*) =>
+      for(item <- what) println(formula(item))
+      Seq()
+    
     case Node(Keyword("define-system"), Identifier(name), system, Node(Keyword("parameters"), params @ _*), Node(Keyword("inputs"), inputs @ _*), Node(Keyword("outputs"), outputs @ _*), config @ _*) =>
       defineSystem(name, system, params, inputs, outputs, config)
       Seq()

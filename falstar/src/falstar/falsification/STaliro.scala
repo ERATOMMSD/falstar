@@ -63,7 +63,7 @@ object STaliro {
       val ys = Signal((0, Vector.zero(sys.outports.length)))
       val tr = Trace(us, Signal.empty)
       val rs = Robustness(Array((0.0, 0.0)))
-      val res = Result(tr, rs)
+      val res = Result(???, tr, rs, ???)
       val stat = Statistics.empty
 
       (res, stat)

@@ -1,27 +1,29 @@
 package falstar
 
-import falstar.mtl.Formula
 
 package object falsification {
+  import falstar.hybrid.Input
   import falstar.hybrid.Score
   import falstar.hybrid.Time
   import falstar.hybrid.Trace
   import falstar.hybrid.System
+  import falstar.mtl.Formula
   import falstar.mtl.Robustness
   import falstar.util.Timer
+  import falstar.linear.Vector
 
   type Results = Seq[Result]
 
   object Result {
-    val empty = Result(Trace.empty, Robustness.empty)
+    val empty = Result(Vector.empty, Trace.empty, Robustness.empty, Nil)
   }
 
-  case class Result(tr: Trace, rs: Robustness) {
+  case class Result(ps: Input, tr: Trace, rs: Robustness, log: List[(Formula, Robustness)]) {
     def T = tr.T
 
     def prefix(c: Score) = {
       val t = rs prefix (Score.MinValue, c)
-      Result(tr until t, rs until t)
+      Result(ps, tr until t, rs until t, log)
     }
 
     def score = rs.score
@@ -31,7 +33,7 @@ package object falsification {
     def robustness = (score, T)
 
     def until(t: Time) = {
-      Result(tr until t, rs until t)
+      Result(ps, tr until t, rs until t, log)
     }
   }
 
