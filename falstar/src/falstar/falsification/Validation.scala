@@ -28,6 +28,8 @@ object Validation {
   }
 
   def apply(row: Row, parser: Parser): Row = {
+    import Signal.SignalOps
+
     val data = row.data.toMap.asInstanceOf[Map[String,String]]
 
     val system = data("system")
@@ -60,12 +62,20 @@ object Validation {
         res += "parameters valid" -> check(pr contains ps)
 
         val ur = cfg.in(sys.inputs)
-        res += "inputs valid" -> check(us forall { case (t, x) => ur contains x })
+
+        val us_ok = us forall { case (t, x) => ur contains x }
+        res += "inputs valid" -> check(us_ok)
+        if(!us_ok) {
+          val (t, x) = us maxBy { case (t, x) => ur error x }
+          val error = ur error x
+          res += "inputs error" -> error
+          res += "inputs invalid where" -> ("[" + t + " " + x.data.mkString(" ") + "]")
+        }
 
         val T = if(data contains "stop time") {
             data("stop time").toDouble
         } else {
-            phi.T
+            us.T
         }
 
         val tr = sys.sim(ps, us, T)

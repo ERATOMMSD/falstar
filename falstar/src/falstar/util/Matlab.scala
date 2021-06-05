@@ -69,6 +69,8 @@ object Matlab {
     val out = stream
     val err = stream
     if (verbose) println("matlab> " + line)
+    assert(engine != null, "engine == null")
+    assert(eval3 != null, "eval3 == null")
     eval3.invoke(engine, line + ";", out, err)
   }
 
@@ -116,6 +118,7 @@ object Matlab {
 
   def disconnect() {
     if(engine != null) {
+      print("disconnecting matlab ...")
       disconnect0.invoke(engine)
       engine = null
     }

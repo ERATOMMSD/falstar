@@ -190,6 +190,12 @@ object Main {
     rs.score
   }
 
+  def shutdown() {
+    writeall(results)
+    println("bye")
+    Matlab.disconnect
+  }
+
   def main(args: Array[String]) {
     if (args.isEmpty) {
       println("usage: falstar [-dv] file_1 ... file_n")
@@ -198,11 +204,16 @@ object Main {
     }
 
     val files = setup(args.toList)
+
+    object hook extends Thread {
+      override def run() {
+        shutdown()
+      }
+    }
+
+    // make sure results get saved even on CTRL + C
+    Runtime.getRuntime.addShutdownHook(hook)
+
     runall(files)
-    writeall(results)
-
-    println("bye")
-
-    Matlab.disconnect
   }
 }

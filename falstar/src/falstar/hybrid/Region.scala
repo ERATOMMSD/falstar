@@ -27,6 +27,14 @@ case class Region(left: Vector, right: Vector) {
     }
   }
 
+  def error(y: Vector) = {
+    val n = y.length
+    val errs = (0 until n) map {
+      i => Math.max(left(i) - y(i), y(i) - right(i))
+    }
+    errs.max
+  }
+
   def sample() = {
     Vector(dimensions, i => Uniform.sample(left(i), right(i)))
   }
