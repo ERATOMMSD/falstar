@@ -6,23 +6,23 @@ import scala.annotation.elidable
 import scala.annotation.elidable.ASSERTION
 
 object NelderMead {
-  def minimize(feval: Vector => Double, x0: Seq[Vector], lb: Vector, ub: Vector, fmin: Double, nmax: Int): (Double, Vector) = {
+  def minimize[A](feval: Vector => (A, Double), x0: Seq[Vector], lb: Vector, ub: Vector, fmin: Double, nmax: Int): (A, Double, Vector) = {
     val nm = NelderMead(feval, lb, ub, fmin, nmax)
     val x = nm init x0
     nm steps x
     val xi = x minBy (_.score)
-    (xi.score, xi.point)
+    (xi.a, xi.score, xi.point)
   }
 }
 
-case class NelderMead(feval: Vector => Double, lb: Vector, ub: Vector, fmin: Double, nmax: Int) {
+case class NelderMead[A](feval: Vector => (A, Double), lb: Vector, ub: Vector, fmin: Double, nmax: Int) {
   val alpha = 1.0
   val gamma = 2.0
   val rho = 0.5
   val sigma = 0.5
 
   case class Solution(point: Vector) extends Ordered[Solution] {
-    lazy val score = feval(point) // not needed for center and intermediate results
+    lazy val (a, score) = feval(point) // not needed for center and intermediate results
 
     def +(that: Solution) = Solution(this.point + that.point)
     def -(that: Solution) = Solution(this.point - that.point)
@@ -73,7 +73,7 @@ case class NelderMead(feval: Vector => Double, lb: Vector, ub: Vector, fmin: Dou
 
     // reflexted point xr is best, try expansion
     if (xr < x(0)) {
-      val xe = xo + (xr - xo) * gamma
+      val xe = bound(xo + (xr - xo) * gamma)
       if (xe < xr) {
         x(n + 1) = xe
       } else {
@@ -84,12 +84,12 @@ case class NelderMead(feval: Vector => Double, lb: Vector, ub: Vector, fmin: Dou
       x(n + 1) = xr
     } // reflected point is bad, try contraction or shrink
     else /* if(xr > x(n)) */ {
-      val xc = xo + (x(n + 1) - xo) * rho
+      val xc = bound(xo + (x(n + 1) - xo) * rho)
       if (xc < x(n + 1)) {
         x(n + 1) = xc
       } else {
         for (i <- 1 to n + 1)
-          x(i) = x(1) + (x(i) - x(1)) * sigma
+          x(i) = bound(x(0) + (x(i) - x(0)) * sigma)
       }
     }
   }

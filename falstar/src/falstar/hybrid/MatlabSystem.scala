@@ -32,10 +32,10 @@ case class MatlabSystem(
   def sim(ps: Input, us: Signal, T: Time) = {
     import Signal.SignalOps
 
+    assert(initialized)
+
     for ((x, a) <- (params, ps.data).zipped)
       eval(x + " = " + a)
-
-    assert(initialized)
 
     eval("p = " + (ps.toMatlabRow))
     eval("u = " + (us toMatlab T))

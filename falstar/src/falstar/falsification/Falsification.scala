@@ -88,6 +88,11 @@ trait Falsification {
     val T = phi.T
 
     import Signal.SignalOps
+
+    if (!ps.isEmpty) {
+      println("  p = " + ps.toMatlabRow)
+    }
+
     if (us.isEmpty) {
       println("  u = [] (this should not happen!)")
     } else {
@@ -171,6 +176,7 @@ trait WithStatistics {
       import Signal.TimeSeriesOps
 
       val us_ = cfg.options get "sample" match {
+        case _ if us.isEmpty => us
         case None => us sample (1, T)
         case Some(dt: Double) => us sample (dt, T)
       }
@@ -178,9 +184,11 @@ trait WithStatistics {
       val tr = simulation.during {
         sys.sim(ps, us_, T)
       }
+
       val (rs, log) = formula.during {
         Robustness.collect(phi, tr.us, tr.ys)
       }
+
       Result(ps, tr, rs, (phi -> rs) :: log)
     }
 

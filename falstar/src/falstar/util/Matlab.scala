@@ -113,6 +113,8 @@ object Matlab {
           engine = startMatlab0.invoke(null)
           println(" done (" + timer.seconds + "s)")
       }
+
+      assert(engine != null, "matlab engine failed")
     }
   }
 

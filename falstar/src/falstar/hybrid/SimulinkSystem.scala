@@ -53,10 +53,10 @@ case class SimulinkSystem(
   def sim(ps: Input, us: Signal, T: Time) = {
     import Signal.SignalOps
 
+    assert(initialized)
+
     for ((x, a) <- (params, ps.data).zipped)
       eval(x + " = " + a)
-
-    assert(initialized)
 
     eval("u = " + (us toMatlab T))
 

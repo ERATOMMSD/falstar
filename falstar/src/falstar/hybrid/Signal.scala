@@ -78,6 +78,19 @@ object Signal {
       }
     }
 
+    def dt = {
+      var r = 0.0
+      var i = 1
+      var (t0, _) = xs(0)
+      while(i < xs.length) {
+        val (t1, _) = xs(i)
+        r = Math.max(t1 - t0, r)
+        t0 = t1
+        i = i + 1
+      }
+      r
+    }
+
     def sample(dt: Duration, T: Time) = {
       var ct: Time = 0
       var i = 0
@@ -90,6 +103,43 @@ object Signal {
         ct += dt
       }
 
+      res.toArray
+    }
+
+    def synced[B](ys: Array[(Time, B)]): Array[(Time, (A,B))] = {
+      val res = ArrayBuffer[(Time, (A,B))]()
+      var i = 1
+      var j = 1
+
+      var t = 0
+      var (0, x) = xs(0)
+      var (0, y) = ys(0)
+
+      res += ((t, (x, y)))
+
+      while (i < xs.length && j < ys.length) {
+        val (ti, xi) = xs(i)
+        val (tj, yj) = ys(j)
+
+        if (ti <= tj) { i += 1; x = xi }
+        if (tj <= ti) { j += 1; y = yj }
+
+        var t = Math.min(ti, tj)
+        res += ((t, (x, y)))
+      }
+
+      while (i < xs.length) {
+        val (t, x) = xs(i)
+        res += ((t, (x, y)))
+        i += 1
+      }
+
+      while (j < ys.length) {
+        val (t, y) = ys(j)
+        res += ((t, (x, y)))
+        j += 1
+      }
+      
       res.toArray
     }
   }
@@ -125,10 +175,6 @@ object Signal {
         }
       }
       ys.toArray
-    }
-
-    def sample(dt: Duration) = {
-
     }
 
     def toMatlab(T: Time) = {

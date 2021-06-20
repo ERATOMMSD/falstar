@@ -138,6 +138,14 @@ object Robustness {
   }
 
   def apply(prop: Proposition, us: Signal, xs: Signal): Robustness = {
+    import Signal.TimeSeriesOps
+    val uxs = us synced xs
+    val rs = for((t, (u, x)) <- uxs)
+      yield (t, apply(prop, t, u, x))
+    Robustness(rs)
+  }
+
+  /* def apply(prop: Proposition, us: Signal, xs: Signal): Robustness = {
     var i = 1
     var j = 1
     val rs = new ArrayBuffer[(Time, Score)]
@@ -176,7 +184,7 @@ object Robustness {
     }
 
     Robustness(rs.toArray)
-  }
+  } */
 
   def apply(phi: Formula, us: Signal, xs: Signal): Robustness = phi match {
     case prop: Proposition =>

@@ -28,6 +28,7 @@ import falstar.hybrid.PiecewiseConstant
 import falstar.hybrid.Constant
 import falstar.hybrid.Input
 import falstar.hybrid.MatlabSystem
+import falstar.falsification.Optimization
 
 sealed trait Command
 case object Flush extends Command
@@ -320,6 +321,10 @@ class Parser(_directory: String) {
       }
 
       state.search = Adaptive.falsification(levels, exploration, uniform, prefix, suffix, budget.toInt)
+      Seq()
+
+    case Node(Keyword("set-solver"), Identifier("nelder-mead"), Number(budget)) =>
+      state.search = Optimization.falsification(budget.toInt)
       Seq()
 
     case Node(Keyword("set-solver"), Identifier("breach"), Number(controlpoints), Identifier(solver), Number(budget)) =>
