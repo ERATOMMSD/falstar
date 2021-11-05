@@ -80,9 +80,11 @@ object Validation {
     Row(prefix ++ data)
   }
 
-  def apply(table: Table, budget: Int, parser: Parser): (Table, Table) = {
+  def apply(table: Table, budget: Option[Int], parser: Parser): (Table, Table) = {
+    val extra = Row(parser.state.notes)
+
     val rows = for(row <- table.rows; res <- apply(row, budget, parser)) yield {
-      res
+      res ++ extra
     }
 
     val result = Table(rows)
@@ -100,10 +102,12 @@ object Validation {
     (result, stats)
   }
 
-  def apply(row: Row, budget: Int, parser: Parser): List[Row] = {
+  def apply(row: Row, budget: Option[Int], parser: Parser): List[Row] = {
     import Signal.TimeSeriesOps
     import Signal.SignalOps
     val data = row.data.toMap.asInstanceOf[Map[String,String]]
+
+    val res = mutable.Buffer[(String, Any)]()
 
     try {
       val system = data("system")
@@ -121,8 +125,6 @@ object Validation {
       val falstar.parser.Node(node) = falstar.parser.read(property)
       state.system = sys // such that ports and stuff work
       val phi = parser.formula(node)
-
-      val res = mutable.Buffer[(String, Any)]()
 
       res += "system" -> system
       res += "property" -> property
@@ -148,9 +150,11 @@ object Validation {
           val simulations = data("simulations")
           res += "simulations" -> simulations
 
-          if(simulations.toInt > budget) {
-              println("excessive simulations: " + simulations + " > " + budget)
-              validated = Some(false)
+          for(max <- budget) {
+              if(simulations.toDouble > max) {
+                  println("excessive simulations: " + simulations + " > " + max)
+                  validated = Some(false)
+              }
           }
       }
 
@@ -328,8 +332,14 @@ object Validation {
             println("error for " + data("system") + ": ")
         else
           println("error: ")
-        e.printStackTrace()        
-        Nil
+        e.printStackTrace()
+
+        if(e.getMessage.length < 100)
+          res += "error" -> e.getMessage
+        else
+          res += "error" -> e.getClass.getSimpleName
+
+        List(Row(res))
     }
   }
 }

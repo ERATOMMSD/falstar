@@ -18,6 +18,8 @@ case class Row(data: Seq[(String, Any)]) {
   val (keys, values) = data.unzip
   assert(keys == keys.distinct, "duplicate keys: " + keys.mkString(" "))
 
+  def ++(that: Row) = Row(this.data ++ that.data)
+
   def get(key: String): Option[Any] = {
     data.find(_._1 == key) map (_._2)
   }
