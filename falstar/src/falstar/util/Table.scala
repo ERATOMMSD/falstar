@@ -12,15 +12,46 @@ import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.QuoteMode
 import scala.util.Try
+import scala.reflect.ClassTag
 
 case class Row(data: Seq[(String, Any)]) {
   val (keys, values) = data.unzip
   assert(keys == keys.distinct, "duplicate keys: " + keys.mkString(" "))
+
+  def get(key: String): Option[Any] = {
+    data.find(_._1 == key) map (_._2)
+  }
+
+  def apply(key: String) = {
+    val Some((_, value)) = data.find(_._1 == key)
+    value
+  }
+
+  def apply(keys: Seq[String]): Seq[Any] = {
+    val stuff = keys map get
+    stuff.flatten
+  }
 }
 
 case class Table(rows: Seq[Row]) {
   val columns = rows.flatMap(_.keys).distinct
   def ++(that: Table) = Table(this.rows ++ that.rows)
+
+  def groupBy(index: Seq[String], aggregate: Seq[(String, String, Seq[Any] => Any)]): Table = {
+    val grouped = rows.groupBy(_(index))
+    import scala.math.Ordering.Implicits._
+    val _rows = for((common, group) <- grouped.toSeq.sortBy(_._1.toString)) yield {
+      val data = for((from, to, fun) <- aggregate) yield {
+        val values = group flatMap (_ get from)
+        (to, fun(values))
+      }
+
+      val prefix = index zip common
+      Row(prefix ++ data)
+    }
+
+    Table(_rows.toSeq)
+  }
 }
 
 object Table {

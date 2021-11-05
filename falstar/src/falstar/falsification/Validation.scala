@@ -44,20 +44,63 @@ object Validation {
     "SCa" -> 0.05, // 1% of valid range
   )
 
-  val isTrue = Set("1", "true", "yes")
+  def isTrue(x: Any) = {
+    x == "1" || x ==  "true" || x == "yes"
+  }
 
-  def apply(table: Table, parser: Parser): (Seq[Row], Row) = {
-    val rows = for(row <- table.rows; res <- apply(row, parser)) yield {
-      print(".")
+  def asNumber(x: Any): Double = x match {
+    case i: Int => i
+    case f: Float => f
+    case d: Double => d
+    case s: String => s.toDouble
+  }
+
+  def count(values: Seq[Any]): Int = {
+    values.length
+  }
+
+  def sum_booleans(values: Seq[Any]): Int = {
+    values.count(isTrue)
+  }
+
+  def sum_numbers(values: Seq[Any]): Double = {
+    values.map(asNumber) sum
+  }
+  
+  def avg_numbers(values: Seq[Any]): Double = {
+    sum_numbers(values) / values.length
+  }
+
+  def aggregate(prefix: Seq[(String, Any)], rows: Seq[Row], how: Seq[(String, String, Seq[Any] => Any)]): Row = {
+    val data = for((key, to, f) <- how) yield {
+      val values = rows map (_(key))
+      (to, f(values))
+    }
+    
+    Row(prefix ++ data)
+  }
+
+  def apply(table: Table, budget: Int, parser: Parser): (Table, Table) = {
+    val rows = for(row <- table.rows; res <- apply(row, budget, parser)) yield {
       res
     }
 
-    val aggregate = ???
+    val result = Table(rows)
+    val aggregate = Seq(
+      ("falsified", "success", sum_booleans _),
+      ("validated", "success (valid)", sum_booleans _),
+      ("falsified", "total", count _),
+      ("time", "time (average)", avg_numbers _),
+      ("simulations", "simulations (average)", avg_numbers _),
+      ("robustness error", "robustness error (average)", avg_numbers _)
+    )
 
-    (rows, aggregate)
+    val stats = result.groupBy(Seq("property", "instance"), aggregate)
+
+    (result, stats)
   }
 
-  def apply(row: Row, parser: Parser): List[Row] = {
+  def apply(row: Row, budget: Int, parser: Parser): List[Row] = {
     import Signal.TimeSeriesOps
     import Signal.SignalOps
     val data = row.data.toMap.asInstanceOf[Map[String,String]]
@@ -97,8 +140,18 @@ object Validation {
           res += "instance" -> data("instance")
       }
 
+      if(data contains "time") {
+          res += "time" -> data("time")
+      }
+
       if(data contains "simulations") {
-          res += "simulations" -> data("simulations")
+          val simulations = data("simulations")
+          res += "simulations" -> simulations
+
+          if(simulations.toInt > budget) {
+              println("excessive simulations: " + simulations + " > " + budget)
+              validated = Some(false)
+          }
       }
 
       res ++= state.notes
@@ -164,6 +217,7 @@ object Validation {
               val expected = data("falsified")
               val falsified = isTrue(expected)
               val falsified_ok = falsified == (rs.score < 0)
+              res += "falsified" -> expected
               res += "falsified correct" -> check(falsified_ok)
 
             if(falsified_ok) {
@@ -213,6 +267,14 @@ object Validation {
             println(String.format("%8.2f", score: java.lang.Double) + "  " + phi)
           }
 
+          tr.ys find (_._2.length != sys.outputs.length) match {
+            case None =>
+            case Some((t, x)) =>
+              println("output signal dimension mismatch")
+            println("  expected " + sys.outputs.length)
+            println("  found    " + x.length + " at time " + t)
+          }
+
           for((n, i) <- sys.outputs.zipWithIndex) {
             val (t1, a1) = tr.ys.minBy { case (t, x) => x(i) }
             val (t2, a2) = tr.ys.maxBy { case (t, x) => x(i) }
@@ -260,12 +322,13 @@ object Validation {
       List(Row(res))
     } catch {
       case e: Throwable =>
-      if(data contains "property")
-          println("error for " + data("property") + ": " + e)
-      else if(data contains "system")
-          println("error for " + data("system") + ": " + e)
-      else
-        println("error: " + e)
+        if(data contains "property")
+            print("error for " + data("property") + ": ")
+        else if(data contains "system")
+            println("error for " + data("system") + ": ")
+        else
+          println("error: ")
+        e.printStackTrace()        
         Nil
     }
   }

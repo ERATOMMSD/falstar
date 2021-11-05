@@ -8,6 +8,7 @@ import scala.io.StdIn
 import falstar.hybrid.Signal
 import falstar.linear.Vector
 import java.io.Writer
+import java.lang.reflect.InvocationTargetException
 
 object NullWriter extends Writer {
   def write(buf: Array[Char], off: Int, len: Int) {}
@@ -56,6 +57,8 @@ object Matlab {
           eval1.invoke(engine, line)
         }
       } catch {
+        case e: InvocationTargetException =>
+          println(e.getCause)
         case e: Throwable =>
           println(e)
         // run = false
@@ -71,7 +74,13 @@ object Matlab {
     if (verbose) println("matlab> " + line)
     assert(engine != null, "engine == null")
     assert(eval3 != null, "eval3 == null")
+    try {
     eval3.invoke(engine, line + ";", out, err)
+    } catch {
+        case e: InvocationTargetException =>
+          e.printCauseTrace()
+          throw e
+    }
   }
 
   def get[T](name: String): T = {

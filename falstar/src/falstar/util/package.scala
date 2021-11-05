@@ -3,6 +3,7 @@ package falstar
 import java.awt.Color
 import java.lang.management.ManagementFactory
 import java.lang.management.MemoryType
+import java.io.File
 
 package object util {
   def now() = {
@@ -59,6 +60,21 @@ package object util {
         total += pool.getPeakUsage.getUsed
     }
     total
+  }
+
+  implicit class FileOps(file: File) {
+    def maybeGetParent(default: String = "") = {
+      val parent = file.getParent
+      if(parent != null) parent else default
+    }
+  }
+
+  implicit class ThrowableOps(e: Throwable) {
+    def printCauseTrace() {
+      println(e)
+      if(e.getCause != null)
+        e.getCause.printCauseTrace()
+    }
   }
 
   implicit class IntOps(val n: Int) extends AnyVal {

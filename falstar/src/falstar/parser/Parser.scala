@@ -29,13 +29,14 @@ import falstar.hybrid.Constant
 import falstar.hybrid.Input
 import falstar.hybrid.MatlabSystem
 import falstar.falsification.Optimization
+import falstar.util.FileOps
 
 sealed trait Command
 case object Flush extends Command
 case object Quit extends Command
 
 case class Falsify(search: Falsification, sys: System, cfg: Config, phi: Formula, seed: Option[Long], repeat: Int, notes: Seq[(String, Any)], log: Option[String], report: Option[String]) extends Command
-case class Validate(source: String, log: Option[String], report: Option[String], parser: Parser) extends Command
+case class Validate(source: String, budget: Int, log: Option[String], report: Option[String], parser: Parser) extends Command
 case class Simulate(sys: System, phi: Formula, ps: Input, us: Signal, T: Time) extends Command
 case class Robustness(phi: Formula, us: Signal, ys: Signal, T: Time) extends Command
 
@@ -63,8 +64,11 @@ object Parser {
 
 class Parser(_directory: String) {
   outer =>
+
   import Parser._
   object directory extends DynamicVariable(_directory)
+
+  assert(_directory != null)
 
   var stack = List(State.empty)
   def state = stack.head
@@ -103,7 +107,7 @@ class Parser(_directory: String) {
   object Path {
     def unapply(node: Syntax): Option[String] = node match {
       case Literal(value: String) =>
-        Some(directory.value + "/" + value)
+        Some(directory.value + value)
       case _ =>
         None
     }
@@ -155,13 +159,13 @@ class Parser(_directory: String) {
     val sys = system match {
       case Node(Keyword("simulink"), Path(name)) =>
         val file = new File(name)
-        val path = file.getParent
+        val path = file.maybeGetParent()
         val model = splitFilename(file.getName)
         SimulinkSystem(path, model, params, inputs, outputs, Seq())
 
       case Node(Keyword("simulink"), Path(name), Literal(load: String)) =>
         val file = new File(name)
-        val path = file.getParent
+        val path = file.maybeGetParent()
         val model = splitFilename(file.getName)
         SimulinkSystem(path, model, params, inputs, outputs, Seq(load))
 
@@ -267,7 +271,7 @@ class Parser(_directory: String) {
     case Node(Keyword("include"), Path(name)) =>
       val file = new File(name)
       val node = read(file)
-      directory.withValue(file.getParent) {
+      directory.withValue(file.maybeGetParent()) {
         parse(node)
       }
 
@@ -365,8 +369,8 @@ class Parser(_directory: String) {
       println("https://gitlab.com/gernst/ARCH-COMP/-/blob/FALS/2021/FALS/Validation.md")
       ???
 
-    case Node(Keyword("validate"), Path(source)) =>
-      val cmd = Validate(source, state.log, state.report, this.copy)
+    case Node(Keyword("validate"), Number(budget), Path(source)) =>
+      val cmd = Validate(source, budget.toInt, state.log, state.report, this.copy)
       Seq(cmd)
 
     case Node(Keyword("simulate"), Number(time), phi, params, input @ _*) =>

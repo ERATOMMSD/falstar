@@ -8,10 +8,11 @@ import scala.collection.mutable.ArrayBuffer
 import java.io.Reader
 import java.io.StringReader
 import falstar.mtl.Port
+import falstar.util.FileOps
 
 package object parser {
   def parse(file: File) = {
-    val parent = file.getParent()
+    val parent = file.maybeGetParent()
     val syntax = read(file)
     val parser = new Parser(parent)
     parser.parse(syntax)

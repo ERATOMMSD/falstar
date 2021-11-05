@@ -44,10 +44,9 @@ object Main {
 
   object options extends Options
 
-  val results = mutable.Map[String, mutable.Buffer[Row]]()
+  val results = mutable.Map[String, Table]()
 
-  def write(name: String, data: Seq[Row]) {
-    val table = Table(data)
+  def write(name: String, table: Table) {
     Table.write(table, name, options.append)
   }
 
@@ -62,14 +61,14 @@ object Main {
 
       for (name <- log) {
         if (!(results contains name))
-          results(name) = mutable.Buffer()
-        results(name) ++= rows
+          results(name) = Table.empty
+        results(name) ++= Table(rows)
       }
 
       for (name <- report) {
         if (!(results contains name))
-          results(name) = mutable.Buffer()
-        results(name) += aggregate
+          results(name) = Table.empty
+        results(name) ++= Table(Seq(aggregate))
       }
 
       if (options.graphics) {
@@ -77,20 +76,20 @@ object Main {
         val scope = new Scope(title, sys, best)
       }
 
-    case Validate(source, log, report, parser) =>
+    case Validate(source, budget, log, report, parser) =>
       val table = Table.read(source)
-      val (rows, aggregate) = Validation.apply(table, parser)
+      val (rows, aggregate) = Validation.apply(table, budget, parser)
 
       for (name <- log) {
         if (!(results contains name))
-          results(name) = mutable.Buffer()
+          results(name) = Table.empty
         results(name) ++= rows
       }
 
       for(name <- report) {
         if (!(results contains name))
-          results(name) = mutable.Buffer()
-        results(name) += aggregate
+          results(name) = Table.empty
+        results(name) ++= aggregate
       }
 
     case Simulate(sys, phi, ps, us, t) =>
@@ -125,9 +124,9 @@ object Main {
     run(commands)
   }
 
-  def writeall(results: Iterable[(String, mutable.Buffer[Row])]) {
-    for ((name, data) <- results) {
-      safe { write(name, data) }
+  def writeall(results: Iterable[(String, Table)]) {
+    for ((name, table) <- results) {
+      safe { write(name, table) }
     }
   }
 
