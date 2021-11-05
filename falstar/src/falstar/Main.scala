@@ -77,14 +77,20 @@ object Main {
         val scope = new Scope(title, sys, best)
       }
 
-    case Validate(log, report, parser) =>
-      val table = Table.read(log.get)
-      val rows = Validation.apply(table, parser)
+    case Validate(source, log, report, parser) =>
+      val table = Table.read(source)
+      val (rows, aggregate) = Validation.apply(table, parser)
 
-      for (name <- report) {
+      for (name <- log) {
         if (!(results contains name))
           results(name) = mutable.Buffer()
         results(name) ++= rows
+      }
+
+      for(name <- report) {
+        if (!(results contains name))
+          results(name) = mutable.Buffer()
+        results(name) += aggregate
       }
 
     case Simulate(sys, phi, ps, us, t) =>

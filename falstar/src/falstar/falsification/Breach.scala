@@ -140,6 +140,8 @@ object Breach {
         cfg.params(name) match {
           case Value(x) =>
             eval(name + " = " + x)
+          case _ =>
+            ???
         }
       }
 
@@ -171,6 +173,9 @@ object Breach {
             for (k <- 0 until controlpoints) {
               eval("sys.SetParamRanges({'" + name + "_u" + k + "'}, [" + in.left(i) + " " + in.right(i) + "])")
             }
+
+          case _ =>
+            ???
         }
       }
 

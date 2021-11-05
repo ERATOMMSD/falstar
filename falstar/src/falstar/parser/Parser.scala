@@ -35,7 +35,7 @@ case object Flush extends Command
 case object Quit extends Command
 
 case class Falsify(search: Falsification, sys: System, cfg: Config, phi: Formula, seed: Option[Long], repeat: Int, notes: Seq[(String, Any)], log: Option[String], report: Option[String]) extends Command
-case class Validate(log: Option[String], report: Option[String], parser: Parser) extends Command
+case class Validate(source: String, log: Option[String], report: Option[String], parser: Parser) extends Command
 case class Simulate(sys: System, phi: Formula, ps: Input, us: Signal, T: Time) extends Command
 case class Robustness(phi: Formula, us: Signal, ys: Signal, T: Time) extends Command
 
@@ -361,7 +361,12 @@ class Parser(_directory: String) {
       phis map { phi => Falsify(state.search, state.system, state.config, formula(phi), state.seed, state.repeat, state.notes, state.log, state.report) }
 
     case Node(Keyword("validate")) =>
-      val cmd = Validate(state.log, state.report, this.copy)
+      println("old-style validation script detected, see here")
+      println("https://gitlab.com/gernst/ARCH-COMP/-/blob/FALS/2021/FALS/Validation.md")
+      ???
+
+    case Node(Keyword("validate"), Path(source)) =>
+      val cmd = Validate(source, state.log, state.report, this.copy)
       Seq(cmd)
 
     case Node(Keyword("simulate"), Number(time), phi, params, input @ _*) =>
