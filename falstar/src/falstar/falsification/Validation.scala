@@ -13,6 +13,8 @@ import falstar.hybrid.Signal
 import falstar.linear.Vector
 
 object Validation {
+  var dummy = false
+
   def check(ok: Boolean) = {
     if(ok) "yes" else "no"
   }
@@ -55,36 +57,35 @@ object Validation {
     case s: String => s.toDouble
   }
 
-  def count(values: Seq[Any]): Int = {
+  def count(values: Seq[Any]) = {
     values.length
   }
 
-  def sum_booleans(values: Seq[Any]): Int = {
+  def sum_booleans(values: Seq[Any]) = {
     values.count(isTrue)
   }
 
-  def sum_numbers(values: Seq[Any]): Double = {
+  def sum_numbers(values: Seq[Any]) = {
     values.map(asNumber) sum
   }
   
-  def avg_numbers(values: Seq[Any]): Double = {
-    sum_numbers(values) / values.length
+  def avg_numbers(values: Seq[Any]) = {
+    if(!values.isEmpty)
+      sum_numbers(values) / values.length
+    else
+      ""
   }
 
-  def aggregate(prefix: Seq[(String, Any)], rows: Seq[Row], how: Seq[(String, String, Seq[Any] => Any)]): Row = {
-    val data = for((key, to, f) <- how) yield {
-      val values = rows map (_(key))
-      (to, f(values))
-    }
-    
-    Row(prefix ++ data)
+  def median_numbers(xs: Seq[Any]) = {
+    if(!xs.isEmpty)
+      Statistics._median(xs map asNumber)
+    else
+      ""
   }
 
   def apply(table: Table, budget: Option[Int], parser: Parser): (Table, Table) = {
-    val extra = Row(parser.state.notes)
-
     val rows = for(row <- table.rows; res <- apply(row, budget, parser)) yield {
-      res ++ extra
+      res
     }
 
     val result = Table(rows)
@@ -94,10 +95,11 @@ object Validation {
       ("falsified", "total", count _),
       ("time", "time (average)", avg_numbers _),
       ("simulations", "simulations (average)", avg_numbers _),
+      ("simulations", "simulations (median)", median_numbers _),
       ("robustness error", "robustness error (average)", avg_numbers _)
     )
 
-    val stats = result.groupBy(Seq("property", "instance"), aggregate)
+    val stats = result.groupBy(Seq("property"), aggregate)
 
     (result, stats)
   }
@@ -148,13 +150,22 @@ object Validation {
 
       if(data contains "simulations") {
           val simulations = data("simulations")
-          res += "simulations" -> simulations
 
-          for(max <- budget) {
-              if(simulations.toDouble > max) {
+          budget match {
+            case Some(max) =>
+              val given = simulations.toDouble.toInt
+              if(given > max) {
                   println("excessive simulations: " + simulations + " > " + max)
                   validated = Some(false)
               }
+
+              if(given < max) {
+                  // only add if meaningful for statistics
+                  res += "simulations" -> simulations
+              }
+
+            case None =>
+              res += "simulations" -> simulations
           }
       }
 
@@ -193,134 +204,144 @@ object Validation {
             println("input is NOT within bounds")
           }
 
-          val dt = us.dt
-          val isUpsampled = (dt < 1.0)
+          if(!Validation.dummy) {
+            val dt = us.dt
+            val isUpsampled = (dt < 1.0)
 
-          val T = if(data contains "stop time") {
-            print("using stop time as provided: ")
-            data("stop time").toDouble
-          } else if(us.length <= 1 || !isUpsampled) {
-            print("using stop time from formula: ")
-            phi.T
-          } else {
-            print("using stop time from input signal: ")
-            us.T
-          }
-
-          println(T)
-
-          if(!isUpsampled) {
-            println("upsampling input signal with dt = " + 0.1)
-            us = us.sample(0.1, T)
-          }
-
-          val tr = sys.sim(ps, us, T)
-          val (rs, sub) = Robustness.collect(phi, tr.us, tr.ys)
-
-          if(data contains "falsified") {
-              val expected = data("falsified")
-              val falsified = isTrue(expected)
-              val falsified_ok = falsified == (rs.score < 0)
-              res += "falsified" -> expected
-              res += "falsified correct" -> check(falsified_ok)
-
-            if(falsified_ok) {
-              if(falsified && validated.isEmpty)
-                validated = Some(true)
-              println("falsified is correct")
+            val T = if(data contains "stop time") {
+              print("using stop time as provided: ")
+              data("stop time").toDouble
+            } else if(us.length <= 1 || !isUpsampled) {
+              print("using stop time from formula: ")
+              phi.T
             } else {
-              println("falsified is incorrect")
+              print("using stop time from input signal: ")
+              us.T
             }
-          }
 
-          if(data contains "robustness") {
-              val expected = data("robustness").toDouble
-              val computed = rs.score
+            println(T)
 
-              // work around for infinities
-              val error = if(expected == computed) 0.0
-                else Math.abs(expected - computed)
+            // special case for S-TaLiRo NNx signals from ARCH 2021,
+            // which lack timing information
+            if(property == "NNx" && us.length == 3 && T == 3 && us.forall(_._2.isEmpty)) {
+              us = us.zipWithIndex.map {
+                case ((u, _), i) => (i: Double, Vector(u))
+              }
+            }
 
-              val robustness_ok = (expected < 0) == (computed < 0)
-              res += "robustness expected" -> expected
-              res += "robustness computed" -> computed
-              res += "robustness correct" -> check(robustness_ok)
-              res += "robustness error" -> error
-              
-              println("expected robustness " + expected)
-              println("computed robustness " + computed)
-              println("robustness error " + error)
+            if(!isUpsampled) {
+              println("upsampling input signal with dt = " + 0.1)
+              us = us.sample(0.1, T)
+            }
 
-              if(!robustness_ok) {
-                println("robustness sign is incorrect!")
+            val tr = sys.sim(ps, us, T)
+            val (rs, sub) = Robustness.collect(phi, tr.us, tr.ys)
 
-                if(expected < 0 && validated.isEmpty && (threshold contains property)) {
-                  println("considering threshold...")
-                  validated = Some(computed < threshold(property))
+            if(data contains "falsified") {
+                val expected = data("falsified")
+                val falsified = isTrue(expected)
+                val falsified_ok = falsified == (rs.score < 0)
+                res += "falsified" -> expected
+                res += "falsified correct" -> check(falsified_ok)
+
+              if(falsified_ok) {
+                if(falsified && validated.isEmpty)
+                  validated = Some(true)
+                println("falsified is correct")
+              } else {
+                println("falsified is incorrect")
+              }
+            }
+
+            if(data contains "robustness") {
+                val expected = data("robustness").toDouble
+                val computed = rs.score
+
+                // work around for infinities
+                val error = if(expected == computed) 0.0
+                  else Math.abs(expected - computed)
+
+                val robustness_ok = (expected < 0) == (computed < 0)
+                res += "robustness expected" -> expected
+                res += "robustness computed" -> computed
+                res += "robustness correct" -> check(robustness_ok)
+                res += "robustness error" -> error
+                
+                println("expected robustness " + expected)
+                println("computed robustness " + computed)
+                println("robustness error " + error)
+
+                if(!robustness_ok) {
+                  println("robustness sign is incorrect!")
+
+                  if(expected < 0 && validated.isEmpty && (threshold contains property)) {
+                    println("considering threshold...")
+                    validated = Some(computed < threshold(property))
+                  }
                 }
-              }
-          } else {
-              val computed = rs.score
-              res += "robustness computed" -> computed
-              println("robustness computed " + computed)
-          }
-
-          println("robustness of subformulas (at time T = " + T + ")")
-          val sub_ = sub.map { case (phi, rs) => (phi, rs.score) }
-          for((phi, score) <- sub_.distinct) {
-            println(String.format("%8.2f", score: java.lang.Double) + "  " + phi)
-          }
-
-          tr.ys find (_._2.length != sys.outputs.length) match {
-            case None =>
-            case Some((t, x)) =>
-              println("output signal dimension mismatch")
-            println("  expected " + sys.outputs.length)
-            println("  found    " + x.length + " at time " + t)
-          }
-
-          for((n, i) <- sys.outputs.zipWithIndex) {
-            val (t1, a1) = tr.ys.minBy { case (t, x) => x(i) }
-            val (t2, a2) = tr.ys.maxBy { case (t, x) => x(i) }
-            println("output '" + n + "'")
-            println("  min at time " + t1 + ": " + a1(i))
-            println("  max at time " + t2 + ": " + a2(i))
-          }
-
-          try {
-            if(data contains "output") {
-              var ys = Signal.parse(data("output"))
-
-              val ds = for((t, (x, y)) <- tr.ys synced ys) yield {
-                (t, y - x)
-              }
-
-              val es = for((n, i) <- sys.outputs.zipWithIndex) yield {
-                val (t, d) = ds.maxBy { case (t, x) => Math.abs(x(i)) }
-                println("output '" + n + "'")
-                println("  max discrepancy at time " + t + ": " + d(i))
-                d(i)
-              }
-
-              res += "output error" -> (es maxBy Math.abs)
+            } else {
+                val computed = rs.score
+                res += "robustness computed" -> computed
+                println("robustness computed " + computed)
             }
-          } catch {
-            case e: Throwable =>
-              println("output comparison failed: " + e.getMessage())
-              println("outputs should be time series with the same format as the input")
-              println("  - include the time as first component per entry")
-              println("  - add all output fields")
-          }
 
-          if(validated == Some(true)) {
-            println("VALIDATED")
-            res += "validated" -> "true"
-          } else {
-            res += "validated" -> "false"
-          }
-            
-          println()
-          println()
+            println("robustness of subformulas (at time T = " + T + ")")
+            val sub_ = sub.map { case (phi, rs) => (phi, rs.score) }
+            for((phi, score) <- sub_.distinct) {
+              println(String.format("%8.2f", score: java.lang.Double) + "  " + phi)
+            }
+
+            tr.ys find (_._2.length != sys.outputs.length) match {
+              case None =>
+              case Some((t, x)) =>
+                println("output signal dimension mismatch")
+              println("  expected " + sys.outputs.length)
+              println("  found    " + x.length + " at time " + t)
+            }
+
+            for((n, i) <- sys.outputs.zipWithIndex) {
+              val (t1, a1) = tr.ys.minBy { case (t, x) => x(i) }
+              val (t2, a2) = tr.ys.maxBy { case (t, x) => x(i) }
+              println("output '" + n + "'")
+              println("  min at time " + t1 + ": " + a1(i))
+              println("  max at time " + t2 + ": " + a2(i))
+            }
+
+            try {
+              if(data contains "output") {
+                var ys = Signal.parse(data("output"))
+
+                val ds = for((t, (x, y)) <- tr.ys synced ys) yield {
+                  (t, y - x)
+                }
+
+                val es = for((n, i) <- sys.outputs.zipWithIndex) yield {
+                  val (t, d) = ds.maxBy { case (t, x) => Math.abs(x(i)) }
+                  println("output '" + n + "'")
+                  println("  max discrepancy at time " + t + ": " + d(i))
+                  d(i)
+                }
+
+                res += "output error" -> (es maxBy Math.abs)
+              }
+            } catch {
+              case e: Throwable =>
+                println("output comparison failed: " + e.getMessage())
+                println("outputs should be time series with the same format as the input")
+                println("  - include the time as first component per entry")
+                println("  - add all output fields")
+            }
+
+            if(validated == Some(true)) {
+              println("VALIDATED")
+              res += "validated" -> "true"
+            } else {
+              res += "validated" -> "false"
+            }
+              
+            println()
+            println()
+        }
       }
 
       List(Row(res))

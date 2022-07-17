@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 HERE=`dirname "$0"`
 source $HERE/falstar-config.sh

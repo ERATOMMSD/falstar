@@ -116,13 +116,13 @@ case class Implies(left: Formula, right: Formula) extends Connective {
 case class Always(from: Time, to: Time, phi: Formula) extends Modality {
   assert(0 <= from && from <= to && to < Double.PositiveInfinity)
   def T = to + phi.T
-  override def toString = "( □_[" + from + ", " + to + "] " + phi + " )"
+  override def toString = "( always_[" + from + ", " + to + "] " + phi + " )"
 }
 
 case class Eventually(from: Time, to: Time, phi: Formula) extends Modality {
   assert(0 <= from && from <= to && to < Double.PositiveInfinity)
   def T = to + phi.T
-  override def toString = "( ◇_[" + from + ", " + to + "] " + phi + " )"
+  override def toString = "( eventually_[" + from + ", " + to + "] " + phi + " )"
 }
   
   

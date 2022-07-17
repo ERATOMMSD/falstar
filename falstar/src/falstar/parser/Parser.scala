@@ -107,7 +107,10 @@ class Parser(_directory: String) {
   object Path {
     def unapply(node: Syntax): Option[String] = node match {
       case Literal(value: String) =>
-        Some(directory.value + value)
+        if(directory.value.isEmpty())
+          Some(value)
+        else
+          Some(directory.value + "/" + value)
       case _ =>
         None
     }

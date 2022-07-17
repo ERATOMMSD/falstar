@@ -16,7 +16,12 @@ import scala.reflect.ClassTag
 
 case class Row(data: Seq[(String, Any)]) {
   val (keys, values) = data.unzip
-  assert(keys == keys.distinct, "duplicate keys: " + keys.mkString(" "))
+
+  def duplicateKeys = {
+    data.groupBy(_._1).filter(_._2.length > 1).map("\"" + _._1 + "\"")
+  }
+
+  assert(keys == keys.distinct, "duplicate keys: " + duplicateKeys.mkString(" "))
 
   def ++(that: Row) = Row(this.data ++ that.data)
 

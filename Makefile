@@ -14,7 +14,7 @@ compile: falstar.jar
 
 falstar.jar: $(SRC) $(SCANNER)
 	mill falstar.assembly
-	cp out/falstar/assembly/dest/out.jar $@
+	cp out/falstar/assembly.dest/out.jar $@
 
 doc: README.html
 
