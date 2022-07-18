@@ -1,39 +1,200 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
-  <title></title>
-  <style type="text/css">code{white-space: pre;}</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
 </head>
 <body>
-<h1 id="fast-falsification-with-adaptive-inputs">Fast Falsification with Adaptive Inputs</h1>
-<p>FalStar is a tool for the falsification of hybrid systems. It takes as an input a model (currently: Simulink) and a configuration file and tries to come up with an input signal such that the output signal produced by the model falsifies given requirements.</p>
+<h1 id="fast-falsification-with-adaptive-inputs">Fast Falsification with
+Adaptive Inputs</h1>
+<p>FalStar is a tool for the falsification of hybrid systems. It takes
+as an input a model (currently: Simulink) and a configuration file and
+tries to come up with an input signal such that the output signal
+produced by the model falsifies given requirements.</p>
 <p>Requirements</p>
 <ul>
-<li>Java 1.8, Scala 2.12</li>
-<li>Matlab (tested with R2017b)</li>
+<li>Java 1.8, Scala 2.12 (compile time only)</li>
+<li>Matlab (tested different versions after R2017)</li>
 </ul>
 <p>Contact: gidonernst (*) gmail.com</p>
-<p>See also <a href="https://cps-vo.org/group/ARCH/FriendlyCompetition">ARCH 2018 friendly competition</a></p>
-<h2 id="quickstart">Quickstart</h2>
-<p>Link the necessary MATLAB files and binaries</p>
-<pre><code>./link $MATLABROOT $ARCH</code></pre>
-<p>where <code>$MATLABROOT</code> points to the top-level of a specific Matlab installation (e.g., ending in <code>../MATLAB/R2017b</code>) and where <code>$ARCH</code> <a href="https://www.mathworks.com/help/matlab/matlab_external/setup-environment.html">depends on your OS</a>. For 64 bit systems:</p>
 <ul>
-<li>Linux: <code>glnxa64</code></li>
-<li>Mac OS X: <code>maci64</code></li>
-<li>Windows: <code>win64</code></li>
+<li><p>Gidon Ernst, Sean Sedwards, Zhenya Zhang, Ichiro Hasuo: <em>Fast
+Falsification of Hybrid Systems using Probabilistically Adaptive
+Input</em>, QEST 2019, Preprint: <a
+href="https://arxiv.org/abs/1812.04159"
+class="uri">https://arxiv.org/abs/1812.04159</a></p></li>
+<li><p>Gidon Ernst, Sean Sedwards, Zhenya Zhang, and Ichiro Hasuo:
+<em>Falsification of hybrid systems using adaptive probabilistic
+search</em>, Transactions on Modeling and Computer Simulations,
+2021</p></li>
 </ul>
+<h2 id="quickstart">Quickstart</h2>
+<p>Determine MATLAB path</p>
+<pre><code>./falstar-config.sh</code></pre>
 <p>Compile <code>falstar.jar</code></p>
 <pre><code>make compile</code></pre>
 <p>Test whether everything worked</p>
-<pre><code>./falstar # prints usage instructions
+<pre><code>./falstar.sh # prints usage instructions
 make test # run a simple test case</code></pre>
-<p>This falsifies a Simulink model of an automatic transmission against specification <code>□_[0,30] speed &lt; 120</code> and displays various input and output signals. Here's the output:</p>
+<p>This falsifies a Simulink model of an automatic transmission against
+specification <code>always_[0,30] speed &lt; 120</code> and displays
+various input and output signals. Here’s the output:</p>
 <pre><code>trial 1/1
-property □_[0.0, 30.0] speed &lt; 120.0
+property always_[0.0, 30.0] speed &lt; 120.0
 algorithm adaptive
   control points: 2 2 3 3 3 4
   exploration ratio: 0.25
@@ -53,46 +214,77 @@ statistics
   peak memory 37111 kb
 
 bye</code></pre>
-<p>If you're tired of waiting for Matlab to initialize on every trial, you can keep an active instance running. Be aware that this caches initialized models as well, so if you change those, you need to restart the session. It's a simple command line interface to Matlab (currently without error handling, and it will terminate if you type in an invalid command).</p>
-<pre><code>./falstar-session</code></pre>
+<p>If you’re tired of waiting for Matlab to initialize on every trial,
+you can keep an active instance running. Be aware that this caches
+initialized models as well, so if you change those, you need to restart
+the session. It’s a simple command line interface to Matlab (currently
+without error handling, and it will terminate if you type in an invalid
+command).</p>
+<pre><code>./falstar-session.sh</code></pre>
 <h2 id="simulink-model-set-up">Simulink model set up</h2>
-<p>Simulink models are accessed through their input and output ports and through the Matlab function <code>sim</code>. The model must currently be prepared for use as follows</p>
+<p>Simulink models are accessed through their input and output ports and
+through the Matlab function <code>sim</code>. The model must currently
+be prepared for use as follows</p>
 <ul>
-<li>In the model configuration parameter setup, set the input to <code>[t__, u__]</code>. This will cause the simulation to read these two variables off the workspace and interpret them as the simulation input. <code>t__</code> is a column matrix of time points and <code>u__</code> provides the corresponding input vectors in each row for the respective time points (see an example above). The falsification tool provides these variables to the Matlab simulation engine in this form.</li>
-<li>The output signal should be recorded to <code>tout</code> and <code>yout</code> (which are the default settings).</li>
+<li>In the model configuration parameter setup, set the input to
+<code>[t__, u__]</code>. This will cause the simulation to read these
+two variables off the workspace and interpret them as the simulation
+input. <code>t__</code> is a column matrix of time points and
+<code>u__</code> provides the corresponding input vectors in each row
+for the respective time points (see an example above). The falsification
+tool provides these variables to the Matlab simulation engine in this
+form.</li>
+<li>The output signal should be recorded to <code>tout</code> and
+<code>yout</code> (which are the default settings).</li>
 <li>Make sure the output signal is not truncated</li>
-<li>Make sure that the <em>interpolation settings</em> on the input ports are as desired, for piecewise constant inputs disable interpolation.</li>
+<li>Make sure that the <em>interpolation settings</em> on the input
+ports are as desired, for piecewise constant inputs disable
+interpolation.</li>
 </ul>
 <h2 id="command-line-options">Command line options</h2>
-<pre><code>usage: falstar [-agv] file_1 ... file_n
-  -a    ask for additional input files:
-          enter one filename per line followed by a blank line
-          a blank line acknowledges, EOF (CTRL+d) aborts
+<pre><code>usage: falstar [-dv] file_1 ... file_n
   -d    dummy run, parse and validate configuration only
-  -g    show a graphical diagram for each trial
-  -v    be verbose</code></pre>
+  -v    be more verbose</code></pre>
+<p>In particular, the <code>-v</code> flag shows all interaction with
+the Matlab engine.</p>
 <h2 id="configuration-file-syntax">Configuration file syntax</h2>
-<p>The syntax is S-expression based. Line comments are introduced with <code>;</code>.</p>
+<p>The syntax is S-expression based. Line comments are introduced with
+<code>;</code>.</p>
 <p>FalStar maintains a context, consisting of</p>
 <ul>
 <li>a currently selected system on which it operates</li>
 <li>a currently selected falsification method</li>
 </ul>
-<p>relative to which formulas are interpreted (e.g., parameter and input/output signal names). Similar to SMT-LIB, contexts can be saved and restored with</p>
+<p>relative to which formulas are interpreted (e.g., parameter and
+input/output signal names). Similar to SMT-LIB, contexts can be saved
+and restored with</p>
 <pre><code>(push)
 ...
 (pop)</code></pre>
-<p>The configuration file can be composed of multiple parts, where <code>&lt;path&gt;</code> is a doubly-quoted path that is interpreted relative to the working directory of FalStar (not relative to the including file):</p>
+<p>The configuration file can be composed of multiple parts, where
+<code>&lt;path&gt;</code> is a doubly-quoted path that is interpreted
+relative to the working directory of FalStar:</p>
 <pre><code>(include &lt;path&gt;)</code></pre>
-<p>System declarations (see below) and requirements for some models are in the <code>models</code> subfolder, ready to be used.</p>
+<p>The path is relatve to the <em>inluding</em> file, except when it
+starts with ‘.’ or with ‘/’ then it is used as given.</p>
+<p>System declarations (see below) and requirements for some models are
+in the <code>models</code> subfolder, ready to be used.</p>
 <h3 id="selecting-a-system-model">Selecting a system model</h3>
-<p>See <code>src/test/configuration/test.cfg</code> for an example. Currently supported system types: <code>simulink</code>.</p>
+<p>See <code>src/resource/configuration/test.cfg</code> for an example.
+Currently supported system types: <code>simulink</code> and
+<code>matlab</code>.</p>
 <pre><code>(define-system &lt;identifier&gt;
+    
+    ; two alternative ways to set up systems
     (simulink &lt;path&gt; [&lt;load&gt;])
+    (matlab   &lt;name&gt; &lt;path&gt; &lt;init&gt; &lt;run&gt;)
+
+    ; common configuration options
     (parameters p1 ... pk)
     (inputs     i1 ... in)
     (outputs    o1 ... om)
 
+    ; valid input ranges
     (constant   pi &lt;num&gt;)
     (constant   pi &lt;num&gt; &lt;num&gt;)
     
@@ -100,50 +292,163 @@ bye</code></pre>
     (constant   ij &lt;num&gt; &lt;num&gt;)
     (piecewise-constant ij &lt;num&gt; &lt;num&gt;) 
     )</code></pre>
-<p>This declares the interface to a Simulink system, referred to by <code>&lt;identifier&gt;</code> subsequently. The interface consists of</p>
+<p>A system definition comprises of a declaration of how the simulation
+is executed, by a <code>simulink</code> or <code>matlab</code> clause,
+followed by a declaration of the system’s interface in terms of
+parameters, input, and output ports; and a declaration of valid ranges
+reps. values for these which can later be overriden if desired</p>
+<h4 id="system-type-simulink">System Type: <code>simulink</code></h4>
+<p>A simulink system is declared by</p>
+<pre><code>(simulink &lt;path&gt; [&lt;load&gt;])</code></pre>
+<p>where <code>&lt;path&gt;</code> must point to a <code>.mdl</code> or
+<code>.slx</code> file. An optional list <code>&lt;load&gt;</code> of
+<code>.m</code> files or <code>.mdl</code> files can be specified. The
+initialization sequence runs</p>
+<pre><code>addpath(&lt;dir&gt;)        % where &lt;dir&gt; is the directory containing &lt;path&gt;
+load_system(&lt;name&gt;)   % where &lt;name&gt; is the file name stem (without suffix)
+
+&lt;load&gt;                % execute .m files without suffix
+load(&lt;load&gt;)          % load .mat files</code></pre>
+<p>and each simulation is executed with the <code>sim</code> function,
+where the stopping time and the external inputs are explicitly given by
+Falstar (i.e., those defined in the model are overriden).</p>
+<h4 id="system-type-matlab">System Type: Matlab</h4>
+<p>A system scripted in Matlab is declared by</p>
+<pre><code>(matlab &lt;name&gt; &lt;path&gt; &lt;init&gt; &lt;run&gt;)</code></pre>
+<p>where <code>&lt;name&gt;</code> is an arbitrary identifier (implicit
+for Simulink systems from the file name), <code>&lt;path&gt;</code> is
+the base path where scripts are located, and <code>&lt;init&gt;</code>
+and <code>&lt;run&gt;</code> are two Matlab functions used to initialize
+the system and run simulations respectively.</p>
+<p>Falstar executes initially</p>
+<pre><code>addpath(&lt;path&gt;)
+&lt;init&gt;</code></pre>
+<p>and for each simulation</p>
+<pre><code>&lt;run&gt;(p, u, T)</code></pre>
+<p>where <code>p</code> is an array of values for the parameters,
+<code>u</code> is a time-varying input signal, and <code>T</code> is the
+stopping time. The expected result is a pair <code>[tout, yout]</code>
+describing the output trace, in the same format as <code>.tout</code>
+and <code>.yout</code> from the <code>Array</code> format specified for
+Simulink systems.</p>
+<h4 id="interface-description">Interface Description</h4>
+<p>The interface description consists of</p>
 <ul>
-<li>Parameters <code>p1</code>, ..., <code>pk</code>, which are names of MATLAB variables that will be initialized by FalStar</li>
-<li>Inputs <code>i1</code>, ..., <code>in</code>, which give names to top-level input ports of the Simulink system (<code>In</code> blocks), in order of their numbers in Simulink (the names attached to the ports in the model are ignored)</li>
-<li>Outputs <code>o1</code>, ..., <code>om</code>, analogously for the output ports (<code>Out</code> blocks)</li>
+<li>Parameters <code>p1</code>, …, <code>pk</code>, which are names of
+MATLAB variables that will be initialized by FalStar</li>
+<li>Inputs <code>i1</code>, …, <code>in</code>, which give names to
+top-level input ports of the Simulink system (<code>In</code> blocks),
+in order of their numbers in Simulink (the names attached to the ports
+in the model are ignored)</li>
+<li>Outputs <code>o1</code>, …, <code>om</code>, analogously for the
+output ports (<code>Out</code> blocks)</li>
 </ul>
-<p>The following lines declare the ranges of parameters and inputs, one statement for each.</p>
+<h4 id="definining-input-ranges">Definining Input Ranges</h4>
+<p>The following lines declare the ranges of parameters and inputs, one
+statement for each.</p>
 <ul>
-<li>Patamerets <code>pi</code> can be either a fixed constant value or a range, from which the value is chosen during falsification.</li>
-<li>Inputs <code>ii</code> can be either a fixed value, a constant input signal, or a piecewise constant input signal, again with a range of values in the latter two cases. Note that the time intervals for which these are held constant depends on the configuration of the falsification solver.</li>
+<li>Patamerets <code>pi</code> can be either a fixed constant value or a
+range, from which the value is chosen during falsification.</li>
+<li>Inputs <code>ii</code> can be either a fixed value, a constant input
+signal, or a piecewise constant input signal, again with a range of
+values in the latter two cases. Note that the time intervals for which
+these are held constant depends on the configuration of the
+falsification solver.</li>
 </ul>
-<p>The current system can be selected by</p>
+<h4 id="selecting-a-system">Selecting a System</h4>
+<p>More than one system can be defined within a Falstar script. You can
+pick the system that is going to be used for the subsequent
+falsification attempts or for validation:</p>
 <pre><code>(select-system &lt;identifier&gt;
     &lt;overrides&gt;)</code></pre>
-<p>where <code>&lt;identifier&gt;</code> refers to a previously declared system, and <code>&lt;overrides&gt;</code> are <code>(constant ...)</code> or <code>(piecewise-constant ...)</code> definitions that can be used to override some of the settings from the system declaration. This comes in handy if a system has several modes of operation (like the Powertrain model).</p>
+<p>where <code>&lt;identifier&gt;</code> refers to a previously declared
+system, and <code>&lt;overrides&gt;</code> are
+<code>(constant ...)</code> or <code>(piecewise-constant ...)</code>
+definitions that can be used to override some of the settings from the
+system declaration. This comes in handy if a system has several modes of
+operation (like the Powertrain model).</p>
 <h3 id="terms-and-formulas">Terms and Formulas</h3>
 <p>May refer to signal names (defined by the current model)</p>
-<p>Arithmetic operators: <code>&lt; &gt; &lt;= &gt;= == != + - * / abs in</code><br />
-Logical connectives: <code>! =&gt; || &amp;&amp; true false not implies and or always eventually</code><br />
+<p>Arithmetic operators:
+<code>&lt; &gt; &lt;= &gt;= == != + - * / abs in</code><br />
+Logical connectives:
+<code>! =&gt; || &amp;&amp; true false not implies and or always eventually</code><br />
 For example</p>
 <ul>
-<li><code>(abs (* 1.5 x))</code> denotes the absolute value of <code>1.5 x</code> where <code>x</code> is a signal name</li>
-<li><code>(in x a b)</code> = <code>(and (&lt;= a x) (&lt;= x b))</code> asserts that <code>x</code> lies in the range <code>[a,b]</code></li>
-<li><code>(always (10 30) phi)</code> asserts that subformula <code>phi</code> holds over time interval <code>[10,30]</code></li>
+<li><code>(abs (* 1.5 x))</code> denotes the absolute value of
+<code>1.5 x</code> where <code>x</code> is a signal name</li>
+<li><code>(in x a b)</code> = <code>(and (&lt;= a x) (&lt;= x b))</code>
+asserts that <code>x</code> lies in the range <code>[a,b]</code></li>
+<li><code>(always (10 30) phi)</code> asserts that subformula
+<code>phi</code> holds over time interval <code>[10,30]</code></li>
 </ul>
-<h3 id="falsification">Falsification</h3>
-<p>First, a falsification method has to be selected. Currently the following are supported</p>
-<ul>
-<li><p>Random sampling <code>(set-solver random &lt;cp&gt; &lt;max-iter&gt;)</code>, where <code>&lt;cp&gt;</code> denotes the number of control points/segments of piecewise constant input signals and and <code>&lt;max-iter&gt;</code> is the upper bound of iterations/simulations to run</p></li>
-<li><p>Adaptive probabilistic search <code>(set-solver adaptive (&lt;cp1&gt; &lt;cp2&gt; ...) &lt;exploration&gt; &lt;max-iter&gt;)</code>, where <code>&lt;cp1&gt;</code>, <code>&lt;cp2&gt;</code>, ... declares an (increasing) sequence of <em>granularity levels</em> with the corresponding number of control points, <code>&lt;exploration&gt;</code> is the exploration ratio (a good value is <code>0.25</code>) and <code>&lt;max-iter&gt;</code> is the maximum number of iterations</p></li>
-<li><p>Breach <code>(&lt;set-solver breach &lt;cp&gt; &lt;opt&gt; &lt;max-iter&gt;)</code> selects falsification by Breach with <code>&lt;cp&gt;</code> control points, optimization method <code>&lt;opt&gt;</code> (from <code>cmaes</code>, <code>global_nelder_mead</code>, ...)</p></li>
-</ul>
-<p>Requirements can be falsified by</p>
-<pre><code>(falsify &lt;formula1&gt; &lt;formula2&gt; ...)</code></pre>
-<p>Results are logged to in <code>csv</code> format if a log file is specified (in double quotes, relative to the working directory of FalStar)</p>
-<pre><code>(set-log &lt;path&gt;)</code></pre>
-<p>Usually, the results are collected and merged, and only written out when FalStar terminates (or when another log file is specified). The reason is that different solvers have different parameters that show up in the resulting output as extra columns. Deferring to write the log means that these can be collected into one big table with a uniform schema. Long running experiments might want to flush the log in between with <code>(flush-log)</code>.</p>
-<p>The initial random seed can be specified by</p>
-<pre><code>(set-seed &lt;number&gt;)</code></pre>
-<p>To request each falsification trial <code>(falsify ... )</code> to be repeated multiple times (with different seeds)</p>
-<pre><code>(set-repeat &lt;num&gt;) </code></pre>
 <h3 id="definitions">Definitions</h3>
 <p>Abbreviations, which are really just macros, can be defined as</p>
 <pre><code>(define &lt;id&gt; &lt;S-Expr&gt;)</code></pre>
-<p>These are expanded immediately when encountered in certain places, but interpreted only alongside the surrounding context. Definitions are expdaned in formulas and almost in all places where numbers are expected.</p>
+<p>These are expanded immediately when encountered in certain places,
+but interpreted only alongside the surrounding context. Definitions are
+expanded in formulas and almost in all places where numbers are
+expected.</p>
+<h3 id="falsification">Falsification</h3>
+<p>First, a falsification method has to be selected. Currently the
+following are supported</p>
+<ul>
+<li><p>Random sampling
+<code>(set-solver random &lt;cp&gt; &lt;max-iter&gt;)</code>, where
+<code>&lt;cp&gt;</code> denotes the number of control points/segments of
+piecewise constant input signals and and <code>&lt;max-iter&gt;</code>
+is the upper bound of iterations/simulations to run</p></li>
+<li><p>Adaptive probabilistic search
+<code>(set-solver adaptive (&lt;cp1&gt; &lt;cp2&gt; ...) &lt;exploration&gt; &lt;max-iter&gt;)</code>,
+where <code>&lt;cp1&gt;</code>, <code>&lt;cp2&gt;</code>, … declares an
+(increasing) sequence of <em>granularity levels</em> with the
+corresponding number of control points, <code>&lt;exploration&gt;</code>
+is the exploration ratio (a good value is <code>0.25</code>) and
+<code>&lt;max-iter&gt;</code> is the maximum number of
+iterations</p></li>
+</ul>
+<p>Moreover, the following bridge might still work (untested):</p>
+<ul>
+<li>Breach
+<code>(&lt;set-solver breach &lt;cp&gt; &lt;opt&gt; &lt;max-iter&gt;)</code>
+selects falsification by Breach with <code>&lt;cp&gt;</code> control
+points, optimization method <code>&lt;opt&gt;</code> (from
+<code>cmaes</code>, <code>global_nelder_mead</code>, …)</li>
+</ul>
+<p>Requirements can be falsified by</p>
+<pre><code>(falsify &lt;formula1&gt; &lt;formula2&gt; ...)</code></pre>
+<p>Results are logged to in <code>.csv</code> format if specified (in
+double quotes, relative to the current file FalStar). The log file
+collects entries for each individual falsification trial, whereas the
+report groups them together (cf. <code>(set-repeat _)</code> below) with
+aggregated information on number of simulations, running time, and
+success rate.</p>
+<pre><code>(set-log    &lt;path&gt;)
+(set-report &lt;path&gt;)</code></pre>
+<p>Usually, log and report are written only at the end, but they can be
+flushed eagerly with <code>(flush-log)</code>, which reads in any
+previous values stored in that file and integrates the new results. It
+is important to note that different solvers produce different columns in
+the table, such that this merging is necessary.</p>
+<p>The initial random seed can be specified by</p>
+<pre><code>(set-seed &lt;number&gt;)</code></pre>
+<p>To request each falsification trial <code>(falsify ... )</code> to be
+repeated multiple times (with different seeds)</p>
+<pre><code>(set-repeat &lt;num&gt;)</code></pre>
+<h3 id="validation-scripts">Validation Scripts</h3>
+<p>The general procedure for validation is described separately in file
+<code>Validation.md</code>. In order to make use of this feature, one
+has to provide particular scripts as follows. First, set up where the
+results should be stored, in a similar format to falsification runs.
+Both files will be in <code>.csv</code> format, existing files with
+results are extended.</p>
+<pre><code>(set-log    &lt;path&gt;)
+(set-report &lt;path&gt;)</code></pre>
+<p>In order to validate, one can give the path to a <code>.csv</code>
+file simply by</p>
+<pre><code>(validate &lt;path&gt;)</code></pre>
+<p>This assumes that all models referred to by this
+<code>&lt;path&gt;</code> in terms of their mnenonic codes have been set
+up properly in the script before this line.</p>
 </body>
 </html>

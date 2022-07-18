@@ -7,16 +7,13 @@ SCANNER=falstar/src/falstar/parser/Scanner.java
 SRC=$(shell find falstar/src -iname "*.scala")
 BIN=falstar.jar falstar.sh falstar-session.sh falstar-config.sh
 
-ARCH2018=$(wildcard falstar/resource/configuration/arch2018/*.cfg)
-HSCC2019=$(wildcard falstar/resource/configuration/hscc2019/*.cfg)
-
 compile: falstar.jar
 
 falstar.jar: $(SRC) $(SCANNER)
 	mill falstar.assembly
 	cp out/falstar/assembly.dest/out.jar $@
 
-doc: README.html
+doc: README.html Validation.html
 
 scanner: $(SCANNER)
 

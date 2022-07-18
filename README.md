@@ -8,36 +8,38 @@ the model falsifies given requirements.
 Requirements
 
 - Java 1.8, Scala 2.12 (compile time only)
-- Matlab (tested with R2017b, R2018a)
+- Matlab (tested different versions after R2017)
 
 Contact: gidonernst (*) gmail.com
 
-Gidon Ernst, Sean Sedwards, Zhenya Zhang, Ichiro Hasuo:
-*Fast Falsification of Hybrid Systems using Probabilistically Adaptive Input*,
-QEST 2019.
+- Gidon Ernst, Sean Sedwards, Zhenya Zhang, Ichiro Hasuo:
+  *Fast Falsification of Hybrid Systems using Probabilistically Adaptive Input*,
+  QEST 2019, Preprint: <https://arxiv.org/abs/1812.04159>
 
-Preprint available at: <https://arxiv.org/abs/1812.04159>
+- Gidon Ernst, Sean Sedwards, Zhenya Zhang, and Ichiro Hasuo:
+  *Falsification of hybrid systems using adaptive probabilistic search*,
+  Transactions on Modeling and Computer Simulations, 2021
 
 ## Quickstart
 
 Determine MATLAB path
 
-    ./falstar-config
+    ./falstar-config.sh
 
-Compile `falstar.jar` (not necessary)
+Compile `falstar.jar`
 
     make compile
     
 Test whether everything worked
 
-    ./falstar # prints usage instructions
+    ./falstar.sh # prints usage instructions
     make test # run a simple test case
 
 This falsifies a Simulink model of an automatic transmission against specification
-`□_[0,30] speed < 120` and displays various input and output signals. Here's the output:
+`always_[0,30] speed < 120` and displays various input and output signals. Here's the output:
 
 	trial 1/1
-	property □_[0.0, 30.0] speed < 120.0
+	property always_[0.0, 30.0] speed < 120.0
 	algorithm adaptive
 	  control points: 2 2 3 3 3 4
 	  exploration ratio: 0.25
@@ -62,19 +64,7 @@ If you're tired of waiting for Matlab to initialize on every trial, you can keep
 Be aware that this caches initialized models as well, so if you change those, you need to restart the session.
 It's a simple command line interface to Matlab (currently without error handling, and it will terminate if you type in an invalid command).
 
-    ./falstar-session
-
-## Repeatability
-
-See respective output in `results/*/summary.csv`
-
-[ARCH 2018 friendly competition](https://easychair.org/publications/paper/HjJ8)
-
-    make arch2018
-    
-HSCC 2019
-
-    make hscc2019
+    ./falstar-session.sh
     
 
 ## Simulink model set up
@@ -96,13 +86,11 @@ The model must currently be prepared for use as follows
   
 ## Command line options
 
-    usage: falstar [-agv] file_1 ... file_n
-      -a    ask for additional input files:
-              enter one filename per line followed by a blank line
-              a blank line acknowledges, EOF (CTRL+d) aborts
+    usage: falstar [-dv] file_1 ... file_n
       -d    dummy run, parse and validate configuration only
-      -g    show a graphical diagram for each trial
-      -v    be verbose
+      -v    be more verbose
+
+In particular, the `-v` flag shows all interaction with the Matlab engine.
 
 ## Configuration file syntax
 
@@ -122,23 +110,31 @@ Similar to SMT-LIB, contexts can be saved and restored with
     (pop)
 
 The configuration file can be composed of multiple parts, where `<path>` is a doubly-quoted path
-that is interpreted relative to the working directory of FalStar (not relative to the including file):
+that is interpreted relative to the working directory of FalStar:
 
     (include <path>)
+
+The path is relatve to the *inluding* file, except when it starts with '.' or with '/' then it is used as given.
 
 System declarations (see below) and requirements for some models are in the `models` subfolder, ready to be used. 
 
 ### Selecting a system model
 
-See `src/test/configuration/test.cfg` for an example.
-Currently supported system types: `simulink`.
+See `src/resource/configuration/test.cfg` for an example.
+Currently supported system types: `simulink` and `matlab`.
 
 	(define-system <identifier>
-	  	(simulink <path> [<load>])
+	  	
+        ; two alternative ways to set up systems
+        (simulink <path> [<load>])
+        (matlab   <name> <path> <init> <run>)
+
+        ; common configuration options
 	  	(parameters p1 ... pk)
 	  	(inputs     i1 ... in)
 	  	(outputs    o1 ... om)
 
+        ; valid input ranges
 	  	(constant   pi <num>)
 	  	(constant   pi <num> <num>)
 	  	
@@ -147,13 +143,65 @@ Currently supported system types: `simulink`.
 	  	(piecewise-constant ij <num> <num>) 
 	  	)
 
-This declares the interface to a Simulink system, referred to by `<identifier>` subsequently.
-The interface consists of
+A system definition comprises of a declaration of how the simulation is executed,
+by a `simulink` or `matlab` clause,
+followed by a declaration of the system's interface in terms of parameters, input, and output ports;
+and a declaration of valid ranges reps. values for these which can later be overriden if desired
+
+#### System Type: `simulink`
+
+A simulink system is declared by
+ 
+    (simulink <path> [<load>])
+
+where `<path>` must point to a `.mdl` or `.slx` file.
+An optional list `<load>` of `.m` files or `.mdl` files can be specified.
+The initialization sequence runs
+
+    addpath(<dir>)        % where <dir> is the directory containing <path>
+    load_system(<name>)   % where <name> is the file name stem (without suffix)
+
+    <load>                % execute .m files without suffix
+    load(<load>)          % load .mat files
+
+and each simulation is executed with the `sim` function,
+where the stopping time and the external inputs are explicitly given by Falstar
+(i.e., those defined in the model are overriden).
+
+#### System Type: Matlab
+
+A system scripted in Matlab is declared by
+
+    (matlab <name> <path> <init> <run>)
+
+where `<name>` is an arbitrary identifier (implicit for Simulink systems from the file name),
+`<path>` is the base path where scripts are located, and `<init>` and `<run>` are two Matlab functions used to initialize the system
+and run simulations respectively.
+
+Falstar executes initially
+
+    addpath(<path>)
+    <init>
+
+and for each simulation
+
+    <run>(p, u, T)
+
+where `p` is an array of values for the parameters, `u` is a time-varying input signal,
+and `T` is the stopping time.
+The expected result is a pair `[tout, yout]` describing the output trace,
+in the same format as `.tout` and `.yout` from the `Array` format specified for Simulink systems.
+
+#### Interface Description
+
+The interface description consists of
 
 - Parameters `p1`, ..., `pk`, which are names of MATLAB variables that will be initialized by FalStar
 - Inputs `i1`, ..., `in`, which give names to top-level input ports of the Simulink system (`In` blocks),
   in order of their numbers in Simulink (the names attached to the ports in the model are ignored)
 - Outputs `o1`, ..., `om`, analogously for the output ports (`Out` blocks)
+
+#### Definining Input Ranges
 
 The following lines declare the ranges of parameters and inputs, one statement for each.
 
@@ -161,7 +209,10 @@ The following lines declare the ranges of parameters and inputs, one statement f
 - Inputs `ii` can be either a fixed value, a constant input signal, or a piecewise constant input signal, again with a range of values in the latter two cases.
   Note that the time intervals for which these are held constant depends on the configuration of the falsification solver.
 
-The current system can be selected by
+#### Selecting a System
+
+More than one system can be defined within a Falstar script.
+You can pick the system that is going to be used for the subsequent falsification attempts or for validation:
 
     (select-system <identifier>
         <overrides>)
@@ -183,6 +234,16 @@ For example
 - `(in x a b)` = `(and (<= a x) (<= x b))` asserts that `x` lies in the range `[a,b]`
 - `(always (10 30) phi)` asserts that subformula `phi` holds over time interval `[10,30]`
 
+### Definitions
+
+Abbreviations, which are really just macros, can be defined as
+
+    (define <id> <S-Expr>)
+
+These are expanded immediately when encountered in certain places,
+but interpreted only alongside the surrounding context.
+Definitions are expanded in formulas and almost in all places where numbers are expected.
+
 ### Falsification
 
 First, a falsification method has to be selected.
@@ -192,20 +253,24 @@ Currently the following are supported
 
 -   Adaptive probabilistic search `(set-solver adaptive (<cp1> <cp2> ...) <exploration> <max-iter>)`, where `<cp1>`, `<cp2>`, ... declares an (increasing) sequence of *granularity levels* with the corresponding number of control points, `<exploration>` is the exploration ratio (a good value is `0.25`) and `<max-iter>` is the maximum number of iterations
 
+Moreover, the following bridge might still work (untested):
+
 -   Breach `(<set-solver breach <cp> <opt> <max-iter>)` selects falsification by Breach with `<cp>` control points, optimization method `<opt>` (from `cmaes`, `global_nelder_mead`, ...)
 
 Requirements can be falsified by
 
     (falsify <formula1> <formula2> ...)
 
-Results are logged to in `csv` format if a log file is specified (in double quotes, relative to the working directory of FalStar)
+Results are logged to in `.csv` format if specified (in double quotes, relative to the current file FalStar).
+The log file collects entries for each individual falsification trial, whereas the report groups them together
+(cf. `(set-repeat _)` below) with aggregated information on number of simulations, running time, and success rate.
 
-    (set-log <path>)
+    (set-log    <path>)
+    (set-report <path>)
 
-Usually, the results are collected and merged, and only written out when FalStar terminates (or when another log file is specified).
-The reason is that different solvers have different parameters that show up in the resulting output as extra columns.
-Deferring to write the log means that these can be collected into one big table with a uniform schema.
-Long running experiments might want to flush the log in between with `(flush-log)`.
+Usually, log and report are written only at the end, but they can be flushed eagerly with `(flush-log)`,
+which reads in any previous values stored in that file and integrates the new results.
+It is important to note that different solvers produce different columns in the table, such that this merging is necessary.
 
 The initial random seed can be specified by
 
@@ -213,14 +278,21 @@ The initial random seed can be specified by
 
 To request each falsification trial `(falsify ... )` to be repeated multiple times (with different seeds)
 
-    (set-repeat <num>) 
+    (set-repeat <num>)
 
-### Definitions
+### Validation Scripts
 
-Abbreviations, which are really just macros, can be defined as
+The general procedure for validation is described separately in file `Validation.md`.
+In order to make use of this feature, one has to provide particular scripts as follows.
+First, set up where the results should be stored, in a similar format to falsification runs.
+Both files will be in `.csv` format, existing files with results are extended.
 
-    (define <id> <S-Expr>)
+    (set-log    <path>)
+    (set-report <path>)
 
-These are expanded immediately when encountered in certain places,
-but interpreted only alongside the surrounding context.
-Definitions are expdaned in formulas and almost in all places where numbers are expected.
+In order to validate, one can give the path to a `.csv` file simply by
+
+    (validate <path>)
+
+This assumes that all models referred to by this `<path>` in terms of their mnenonic codes
+have been set up properly in the script before this line.
