@@ -13,8 +13,6 @@ import falstar.hybrid.Signal
 import falstar.linear.Vector
 
 object Validation {
-  var dummy = false
-
   def check(ok: Boolean) = {
     if(ok) "yes" else "no"
   }
@@ -83,8 +81,8 @@ object Validation {
       ""
   }
 
-  def apply(table: Table, budget: Option[Int], parser: Parser): (Table, Table) = {
-    val rows = for(row <- table.rows; res <- apply(row, budget, parser)) yield {
+  def apply(table: Table, budget: Option[Int], parser: Parser, dummy: Boolean): (Table, Table) = {
+    val rows = for(row <- table.rows; res <- apply(row, budget, parser, dummy)) yield {
       res
     }
 
@@ -99,12 +97,12 @@ object Validation {
       ("robustness error", "robustness error (average)", avg_numbers _)
     )
 
-    val stats = result.groupBy(Seq("property"), aggregate)
+    val stats = result.groupBy(Seq("property", "instance"), aggregate)
 
     (result, stats)
   }
 
-  def apply(row: Row, budget: Option[Int], parser: Parser): List[Row] = {
+  def apply(row: Row, budget: Option[Int], parser: Parser, dummy: Boolean): List[Row] = {
     import Signal.TimeSeriesOps
     import Signal.SignalOps
     val data = row.data.toMap.asInstanceOf[Map[String,String]]
@@ -119,10 +117,6 @@ object Validation {
 
       var property = data("property")
 
-      // Hack for falsify:
-      if(system == "NN" && property == "0.005-0.04")
-        property = "(NN 0.005 0.04)"
-
       // need to unpack one layer because it reads a sequence of nodes
       val falstar.parser.Node(node) = falstar.parser.read(property)
       state.system = sys // such that ports and stuff work
@@ -136,6 +130,8 @@ object Validation {
       println("property: " + property)
       println("known formula: " + phi)
 
+      val falsified = (data contains "falsified") && isTrue(data("falsified"))
+
       if(data contains "formula") {
         println("reference formula: " + data("formula"))
       }
@@ -144,29 +140,63 @@ object Validation {
           res += "instance" -> data("instance")
       }
 
-      if(data contains "time") {
-          res += "time" -> data("time")
+      if(data contains "simulations") {
+        val simulations = data("simulations")
+
+        budget match {
+          case Some(max) =>
+            val given = simulations.toDouble.toInt
+            if(given > max) {
+                println("excessive simulations: " + simulations + " > " + max)
+                validated = Some(false)
+            }
+
+            // if(given < max) {
+            //     
+            //     res += "simulations" -> simulations
+            // }
+
+          case None =>
+            // res += "simulations" -> simulations
+        }
+
+        // only add if meaningful for statistics
+        if(falsified) {
+          res += "simulations" -> simulations
+        }
       }
 
-      if(data contains "simulations") {
-          val simulations = data("simulations")
+      var simulation_time = 0.0
+      var total_time = 0.0
 
-          budget match {
-            case Some(max) =>
-              val given = simulations.toDouble.toInt
-              if(given > max) {
-                  println("excessive simulations: " + simulations + " > " + max)
-                  validated = Some(false)
-              }
+      if(data contains "simulation time") {
+        simulation_time = data("simulation time").toDouble
+        res += "simulation time" -> simulation_time
+      }
 
-              if(given < max) {
-                  // only add if meaningful for statistics
-                  res += "simulations" -> simulations
-              }
+      if(data contains "total time") {
+        total_time = data("total time").toDouble
+      } else if(data contains "time") {
+        total_time = data("time").toDouble
+      }
 
-            case None =>
-              res += "simulations" -> simulations
-          }
+      if(total_time > 0) {
+        res += "total time" -> total_time
+        if(falsified)
+          res += "falsification time" -> total_time
+      }
+
+      if(simulation_time > 0 && total_time > 0) {
+        res += "simulation ratio" -> simulation_time/total_time
+      }
+
+      // add to output regardless of whether we run simulations later
+      if(data contains "falsified") {
+        res += "falsified" -> isTrue(data("falsified"))
+      }
+
+      if(data contains "robustness") {
+        res += "robustness expected" -> data("robustness").toDouble
       }
 
       res ++= state.notes
@@ -204,7 +234,7 @@ object Validation {
             println("input is NOT within bounds")
           }
 
-          if(!Validation.dummy) {
+          if(!dummy) {
             val dt = us.dt
             val isUpsampled = (dt < 1.0)
 
@@ -223,15 +253,23 @@ object Validation {
 
             // special case for S-TaLiRo NNx signals from ARCH 2021,
             // which lack timing information
-            if(property == "NNx" && us.length == 3 && T == 3 && us.forall(_._2.isEmpty)) {
-              us = us.zipWithIndex.map {
-                case ((u, _), i) => (i: Double, Vector(u))
-              }
-            }
+            // if(property == "NNx" && us.length == 3 && T == 3 && us.forall(_._2.isEmpty)) {
+            //   us = us.zipWithIndex.map {
+            //     case ((u, _), i) => (i: Double, Vector(u))
+            //   }
+            // }
 
             if(!isUpsampled) {
-              println("upsampling input signal with dt = " + 0.1)
-              us = us.sample(0.1, T)
+              cfg.options get "sample" match {
+                case _ if us.isEmpty =>
+                  us
+                case None =>
+                  println("upsampling input signal with default dt = " + 0.1)
+                  us = us.sample(0.1, T)
+                case Some(dt: Double) =>
+                  println("upsampling input signal with specified dt = " + dt)
+                  us sample (dt, T)
+              }
             }
 
             val tr = sys.sim(ps, us, T)
@@ -241,7 +279,6 @@ object Validation {
                 val expected = data("falsified")
                 val falsified = isTrue(expected)
                 val falsified_ok = falsified == (rs.score < 0)
-                res += "falsified" -> expected
                 res += "falsified correct" -> check(falsified_ok)
 
               if(falsified_ok) {
@@ -262,7 +299,6 @@ object Validation {
                   else Math.abs(expected - computed)
 
                 val robustness_ok = (expected < 0) == (computed < 0)
-                res += "robustness expected" -> expected
                 res += "robustness computed" -> computed
                 res += "robustness correct" -> check(robustness_ok)
                 res += "robustness error" -> error

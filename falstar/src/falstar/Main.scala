@@ -51,7 +51,7 @@ object Main {
   }
 
   def run(cmd: Command): Unit = cmd match {
-    case Falsify(search, sys, cfg, phi, seed, repeat, notes, log, report) =>
+    case Falsify(search, sys, cfg, phi, seed, repeat, notes, log, report) if !options.dummy =>
       seed match {
         case None => Probability.setUniqueSeed()
         case Some(seed) => Probability.seed = seed
@@ -78,7 +78,7 @@ object Main {
 
     case Validate(source, budget, log, report, parser) =>
       val table = Table.read(source)
-      val (rows, aggregate) = Validation.apply(table, budget, parser)
+      val (rows, aggregate) = Validation.apply(table, budget, parser, options.dummy)
 
       for (name <- log) {
         if (!(results contains name))
@@ -92,11 +92,11 @@ object Main {
         results(name) ++= aggregate
       }
 
-    case Simulate(sys, phi, ps, us, t) =>
+    case Simulate(sys, phi, ps, us, t) if !options.dummy =>
       val tr = sys.sim(ps, us, t)
       val rs = mtl.Robustness(phi, tr.us, tr.ys)
 
-    case Robustness(phi, us, ys, t) =>
+    case Robustness(phi, us, ys, t) if !options.dummy =>
       val rs = mtl.Robustness(phi, us, ys)
 
     case Flush =>
@@ -105,6 +105,9 @@ object Main {
 
     case Quit =>
       quit.break
+
+    case _ =>
+      // do nothing (due to options.dummy)
   }
 
   def run(commands: Seq[Command]) {
@@ -117,10 +120,6 @@ object Main {
 
   def run(file: String): Unit = {
     val commands = parse(new File(file))
-
-    if (options.dummy)
-      return
-
     run(commands)
   }
 
