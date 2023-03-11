@@ -97,7 +97,7 @@ object Validation {
       ("robustness error", "robustness error (average)", avg_numbers _)
     )
 
-    val stats = result.groupBy(Seq("property", "instance"), aggregate)
+    val stats = result.groupBy(Seq("instance", "property"), aggregate)
 
     (result, stats)
   }
@@ -196,7 +196,11 @@ object Validation {
       }
 
       if(data contains "robustness") {
-        res += "robustness expected" -> data("robustness").toDouble
+        val r = data("robustness").toDouble
+        res += "robustness expected" -> r
+
+        if(!(data contains "falsified"))
+          res += "falsified" -> ((r < 0) || (data("robustness") == "-0.0"))
       }
 
       res ++= state.notes
@@ -358,6 +362,9 @@ object Validation {
                   d(i)
                 }
 
+                val (os, _) = Robustness.collect(phi, us, ys)
+                res += "output robustness" -> os.score
+                res += "output falsified" -> (os.score < 0)
                 res += "output error" -> (es maxBy Math.abs)
               }
             } catch {
