@@ -106,7 +106,7 @@ class Parser(_directory: String) {
 
   object Path {
     def unapply(node: Syntax): Option[String] = node match {
-      case Literal(value: String) if value.startsWith("/") || value.startsWith(".") =>
+      case Literal(value: String) if value.startsWith("/") /* || value.startsWith("./") */ =>
         Some(value)
 
       case Literal(value: String) =>
